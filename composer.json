@@ -1,0 +1,23 @@
+{
+  "name": "equipo-proyecto-2026/ds-beauty-academy",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "DsBeautyAcademy\\": "src/"
+    },
+    "files": [
+      "src/config/components/configSystem.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Heliscar",
+      "email": "zuhairromero14@gmail.com"
+    },
+    {
+      "name": "Un Carlos",
+      "email": "carlosj.pineda07@gmail.com"
+    }
+  ],
+  "require": {}
+}
