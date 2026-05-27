@@ -6,18 +6,19 @@ use Exception;
 use DsBeautyAcademy\config\connect\DBConnect;
 use DsBeautyAcademy\config\interfaces\Crud;
 use DsBeautyAcademy\Helpers\ApiResponse;
+use DsBeautyAcademy\Helpers\Validations;
 
 class BancoModel extends DBConnect implements Crud
 {
-    use ApiResponse;
+    use ApiResponse, Validations;
 
     protected $table = 'banco';
     protected $idField = 'id_banco';
     protected $fields = [
         'nombre' => 'validate_names',
-        'estatus_banco' => 'validate_numbers',
-        'fecha_creacion' => 'validate_dates',
-        'fecha_actualizacion' => 'validate_dates',
+        'estatus_banco' => 'validate_boolean',
+        'fecha_creacion' => 'validate_datetime',
+        'fecha_actualizacion' => 'validate_datetime',
     ];
     // Aplicar booleano modular
     protected $module_name = [

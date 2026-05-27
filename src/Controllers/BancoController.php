@@ -33,7 +33,9 @@ if ($action) {
         case 'guardar':
             $data = [];
             foreach ($module_config['fields'] as $field) {
-                $data[$field] = $_POST[$field] ?? '';
+                if (isset($_POST[$field])) {
+                    $data[$field] = $_POST[$field];
+                }
             }
             $result = $model->guardar($data);
             if ($result) {
@@ -47,7 +49,9 @@ if ($action) {
             if ($id) {
                 $data = [];
                 foreach ($module_config['fields'] as $field) {
-                    $data[$field] = $_POST[$field] ?? '';
+                    if (isset($_POST[$field])) {
+                        $data[$field] = $_POST[$field];
+                    }
                 }
                 $result = $model->actualizar($id, $data);
                 if ($result) {
@@ -71,7 +75,7 @@ if ($action) {
         case 'buscar':
             $id = $_POST['buscar'] ?? null;
             if ($id) {
-                $result = $model->find($id);
+                $result = $model->buscar($id);
                 if ($result) {
                     header('Content-Type: application/json');
                     echo json_encode($result);
@@ -80,7 +84,7 @@ if ($action) {
             exit;
 
         case 'buscarTodos':
-            $result = $model->findAll();
+            $result = $model->buscarTodos();
             if ($result) {
                 header('Content-Type: application/json');
                 echo json_encode($result);
