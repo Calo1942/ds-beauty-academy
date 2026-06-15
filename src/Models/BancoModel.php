@@ -15,7 +15,7 @@ class BancoModel extends DBConnect implements Crud
     protected $table = 'banco';
     protected $idField = 'id_banco';
     protected $fields = [
-        'nombre' => 'validate_names',
+        'nombre_banco' => 'validate_names',
         'estatus_banco' => 'validate_boolean',
         'fecha_creacion' => 'validate_datetime',
         'fecha_actualizacion' => 'validate_datetime',
@@ -25,6 +25,14 @@ class BancoModel extends DBConnect implements Crud
         'singular' => 'Banco',
         'plural' => 'Bancos'
     ];
+
+    /*
+    NOTAS
+    queda pendiente:
+    - Hacer un metodo exclusivamente para las validaciones
+    - Aplicar encapsulamiento
+    - buscar() y buscarTodos() son métodos públicos. Los demás son métodos privados
+    */
 
     public function guardar($data)
     {
@@ -53,7 +61,7 @@ class BancoModel extends DBConnect implements Crud
             }
             throw new Exception('Error al guardar');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::error(500, 'Error al almacenar', $e->getMessage());
         }
     }
@@ -64,7 +72,7 @@ class BancoModel extends DBConnect implements Crud
             $stmt = $this->con->query("SELECT * FROM {$this->table} WHERE estatus_banco = 1");
             $result = $stmt->fetchAll();
             return self::success(200, "{$this->module_name['plural']} obtenidos", $result);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::error(500, 'Error al obtener', $e->getMessage());
         }
     }
@@ -76,7 +84,7 @@ class BancoModel extends DBConnect implements Crud
             $stmt->execute([$id]);
             $result = $stmt->fetch();
             return self::success(200, "{$this->module_name['singular']} obtenido", $result);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::error(500, 'Error al obtener', $e->getMessage());
         }
     }
@@ -107,7 +115,7 @@ class BancoModel extends DBConnect implements Crud
             }
             throw new Exception('Error al actualizar');
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::error(500, 'Error al actualizar', $e->getMessage());
         }
     }
@@ -121,7 +129,7 @@ class BancoModel extends DBConnect implements Crud
                 return self::success(200, "{$this->module_name['singular']} eliminado");
             }
             throw new Exception('Error al eliminar');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return self::error(500, 'Error al eliminar', $e->getMessage());
         }
     }

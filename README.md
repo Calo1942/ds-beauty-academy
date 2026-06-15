@@ -66,3 +66,19 @@ Formato error en la petición
 - Mantener el resumen **conciso y claro** (máximo 50 caracteres).
 - Si el cambio requiere explicación adicional, agregarla en el cuerpo del mensaje.
 - Evitar commits genéricos como "cambios varios" o "actualización".
+
+# Principios SOLID: Fundamentos del Diseño Orientado a Objetos
+
+Los principios SOLID son cinco reglas fundamentales del diseño y la programación orientada a objetos. Sirven para escribir código limpio, fácil de mantener y escalable, evitando que el software se vuelva complejo y rígido a medida que crece.
+
+### Conoce los cinco conceptos básicos en los que se dividen
+1. **Responsabilidad Única (SRP):**
+Una clase o módulo solo debe tener una razón para cambiar. Es decir, debe realizar una única tarea específica para no mezclar funcionalidades.
+2. **Abierto / Cerrado (OCP)**
+Las entidades de software deben estar abiertas a extensión, pero cerradas a modificación. Esto permite añadir nuevas funcionalidades sin alterar el código base existente.
+3. **Sustitución de Liskov (LSP)**
+Los objetos de un programa deben ser reemplazables por objetos de sus subclases sin alterar el funcionamiento del programa. Las clases hijas no deben romper el comportamiento de la clase padre.
+4. **Segregación de Interfaces (ISP)**
+Es mejor tener muchas interfaces específicas que una sola interfaz de propósito general. Las clases no deben estar obligadas a implementar métodos que no utilizan.
+5. **Inversión de Dependencias (DIP)**
+Los módulos de alto nivel no deben depender de módulos de bajo nivel. Ambos deben depender de abstracciones (como las interfaces) para reducir el acoplamiento entre clases.

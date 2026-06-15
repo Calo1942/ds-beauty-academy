@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,12 +160,12 @@
             transition: .4s;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--accent-color);
             border-color: var(--accent-color);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(22px);
         }
 
@@ -254,7 +255,8 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -328,7 +330,7 @@
         .btn-delete:hover {
             background: rgba(239, 68, 68, 0.1);
         }
-        
+
         /* Toast Notifications */
         #toast-container {
             position: fixed;
@@ -339,6 +341,7 @@
             flex-direction: column;
             gap: 10px;
         }
+
         .toast {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
@@ -353,13 +356,21 @@
             transform: translateX(120%);
             transition: transform 0.3s ease;
         }
+
         .toast.show {
             transform: translateX(0);
         }
-        .toast-success i { color: var(--success-color); }
-        .toast-error i { color: var(--danger-color); }
+
+        .toast-success i {
+            color: var(--success-color);
+        }
+
+        .toast-error i {
+            color: var(--danger-color);
+        }
     </style>
 </head>
+
 <body>
     <div class="app-container">
         <header class="header">
@@ -373,10 +384,11 @@
                 <h2 id="form-title">Registrar Nuevo Banco</h2>
                 <form id="banco-form">
                     <input type="hidden" id="id_banco" name="id_banco">
-                    
+
                     <div class="form-group">
-                        <label for="nombre">Nombre del Banco</label>
-                        <input type="text" id="nombre" name="nombre" placeholder="Ej. Banco Mercantil" required autocomplete="off">
+                        <label for="nombre_banco">Nombre del Banco</label>
+                        <input type="text" id="nombre_banco" name="nombre_banco" placeholder="Ej. Banco Mercantil"
+                            required autocomplete="off">
                     </div>
 
                     <div class="form-group checkbox-group">
@@ -388,7 +400,8 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="btn-cancel" style="display: none;" onclick="resetForm()">Cancelar</button>
+                        <button type="button" class="btn btn-secondary" id="btn-cancel" style="display: none;"
+                            onclick="resetForm()">Cancelar</button>
                         <button type="submit" class="btn btn-primary" id="btn-submit">
                             <i class="fas fa-save"></i> Guardar Banco
                         </button>
@@ -434,9 +447,9 @@
             toast.className = `toast toast-${type}`;
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
             toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
-            
+
             container.appendChild(toast);
-            
+
             // Trigger animation
             setTimeout(() => {
                 toast.classList.add('show');
@@ -460,11 +473,11 @@
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const text = await response.text();
                 try {
                     return JSON.parse(text);
-                } catch(e) {
+                } catch (e) {
                     console.error('JSON parse error:', text);
                     return { status: 'error', message: 'Respuesta inválida del servidor.' };
                 }
@@ -477,28 +490,28 @@
         async function loadBancos() {
             const tbody = document.getElementById('bancos-tbody');
             tbody.innerHTML = '<tr><td colspan="4" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>';
-            
+
             const result = await sendRequest({ buscarTodos: '1' });
-            
+
             if (result && result.status === 'success') {
                 const bancos = result.data || [];
                 tbody.innerHTML = '';
-                
-                if(bancos.length === 0) {
-                     tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay bancos registrados.</td></tr>';
-                     return;
+
+                if (bancos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay bancos registrados.</td></tr>';
+                    return;
                 }
 
                 bancos.forEach(banco => {
                     const tr = document.createElement('tr');
                     const isActive = parseInt(banco.estatus_banco) === 1;
-                    const statusBadge = isActive 
-                        ? '<span class="badge badge-active">Activo</span>' 
+                    const statusBadge = isActive
+                        ? '<span class="badge badge-active">Activo</span>'
                         : '<span class="badge badge-inactive">Inactivo</span>';
 
                     tr.innerHTML = `
                         <td>${banco.id_banco}</td>
-                        <td>${banco.nombre}</td>
+                        <td>${banco.nombre_banco}</td>
                         <td>${statusBadge}</td>
                         <td class="actions-cell">
                             <button class="btn-action btn-edit" onclick="editBanco(${banco.id_banco})" title="Editar">
@@ -521,13 +534,13 @@
             if (result && result.status === 'success' && result.data) {
                 const banco = result.data;
                 document.getElementById('id_banco').value = banco.id_banco;
-                document.getElementById('nombre').value = banco.nombre;
+                document.getElementById('nombre_banco').value = banco.nombre_banco;
                 document.getElementById('estatus_banco').checked = parseInt(banco.estatus_banco) === 1;
-                
+
                 document.getElementById('form-title').innerText = 'Editar Banco';
                 document.getElementById('btn-submit').innerHTML = '<i class="fas fa-save"></i> Actualizar Banco';
                 document.getElementById('btn-cancel').style.display = 'inline-block';
-                
+
                 document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
             } else {
                 showToast(result?.message || 'Error al obtener datos del banco', 'error');
@@ -550,7 +563,7 @@
             document.getElementById('banco-form').reset();
             document.getElementById('id_banco').value = '';
             document.getElementById('estatus_banco').checked = true;
-            
+
             document.getElementById('form-title').innerText = 'Registrar Nuevo Banco';
             document.getElementById('btn-submit').innerHTML = '<i class="fas fa-save"></i> Guardar Banco';
             document.getElementById('btn-cancel').style.display = 'none';
@@ -558,31 +571,31 @@
 
         document.getElementById('banco-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const btnSubmit = document.getElementById('btn-submit');
             const originalBtnHtml = btnSubmit.innerHTML;
             btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
             btnSubmit.disabled = true;
 
             const id_banco = document.getElementById('id_banco').value;
-            const nombre = document.getElementById('nombre').value;
+            const nombre_banco = document.getElementById('nombre_banco').value;
             const estatus_banco = document.getElementById('estatus_banco').checked ? 1 : 0;
-            
+
             const isUpdate = id_banco !== '';
             const actionKey = isUpdate ? 'actualizar' : 'guardar';
-            
+
             const data = {
                 [actionKey]: '1',
-                nombre: nombre,
+                nombre_banco: nombre_banco,
                 estatus_banco: estatus_banco
             };
-            
+
             if (isUpdate) {
                 data.id_banco = id_banco;
             }
-            
+
             const result = await sendRequest(data);
-            
+
             btnSubmit.innerHTML = originalBtnHtml;
             btnSubmit.disabled = false;
 
@@ -601,4 +614,5 @@
         document.addEventListener('DOMContentLoaded', loadBancos);
     </script>
 </body>
+
 </html>
