@@ -7,7 +7,7 @@ use DsBeautyAcademy\Models\BancoModel;
 // Configuración del Módulo
 $module_config = [
     'primary_key' => 'id_banco',
-    'fields' => ['nombre_banco', 'estatus_banco', 'fecha_creacion', 'fecha_actualizacion'],
+    'fields' => ['nombre_banco', 'estatus_banco'],
     'view_path' => 'banco.php'
 ];
 

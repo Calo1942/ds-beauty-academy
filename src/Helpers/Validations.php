@@ -4,125 +4,42 @@ namespace DsBeautyAcademy\Helpers;
 
 trait Validations
 {
-    public static function validate_id($data)
-    {
-        return (preg_match('/^[0-9]{1,}$/', $data)) ? true : false;
-    }
+    public $validate_id = '/^[0-9]{1,}$/';
+    public $validate_number = '/^[0-9]{1,}$/';
+    public $validate_telefono = '/^[0-9]{11}$/';
+    public $validate_names = '/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]{2,}$/';
+    public $validate_text = '/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,15}$/';
+    public $validate_email = '/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/';
+    public $validate_cedula = '/^[0-9]{1,10}$/';
+    public $validate_text_long = '/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-]{2,100}$/';
+    public $validate_text_very_long = '/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-]{2,255}$/';
+    public $validate_description = '/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-()]{2,}$/';
+    public $validate_decimal = '/^\d+(\.\d{1,2})?$/';
+    public $validate_boolean = [true, false, 1, 0, '1', '0'];
+    public $validate_talla = '/^[A-Za-z0-9]{1,5}$/';
+    public $validate_color = '/^[A-Za-zñÑáéíóúÁÉÍÓÚ\s]{2,50}$/';
+    public $validate_referencia = '/^[A-Za-z0-9\-_]{5,100}$/';
+    public $validate_nombre_archivo = '/^[A-Za-z0-9\-_\.]{1,100}$/';
+    public $validate_fecha = '/^\d{4}-\d{2}-\d{2}$/';
+    public $validate_datetime = '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/';
+    public $validate_stock = '/^[0-9]{1,11}$/';
+    public $validate_cantidad = '/^[0-9]{1,11}$/';
+    public $validate_precio = '/^\d+(\.\d{1,2})?$/';
+    public $validate_cotizacion = '/^\d+(\.\d{1,2})?$/';
+    public $validate_estado = ['pendiente', 'aprobado', 'rechazado', 'en_proceso', 'completado', 'cancelado'];
+    public $validate_tipo_venta = ['detalle', 'mayor', 'mixta'];
 
-    public static function validate_number($data)
+    public function validator($data, $rule)
     {
-        return (preg_match('/^[0-9]{1,}$/', $data)) ? true : false;
-    }
+        if (is_array($rule)) {
+            // Si la regla es un array, verificamos si el dato está dentro de las opciones
+            return in_array($data, $rule, true); // true para validación estricta de tipos
+        }
 
-    public static function validate_telefono($data)
-    {
-        return (preg_match('/^[0-9]{11}$/', $data)) ? true : false;
-    }
-
-    public static function validate_names($data)
-    {
-        return (preg_match('/^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]{2,}$/', $data)) ? true : false;
-    }
-
-    public static function validate_text($data)
-    {
-        return (preg_match('/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,15}$/', $data)) ? true : false;
-    }
-
-    public static function validate_email($data)
-    {
-        return (preg_match('/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/', $data)) ? true : false;
-    }
-
-    public static function validate_cedula($data)
-    {
-        return (preg_match('/^[0-9]{1,10}$/', $data)) ? true : false;
-    }
-
-    public static function validate_text_long($data)
-    {
-        return (preg_match('/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-]{2,100}$/', $data)) ? true : false;
-    }
-
-    public static function validate_text_very_long($data)
-    {
-        return (preg_match('/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-]{2,255}$/', $data)) ? true : false;
-    }
-
-    public static function validate_description($data)
-    {
-        return (preg_match('/^[0-9A-Za-zÁÉÍÓÚáéíóúÑñ\s.,!?\-()]{2,}$/', $data)) ? true : false;
-    }
-
-    public static function validate_decimal($data)
-    {
-        return (preg_match('/^\d+(\.\d{1,2})?$/', $data)) ? true : false;
-    }
-
-    public static function validate_boolean($data)
-    {
-        return in_array($data, [true, false, 1, 0, '1', '0'], true);
-    }
-
-    public static function validate_talla($data)
-    {
-        return (preg_match('/^[A-Za-z0-9]{1,5}$/', $data)) ? true : false;
-    }
-
-    public static function validate_color($data)
-    {
-        return (preg_match('/^[A-Za-zñÑáéíóúÁÉÍÓÚ\s]{2,50}$/', $data)) ? true : false;
-    }
-
-    public static function validate_estado($data)
-    {
-        $estados_validos = ['pendiente', 'aprobado', 'rechazado', 'en_proceso', 'completado', 'cancelado'];
-        return in_array(strtolower($data), $estados_validos);
-    }
-
-    public static function validate_tipo_venta($data)
-    {
-        $tipos_validos = ['detalle', 'mayor', 'mixta'];
-        return in_array(strtolower($data), $tipos_validos);
-    }
-
-    public static function validate_referencia($data)
-    {
-        return (preg_match('/^[A-Za-z0-9\-_]{5,100}$/', $data)) ? true : false;
-    }
-
-    public static function validate_nombre_archivo($data)
-    {
-        return (preg_match('/^[A-Za-z0-9\-_\.]{1,100}$/', $data)) ? true : false;
-    }
-
-    public static function validate_fecha($data)
-    {
-        return (preg_match('/^\d{4}-\d{2}-\d{2}$/', $data)) ? true : false;
-    }
-
-    public static function validate_datetime($data)
-    {
-        return (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $data)) ? true : false;
-    }
-
-    public static function validate_stock($data)
-    {
-        return (preg_match('/^[0-9]{1,11}$/', $data) && $data >= 0) ? true : false;
-    }
-
-    public static function validate_cantidad($data)
-    {
-        return (preg_match('/^[0-9]{1,11}$/', $data) && $data > 0) ? true : false;
-    }
-
-    public static function validate_precio($data)
-    {
-        return (preg_match('/^\d+(\.\d{1,2})?$/', $data) && $data > 0) ? true : false;
-    }
-
-    public static function validate_cotizacion($data)
-    {
-        return (preg_match('/^\d+(\.\d{1,2})?$/', $data) && $data > 0) ? true : false;
+        if (is_string($rule)) {
+            // Si es un string, asumimos que es una expresión regular
+            return preg_match($rule, $data) === 1;
+        }
+        return false;
     }
 }
