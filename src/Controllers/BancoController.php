@@ -94,6 +94,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . '/views/' . $module_config['view_path'];
+include __ROOT__ . '/views/banco/' . $module_config['view_path'];
 
 die();

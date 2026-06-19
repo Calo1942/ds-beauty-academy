@@ -13,9 +13,9 @@ $payments = $model->getUpcomingPayments();
 $certifications = $model->getLatestCertifications();
 
 // Incluir vista
-$viewPath = __DIR__ . '/../views/dashboard.php';
+$viewPath = __DIR__ . '/../views/dashboard/dashboard.php';
 if (defined('__ROOT__')) {
-    $viewPath = __ROOT__ . '/views/dashboard.php';
+    $viewPath = __ROOT__ . '/views/dashboard/dashboard.php';
 }
 
 if (file_exists($viewPath)) {
