@@ -1,5 +1,5 @@
 -- ==========================================
--- DS Beauty Academy - Modelo Fisico - Version 3.0 - 15/06/2026
+-- DS Beauty Academy - Modelo Fisico - Version 4.0 - 23/06/2026
 -- ==========================================
 
 DROP DATABASE IF EXISTS ds_beauty_academy_db;
@@ -9,6 +9,26 @@ USE ds_beauty_academy_db;
 -- ==========================================
 -- TABLAS
 -- ==========================================
+
+CREATE TABLE roles (
+    id_rol INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nombre_rol VARCHAR(100) NOT NULL UNIQUE,
+    descripcion_rol TEXT,
+    estatus_rol BOOLEAN DEFAULT TRUE,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE usuarios (
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    email_usuario VARCHAR(150) NOT NULL UNIQUE,
+    password_usuario VARCHAR(255) NOT NULL,
+    id_rol INT NOT NULL,
+    estatus_usuario BOOLEAN DEFAULT TRUE,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_rol) REFERENCES roles(id_rol) ON DELETE RESTRICT ON UPDATE CASCADE
+);
 
 CREATE TABLE instructores (
     id_instructor INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -21,7 +41,7 @@ CREATE TABLE instructores (
     telefono_principal_instructor VARCHAR(50) NOT NULL,
     telefono_alternativo_instructor VARCHAR(50),
     usuario_instagram_instructor VARCHAR(100),
-    estatus_instructor ENUM('activo','inactivo') DEFAULT 'activo',
+    estatus_instructor BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -44,13 +64,14 @@ CREATE TABLE especialidad_instructor (
     FOREIGN KEY (id_especialidad) REFERENCES especialidades(id_especialidad) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
-CREATE TABLE certificado_instructor (
-    id_certificado_instructor INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    titulo_certificado_instructor VARCHAR(255) NOT NULL,
-    descripcion_certificado_instructor TEXT,
-    categoria_certificado_instructor VARCHAR(100) NOT NULL,
-    url_pdf_certificado_instructor VARCHAR(512),
+CREATE TABLE diplomas (
+    id_diploma INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    titulo_diploma VARCHAR(255) NOT NULL,
+    descripcion_diploma TEXT,
+    categoria_diploma VARCHAR(100) NOT NULL,
+    url_pdf_diploma VARCHAR(512),
     id_instructor INT NOT NULL,
+    estatus_diploma BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_instructor) REFERENCES instructores(id_instructor) ON DELETE CASCADE ON UPDATE CASCADE
@@ -67,7 +88,7 @@ CREATE TABLE estudiantes (
     telefono_principal_estudiante VARCHAR(50) NOT NULL,
     telefono_alternativo_estudiante VARCHAR(50),
     usuario_instagram_estudiante VARCHAR(100),
-    estatus_estudiante ENUM('activo','inactivo') DEFAULT 'activo',
+    estatus_estudiante BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -120,16 +141,18 @@ CREATE TABLE clases (
 CREATE TABLE etiquetas (
     id_etiqueta INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nombre_etiqueta VARCHAR(100) NOT NULL,
+    estatus_etiqueta BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recursos (
     id_recurso INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    titulo_recurso VARCHAR(150) NOT NULL,
+    nombre_recurso VARCHAR(150) NOT NULL,
     descripcion_recurso TEXT,
     url_archivo_recurso VARCHAR(512) NOT NULL,
     id_etiqueta INT NOT NULL,
+    estatus_recurso BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_etiqueta) REFERENCES etiquetas(id_etiqueta) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -153,7 +176,7 @@ CREATE TABLE matriculas (
     fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
     precio_acordado DECIMAL(10,2) NOT NULL,
     estatus_pago ENUM('Deudora','Solvente') DEFAULT 'Deudora',
-    estatus_cupo ENUM('Reservado','Confirmado','Cancelado') DEFAULT 'Reservado', 
+    estatus_cupo ENUM('Reservado','Confirmado','Cancelado') DEFAULT 'Reservado',
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY unique_estudiante_curso (id_estudiante, id_curso),
