@@ -1,7 +1,7 @@
 <div id="modalCrear" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 class="modal-title">Registro de Nuevo Banco</h2>
+            <h2 class="modal-title">Registrar Banco</h2>
             <span class="close-modal" onclick="cerrarModal('modalCrear')">&times;</span>
         </div>
         <form id="formCrearBanco">

@@ -20,7 +20,7 @@
             <h1 class="page-title">Gestión de Especialidades</h1>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="abrirModal('modalCrear')">
-                    <i class="fas fa-plus"></i> Nueva Especialidad
+                    <i class="fas fa-plus"></i> Registrar Especialidad
                 </button>
             </div>
         </div>

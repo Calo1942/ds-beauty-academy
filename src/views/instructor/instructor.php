@@ -20,7 +20,7 @@
             <h1 class="page-title">Gestión de Instructores</h1>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="abrirModal('modalCrear')">
-                    <i class="fas fa-plus"></i> Nuevo Instructor
+                    <i class="fas fa-plus"></i> Registrar Instructor
                 </button>
             </div>
         </div>

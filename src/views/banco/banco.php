@@ -20,7 +20,7 @@
             <h1 class="page-title">Gestión de Bancos</h1>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="abrirModal('modalCrear')">
-                    <i class="fas fa-plus"></i> Nuevo Banco
+                    <i class="fas fa-plus"></i> Registrar Banco
                 </button>
             </div>
         </div>

@@ -1,7 +1,7 @@
 <div id="modalCrear" class="modal">
     <div class="modal-content" style="max-width: 600px;">
         <div class="modal-header">
-            <h2 class="modal-title">Registro de Nuevo Diploma</h2>
+            <h2 class="modal-title">Registrar Diploma</h2>
             <span class="close-modal" onclick="cerrarModal('modalCrear')">&times;</span>
         </div>
         <form id="formCrearDiploma">

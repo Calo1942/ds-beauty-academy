@@ -20,7 +20,7 @@
             <h1 class="page-title">Gestión de Diplomas</h1>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="abrirModalCrear()">
-                    <i class="fas fa-plus"></i> Nuevo Diploma
+                    <i class="fas fa-plus"></i> Registrar Diploma
                 </button>
             </div>
         </div>
