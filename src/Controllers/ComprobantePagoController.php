@@ -15,7 +15,7 @@ $module_config = [
         'url_comprobante_pago',
         'estatus_comprobante'
     ],
-    'view_path' => 'comprobante_pagos.php'
+    'view_path' => 'pago/comprobante_pago.php'
 ];
 
 $model = new ComprobantePagoModel();

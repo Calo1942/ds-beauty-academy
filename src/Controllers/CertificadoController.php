@@ -13,7 +13,7 @@ $module_config = [
         'fecha_emision',
         'estatus_certificado'
     ],
-    'view_path' => 'certificados.php'
+    'view_path' => 'certificado/certificado.php'
 ];
 
 $model = new CertificadoModel();
