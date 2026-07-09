@@ -12,158 +12,211 @@ class BancoModel extends DBConnect implements Crud
 {
     use ApiResponse, Validations;
 
-    private $table = 'banco';
-    private $idField = 'id_banco';
-    private $statusField = 'estatus_banco';
+    private $id_banco;
     private $nombre_banco;
     private $estatus_banco;
-    // Aplicar booleano modular
-    private $module_name = [
-        'singular' => 'Banco',
-        'plural' => 'Bancos'
-    ];
 
-    // --- Setters de Encapsulamiento ---
-    public function setNombreBanco($nombre)
+    // Metodo para validar datos
+    private function validarDatos($data, $isUpdate = false)
     {
-        if (self::validator($nombre, $this->validate_names) !== true) {
+        $id = $data['id_banco'] ?? null;
+        $nombre_banco = $data['nombre_banco'] ?? null;
+        $status = $data['estatus_banco'] ?? 1;
+
+        if ($isUpdate || $id !== null) {
+            if ($this->validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del banco es inválido.");
+            }
+            $this->id_banco = $id;
+        }
+
+        if (self::validator($nombre_banco, $this->validate_names) !== true) {
             throw new Exception("El nombre del banco es inválido.");
         }
-        $this->nombre_banco = $nombre;
-    }
 
-    public function setEstatusBanco($estatus)
-    {
-        if (self::validator($estatus, $this->validate_boolean) !== true) {
+        // Estatus validation can be tricky with strict types in $_POST, so we ensure it's validated
+        if (!in_array($status, $this->validate_boolean, false)) {
             throw new Exception("El estatus del banco es inválido.");
         }
-        $this->estatus_banco = $estatus;
+
+        // Encapsulamiento si todo está correcto
+        $this->nombre_banco = $nombre_banco;
+        $this->estatus_banco = $status;
+        return true;
     }
 
-    // --- Método Validador Dinámico ---
-    private function validarYSetearDatos($data)
-    {
-        $validatedData = [];
-        foreach ($data as $key => $value) {
-            // Convierte 'nombre_banco' en 'setNombreBanco'
-            $methodName = 'set' . str_replace('_', '', ucwords($key, '_'));
-
-            // Si el setter existe, lo usamos para validar y asignar
-            if (method_exists($this, $methodName)) {
-                $this->$methodName($value);
-                $validatedData[$key] = $this->$key;
-            }
-        }
-        return $validatedData;
-    }
-
-    private function validarId($id)
-    {
-        if (self::validator($id, $this->validate_id) !== true) {
-            throw new Exception("ID inválido");
-        }
-    }
-
+    // Metodo setter para guardar datos
     public function guardar($data)
     {
         try {
-            $validatedData = $this->validarYSetearDatos($data);
-
-            if (empty($validatedData)) {
-                throw new Exception('No hay datos válidos para guardar');
-            }
-
-            $columns = array_keys($validatedData);
-            $placeholders = array_fill(0, count($validatedData), '?');
-            $values = array_values($validatedData);
-
-            $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
-                    VALUES (" . implode(', ', $placeholders) . ")";
-
-            $stmt = $this->con->prepare($sql);
-
-            if ($stmt->execute($values)) {
-                return self::success(201, "{$this->module_name['singular']} creado exitosamente");
-            }
-            throw new Exception('Error al guardar');
-
+            $this->validarDatos($data);
+            $this->guardarDatos();
+            return $this->success(201, "Dato agregado correctamente.");
         } catch (Exception $e) {
-            return self::error(500, 'Error al almacenar', $e->getMessage());
+            return $this->error(400, $e->getMessage());
         }
     }
 
+    // Metodo para verificar si el dato existe
+    public function verificarDatosExistentes($nombre, $id_excluir = null)
+    {
+        try {
+            // Verificamos si existe un banco con ese nombre.
+            // Si pasamos un $id_excluir (ej. al actualizar), excluimos ese ID de la búsqueda.
+            $sql = "SELECT id_banco, estatus_banco FROM banco WHERE nombre_banco = :nombre";
+            if ($id_excluir) {
+                $sql .= " AND id_banco != :id_excluir";
+            }
+
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':nombre', trim($nombre));
+            if ($id_excluir) {
+                $stmt->bindValue(':id_excluir', $id_excluir);
+            }
+            $stmt->execute();
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            return ($result) ? $result : false;
+        } catch (\PDOException $e) {
+            // Si falla la consulta, es mejor lanzar la excepción para no insertar a ciegas
+            throw new Exception("Error al verificar existencia: " . $e->getMessage());
+        }
+    }
+
+    private function guardarDatos()
+    {
+        try {
+            // Se verifica si el banco ya existe (activo o inactivo)
+            $bancoExistente = $this->verificarDatosExistentes($this->nombre_banco);
+
+            if ($bancoExistente) {
+                if ($bancoExistente['estatus_banco'] == 1) {
+                    throw new Exception("Ya existe un banco registrado con ese nombre.");
+                } else {
+                    // Se Reahabilita el banco y se actualiza el nombre (por si se modificaron las mayúsculas o minúsculas)
+                    $sqlUpdate = "UPDATE banco SET nombre_banco = :nombre, estatus_banco = 1 WHERE id_banco = :id";
+                    $stmtUpdate = $this->con->prepare($sqlUpdate);
+                    $stmtUpdate->bindValue(':nombre', trim($this->nombre_banco));
+                    $stmtUpdate->bindValue(':id', $bancoExistente['id_banco']);
+                    $stmtUpdate->execute();
+                    return;
+                }
+            }
+
+            // Si el dato no existe en absoluto, se procede a insertar el nuevo registro
+            $sqlInsert = "INSERT INTO banco (nombre_banco, estatus_banco) VALUES (:nombre, :estatus)";
+            $stmtInsert = $this->con->prepare($sqlInsert);
+            $stmtInsert->bindValue(':nombre', $this->nombre_banco);
+            $stmtInsert->bindValue(':estatus', $this->estatus_banco);
+            $stmtInsert->execute();
+
+        } catch (\PDOException $e) {
+            throw new Exception("Error en la base de datos: " . $e->getMessage());
+        }
+    }
+
+    // Metodo para buscar todos los datos activos
     public function buscarTodos()
     {
         try {
-            $stmt = $this->con->query("SELECT * FROM {$this->table} WHERE {$this->statusField} = 1");
-            $result = $stmt->fetchAll();
-            return self::success(200, "{$this->module_name['plural']} obtenidos", $result);
-        } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            $sql = "SELECT id_banco, nombre_banco, estatus_banco FROM banco WHERE estatus_banco = 1";
+            $stmt = $this->con->prepare($sql);
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $this->success(200, "Consulta exitosa", $result);
+        } catch (\PDOException $e) {
+            return $this->error(400, "Error de base de datos", $e->getMessage());
         }
     }
 
+    // Metodo para buscar un dato por id
     public function buscar($id)
     {
         try {
-            $this->validarId($id);
-            $stmt = $this->con->prepare("SELECT * FROM {$this->table} WHERE {$this->idField} = ?");
-            $stmt->execute([$id]);
-            $result = $stmt->fetch();
-            return self::success(200, "{$this->module_name['singular']} obtenido", $result);
+            // Validación del ID
+            if (self::validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del banco es inválido.");
+            }
+
+            // Preparación de consulta SQL
+            $sql = "SELECT id_banco, nombre_banco, estatus_banco FROM banco WHERE id_banco = :id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if ($result) {
+                return $this->success(200, "Consulta exitosa", $result);
+            }
+            return $this->error(404, "Banco no encontrado");
+
+        } catch (\PDOException $e) {
+            return $this->error(400, "Error de base de datos", $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            return $this->error(400, $e->getMessage());
         }
     }
 
+    // Metodo setter para actualizar un dato
     public function actualizar($id, $data)
     {
         try {
-            $this->validarId($id);
-
-            $validatedData = $this->validarYSetearDatos($data);
-
-            if (empty($validatedData)) {
-                throw new Exception('No hay datos válidos para actualizar');
-            }
-
-            $updates = [];
-            $values = [];
-
-            foreach ($validatedData as $field => $value) {
-                $updates[] = "$field = ?";
-                $values[] = $value;
-            }
-
-            $values[] = $id;
-
-            $sql = "UPDATE {$this->table} SET " . implode(', ', $updates) . " 
-                    WHERE {$this->idField} = ?";
-
-            $stmt = $this->con->prepare($sql);
-            if ($stmt->execute($values)) {
-                return self::success(200, "{$this->module_name['singular']} actualizado");
-            }
-            throw new Exception('Error al actualizar');
-
+            $data['id_banco'] = $id;
+            $this->validarDatos($data, true);
+            $this->actualizarDatos();
+            return $this->success(200, "Dato modificado correctamente");
         } catch (Exception $e) {
-            return self::error(500, 'Error al actualizar', $e->getMessage());
+            return $this->error(400, $e->getMessage());
         }
     }
 
+    // Metodo para actualizar un dato
+    private function actualizarDatos()
+    {
+        try {
+            // Validamos que el nuevo nombre no le pertenezca ya a otro banco
+            $bancoExistente = $this->verificarDatosExistentes($this->nombre_banco, $this->id_banco);
+            if ($bancoExistente) {
+                throw new Exception("Ya existe otro banco registrado con ese nombre.");
+            }
+
+            $sql = "UPDATE banco SET nombre_banco = :nombre, estatus_banco = :estatus WHERE id_banco = :id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':nombre', trim($this->nombre_banco));
+            $stmt->bindValue(':estatus', $this->estatus_banco);
+            $stmt->bindValue(':id', $this->id_banco);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new Exception("Error al actualizar: " . $e->getMessage());
+        }
+    }
+
+    // Metodo setter para eliminar un dato
     public function eliminar($id)
     {
         try {
-            $this->validarId($id);
-
-            $sql = "UPDATE {$this->table} SET {$this->statusField} = 0 WHERE {$this->idField} = ?";
-            $stmt = $this->con->prepare($sql);
-            if ($stmt->execute([$id])) {
-                return self::success(200, "{$this->module_name['singular']} eliminado");
+            if (self::validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del banco es inválido.");
             }
-            throw new Exception('Error al eliminar');
+            $this->id_banco = $id;
+            $this->eliminarDatos();
+            return $this->success(200, "Dato eliminado correctamente");
         } catch (Exception $e) {
-            return self::error(500, 'Error al eliminar', $e->getMessage());
+            return $this->error(400, $e->getMessage());
+        }
+    }
+
+    // Metodo para eliminar un dato
+    private function eliminarDatos()
+    {
+        try {
+            // Eliminación Lógica
+            $sql = "UPDATE banco SET estatus_banco = 0 WHERE id_banco = :id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':id', $this->id_banco);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new Exception("Error al eliminar: " . $e->getMessage());
         }
     }
 }

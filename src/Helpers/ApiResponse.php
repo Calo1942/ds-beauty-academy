@@ -12,7 +12,6 @@ trait ApiResponse
             'message' => $message,
             'data' => $data
         ];
-        exit;
     }
     public static function error($code = 400, $message, $error = null)
     {
@@ -22,6 +21,5 @@ trait ApiResponse
             'message' => $message,
             'error' => $error
         ];
-        exit;
     }
 }

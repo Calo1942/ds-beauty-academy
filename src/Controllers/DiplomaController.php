@@ -2,21 +2,22 @@
 
 namespace DsBeautyAcademy\Controllers;
 
-use DsBeautyAcademy\Models\CertificadoInstructorModel;
+use DsBeautyAcademy\Models\DiplomaModel;
 
 $module_config = [
-    'primary_key' => 'id_certificado_instructor',
+    'primary_key' => 'id_diploma',
     'fields' => [
-        'titulo_certificado_instructor',
-        'descripcion_certificado_instructor',
-        'categoria_certificado_instructor',
-        'url_pdf_certificado_instructor',
-        'id_instructor'
+        'titulo_diploma',
+        'descripcion_diploma',
+        'categoria_diploma',
+        'url_pdf_diploma',
+        'id_instructor',
+        'estatus_diploma',
     ],
     'view_path' => 'diploma.php'
 ];
 
-$model = new CertificadoInstructorModel();
+$model = new DiplomaModel();
 $action = null;
 
 if (isset($_POST['guardar'])) {

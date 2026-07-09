@@ -27,7 +27,7 @@ trait Validations
     public $validate_precio = '/^\d+(\.\d{1,2})?$/';
     public $validate_cotizacion = '/^\d+(\.\d{1,2})?$/';
     public $validate_estado = ['pendiente', 'aprobado', 'rechazado', 'en_proceso', 'completado', 'cancelado'];
-    public $validate_tipo_venta = ['detalle', 'mayor', 'mixta'];
+    public $validate_usuario_instagram = '/^@?[A-Za-z0-9_.-]{2,50}$/';
 
     public function validator($data, $rule)
     {

@@ -12,10 +12,7 @@ class InstructorModel extends DBConnect implements Crud
 {
     use ApiResponse, Validations;
 
-    private $table = 'instructores';
-    private $idField = 'id_instructor';
-    private $statusField = 'estatus_instructor';
-
+    private $id_instructor;
     private $primer_nombre_instructor;
     private $segundo_nombre_instructor;
     private $primer_apellido_instructor;
@@ -27,232 +24,274 @@ class InstructorModel extends DBConnect implements Crud
     private $usuario_instagram_instructor;
     private $estatus_instructor;
 
-    private $module_name = [
-        'singular' => 'Instructor',
-        'plural' => 'Instructores'
-    ];
-
-    public $validate_estatus_activo_inactivo = ['activo', 'inactivo'];
-    public $validate_usuario_instagram = '/^@?[A-Za-z0-9_.-]{2,50}$/';
-
-    // --- Setters de Encapsulamiento ---
-    public function setPrimerNombreInstructor($valor)
+    // Metodo para validar datos
+    private function validarDatos($data, $isUpdate = false)
     {
-        if (self::validator($valor, $this->validate_names) !== true) {
+        $id = $data['id_instructor'] ?? null;
+        $primer_nombre = $data['primer_nombre_instructor'] ?? null;
+        $segundo_nombre = $data['segundo_nombre_instructor'] ?? null;
+        $primer_apellido = $data['primer_apellido_instructor'] ?? null;
+        $segundo_apellido = $data['segundo_apellido_instructor'] ?? null;
+        $cedula = $data['cedula_instructor'] ?? null;
+        $correo = $data['correo_instructor'] ?? null;
+        $telefono_principal = $data['telefono_principal_instructor'] ?? null;
+        $telefono_alternativo = $data['telefono_alternativo_instructor'] ?? null;
+        $usuario_instagram = $data['usuario_instagram_instructor'] ?? null;
+        $estatus = $data['estatus_instructor'] ?? 1;
+
+        if ($isUpdate || $id !== null) {
+            if ($this->validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del instructor es inválido.");
+            }
+            $this->id_instructor = $id;
+        }
+
+        if (self::validator($primer_nombre, $this->validate_names) !== true) {
             throw new Exception("El primer nombre es inválido.");
         }
-        $this->primer_nombre_instructor = $valor;
-    }
 
-    public function setSegundoNombreInstructor($valor)
-    {
-        if (!empty($valor)) {
-            if (self::validator($valor, $this->validate_names) !== true) {
-                throw new Exception("El segundo nombre es inválido.");
-            }
-            $this->segundo_nombre_instructor = $valor;
-        } else {
-            $this->segundo_nombre_instructor = null;
+        if (!empty($segundo_nombre) && self::validator($segundo_nombre, $this->validate_names) !== true) {
+            throw new Exception("El segundo nombre es inválido.");
         }
-    }
 
-    public function setPrimerApellidoInstructor($valor)
-    {
-        if (self::validator($valor, $this->validate_names) !== true) {
+        if (self::validator($primer_apellido, $this->validate_names) !== true) {
             throw new Exception("El primer apellido es inválido.");
         }
-        $this->primer_apellido_instructor = $valor;
-    }
 
-    public function setSegundoApellidoInstructor($valor)
-    {
-        if (!empty($valor)) {
-            if (self::validator($valor, $this->validate_names) !== true) {
-                throw new Exception("El segundo apellido es inválido.");
-            }
-            $this->segundo_apellido_instructor = $valor;
-        } else {
-            $this->segundo_apellido_instructor = null;
+        if (!empty($segundo_apellido) && self::validator($segundo_apellido, $this->validate_names) !== true) {
+            throw new Exception("El segundo apellido es inválido.");
         }
-    }
 
-    public function setCedulaInstructor($valor)
-    {
-        if (self::validator($valor, $this->validate_cedula) !== true) {
+        if (self::validator($cedula, $this->validate_cedula) !== true) {
             throw new Exception("La cédula es inválida.");
         }
-        $this->cedula_instructor = $valor;
-    }
 
-    public function setCorreoInstructor($valor)
-    {
-        if (self::validator($valor, $this->validate_email) !== true) {
+        if (self::validator($correo, $this->validate_email) !== true) {
             throw new Exception("El correo es inválido.");
         }
-        $this->correo_instructor = $valor;
-    }
 
-    public function setTelefonoPrincipalInstructor($valor)
-    {
-        if (self::validator($valor, $this->validate_telefono) !== true) {
+        if (self::validator($telefono_principal, $this->validate_telefono) !== true) {
             throw new Exception("El teléfono principal es inválido.");
         }
-        $this->telefono_principal_instructor = $valor;
-    }
 
-    public function setTelefonoAlternativoInstructor($valor)
-    {
-        if (!empty($valor)) {
-            if (self::validator($valor, $this->validate_telefono) !== true) {
-                throw new Exception("El teléfono alternativo es inválido.");
-            }
-            $this->telefono_alternativo_instructor = $valor;
-        } else {
-            $this->telefono_alternativo_instructor = null;
+        if (!empty($telefono_alternativo) && self::validator($telefono_alternativo, $this->validate_telefono) !== true) {
+            throw new Exception("El teléfono alternativo es inválido.");
         }
-    }
 
-    public function setUsuarioInstagramInstructor($valor)
-    {
-        if (!empty($valor)) {
-            if (self::validator($valor, $this->validate_usuario_instagram) !== true) {
-                throw new Exception("El usuario de Instagram es inválido.");
-            }
-            $this->usuario_instagram_instructor = $valor;
-        } else {
-            $this->usuario_instagram_instructor = null;
+        if (!empty($usuario_instagram) && self::validator($usuario_instagram, $this->validate_usuario_instagram) !== true) {
+            throw new Exception("El usuario de Instagram es inválido.");
         }
-    }
 
-    public function setEstatusInstructor($valor)
-    {
-        if (self::validator($valor, $this->validate_estatus_activo_inactivo) !== true) {
-            throw new Exception("El estatus es inválido.");
+        if (!in_array($estatus, $this->validate_boolean, false)) {
+            throw new Exception("El estatus del instructor es inválido.");
         }
-        $this->estatus_instructor = $valor;
+
+        // Encapsulamiento
+        $this->primer_nombre_instructor = $primer_nombre;
+        $this->segundo_nombre_instructor = empty($segundo_nombre) ? null : $segundo_nombre;
+        $this->primer_apellido_instructor = $primer_apellido;
+        $this->segundo_apellido_instructor = empty($segundo_apellido) ? null : $segundo_apellido;
+        $this->cedula_instructor = $cedula;
+        $this->correo_instructor = $correo;
+        $this->telefono_principal_instructor = $telefono_principal;
+        $this->telefono_alternativo_instructor = empty($telefono_alternativo) ? null : $telefono_alternativo;
+        $this->usuario_instagram_instructor = empty($usuario_instagram) ? null : $usuario_instagram;
+        $this->estatus_instructor = $estatus;
+
+        return true;
     }
 
-    // --- Método Validador Dinámico ---
-    private function validarYSetearDatos($data)
-    {
-        $validatedData = [];
-        foreach ($data as $key => $value) {
-            $methodName = 'set' . str_replace('_', '', ucwords($key, '_'));
-            if (method_exists($this, $methodName)) {
-                $this->$methodName($value);
-                $validatedData[$key] = $this->$key;
-            }
-        }
-        return $validatedData;
-    }
-
-    private function validarId($id)
-    {
-        if (self::validator($id, $this->validate_id) !== true) {
-            throw new Exception("ID inválido");
-        }
-    }
-
+    // Metodo setter para guardar datos
     public function guardar($data)
     {
         try {
-            $validatedData = $this->validarYSetearDatos($data);
+            $this->validarDatos($data);
+            $this->guardarDatos();
+            return $this->success(201, "Instructor agregado correctamente.");
+        } catch (Exception $e) {
+            return $this->error(400, $e->getMessage());
+        }
+    }
 
-            if (empty($validatedData)) {
-                throw new Exception('No hay datos válidos para guardar');
+    // Metodo para verificar si el dato existe
+    public function verificarDatosExistentes($cedula, $id_excluir = null)
+    {
+        try {
+            $sql = "SELECT id_instructor, estatus_instructor FROM instructores WHERE cedula_instructor = :cedula";
+            if ($id_excluir) {
+                $sql .= " AND id_instructor != :id_excluir";
             }
-
-            $columns = array_keys($validatedData);
-            $placeholders = array_fill(0, count($validatedData), '?');
-            $values = array_values($validatedData);
-
-            $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
-                    VALUES (" . implode(', ', $placeholders) . ")";
 
             $stmt = $this->con->prepare($sql);
-
-            if ($stmt->execute($values)) {
-                return self::success(201, "{$this->module_name['singular']} creado exitosamente");
+            $stmt->bindValue(':cedula', trim($cedula));
+            if ($id_excluir) {
+                $stmt->bindValue(':id_excluir', $id_excluir);
             }
-            throw new Exception('Error al guardar');
+            $stmt->execute();
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        } catch (Exception $e) {
-            return self::error(500, 'Error al almacenar', $e->getMessage());
+            return ($result) ? $result : false;
+        } catch (\PDOException $e) {
+            throw new Exception("Error al verificar existencia: " . $e->getMessage());
+        }
+    }
+
+    private function obtenerParametros()
+    {
+        return [
+            ':p_nombre' => $this->primer_nombre_instructor,
+            ':s_nombre' => $this->segundo_nombre_instructor,
+            ':p_apellido' => $this->primer_apellido_instructor,
+            ':s_apellido' => $this->segundo_apellido_instructor,
+            ':cedula' => $this->cedula_instructor,
+            ':correo' => $this->correo_instructor,
+            ':tel_princ' => $this->telefono_principal_instructor,
+            ':tel_alt' => $this->telefono_alternativo_instructor,
+            ':instagram' => $this->usuario_instagram_instructor,
+            ':estatus' => $this->estatus_instructor
+        ];
+    }
+
+    private function guardarDatos()
+    {
+        try {
+            $instructorExistente = $this->verificarDatosExistentes($this->cedula_instructor);
+
+            if ($instructorExistente) {
+                if ($instructorExistente['estatus_instructor'] == 1) {
+                    throw new Exception("Ya existe un instructor registrado con esa cédula.");
+                } else {
+                    echo ("hoa");
+                }
+            }
+
+            $sqlInsert = "INSERT INTO instructores (
+                primer_nombre_instructor, 
+                segundo_nombre_instructor, 
+                primer_apellido_instructor, 
+                segundo_apellido_instructor, 
+                cedula_instructor, 
+                correo_instructor, 
+                telefono_principal_instructor, 
+                telefono_alternativo_instructor, 
+                usuario_instagram_instructor, 
+                estatus_instructor
+            ) VALUES (
+                :p_nombre, :s_nombre, :p_apellido, :s_apellido, :cedula, 
+                :correo, :tel_princ, :tel_alt, :instagram, :estatus
+            )";
+            $stmtInsert = $this->con->prepare($sqlInsert);
+            $stmtInsert->execute($this->obtenerParametros());
+
+        } catch (\PDOException $e) {
+            throw new Exception("Error en la base de datos: " . $e->getMessage());
         }
     }
 
     public function buscarTodos()
     {
         try {
-            $stmt = $this->con->query("SELECT * FROM {$this->table} WHERE {$this->statusField} = 'activo'");
-            $result = $stmt->fetchAll();
-            return self::success(200, "{$this->module_name['plural']} obtenidos", $result);
-        } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            $sql = "SELECT * FROM instructores WHERE estatus_instructor = 1";
+            $stmt = $this->con->prepare($sql);
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            return $this->success(200, "Consulta exitosa", $result);
+        } catch (\PDOException $e) {
+            return $this->error(400, "Error de base de datos", $e->getMessage());
         }
     }
 
     public function buscar($id)
     {
         try {
-            $this->validarId($id);
-            $stmt = $this->con->prepare("SELECT * FROM {$this->table} WHERE {$this->idField} = ?");
-            $stmt->execute([$id]);
-            $result = $stmt->fetch();
-            return self::success(200, "{$this->module_name['singular']} obtenido", $result);
+            if (self::validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del instructor es inválido.");
+            }
+
+            $sql = "SELECT * FROM instructores WHERE id_instructor = :id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if ($result) {
+                return $this->success(200, "Consulta exitosa", $result);
+            }
+            return $this->error(404, "Instructor no encontrado");
+
+        } catch (\PDOException $e) {
+            return $this->error(400, "Error de base de datos", $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            return $this->error(400, $e->getMessage());
         }
     }
 
     public function actualizar($id, $data)
     {
         try {
-            $this->validarId($id);
+            $data['id_instructor'] = $id;
+            $this->validarDatos($data, true);
+            $this->actualizarDatos();
+            return $this->success(200, "Instructor modificado correctamente");
+        } catch (Exception $e) {
+            return $this->error(400, $e->getMessage());
+        }
+    }
 
-            $validatedData = $this->validarYSetearDatos($data);
-
-            if (empty($validatedData)) {
-                throw new Exception('No hay datos válidos para actualizar');
+    private function actualizarDatos()
+    {
+        try {
+            $instructorExistente = $this->verificarDatosExistentes($this->cedula_instructor, $this->id_instructor);
+            if ($instructorExistente) {
+                throw new Exception("Ya existe otro instructor registrado con esa cédula.");
             }
 
-            $updates = [];
-            $values = [];
-
-            foreach ($validatedData as $field => $value) {
-                $updates[] = "$field = ?";
-                $values[] = $value;
-            }
-
-            $values[] = $id;
-
-            $sql = "UPDATE {$this->table} SET " . implode(', ', $updates) . " 
-                    WHERE {$this->idField} = ?";
+            $sql = "UPDATE instructores SET 
+                primer_nombre_instructor = :p_nombre,
+                segundo_nombre_instructor = :s_nombre,
+                primer_apellido_instructor = :p_apellido,
+                segundo_apellido_instructor = :s_apellido,
+                cedula_instructor = :cedula,
+                correo_instructor = :correo,
+                telefono_principal_instructor = :tel_princ,
+                telefono_alternativo_instructor = :tel_alt,
+                usuario_instagram_instructor = :instagram,
+                estatus_instructor = :estatus
+                WHERE id_instructor = :id";
 
             $stmt = $this->con->prepare($sql);
-            if ($stmt->execute($values)) {
-                return self::success(200, "{$this->module_name['singular']} actualizado");
-            }
-            throw new Exception('Error al actualizar');
 
-        } catch (Exception $e) {
-            return self::error(500, 'Error al actualizar', $e->getMessage());
+            $parametros = $this->obtenerParametros();
+            $parametros[':id'] = $this->id_instructor;
+            $stmt->execute($parametros);
+        } catch (\PDOException $e) {
+            throw new Exception("Error al actualizar: " . $e->getMessage());
         }
     }
 
     public function eliminar($id)
     {
         try {
-            $this->validarId($id);
-
-            $sql = "UPDATE {$this->table} SET {$this->statusField} = 'inactivo' WHERE {$this->idField} = ?";
-            $stmt = $this->con->prepare($sql);
-            if ($stmt->execute([$id])) {
-                return self::success(200, "{$this->module_name['singular']} eliminado");
+            if (self::validator($id, $this->validate_id) !== true) {
+                throw new Exception("El ID del instructor es inválido.");
             }
-            throw new Exception('Error al eliminar');
+            $this->id_instructor = $id;
+            $this->eliminarDatos();
+            return $this->success(200, "Instructor eliminado correctamente");
         } catch (Exception $e) {
-            return self::error(500, 'Error al eliminar', $e->getMessage());
+            return $this->error(400, $e->getMessage());
+        }
+    }
+
+    private function eliminarDatos()
+    {
+        try {
+            $sql = "UPDATE instructores SET estatus_instructor = 0 WHERE id_instructor = :id";
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindValue(':id', $this->id_instructor);
+            $stmt->execute();
+        } catch (\PDOException $e) {
+            throw new Exception("Error al eliminar: " . $e->getMessage());
         }
     }
 }

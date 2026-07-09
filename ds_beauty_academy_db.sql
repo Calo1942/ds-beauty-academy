@@ -37,7 +37,7 @@ CREATE TABLE instructores (
     primer_apellido_instructor VARCHAR(100) NOT NULL,
     segundo_apellido_instructor VARCHAR(100),
     cedula_instructor VARCHAR(50) NOT NULL UNIQUE,
-    correo_instructor VARCHAR(150) NOT NULL,
+    correo_instructor VARCHAR(150) NOT NULL UNIQUE,
     telefono_principal_instructor VARCHAR(50) NOT NULL,
     telefono_alternativo_instructor VARCHAR(50),
     usuario_instagram_instructor VARCHAR(100),
@@ -48,7 +48,7 @@ CREATE TABLE instructores (
 
 CREATE TABLE especialidades (
     id_especialidad INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nombre_especialidad VARCHAR(150) NOT NULL,
+    nombre_especialidad VARCHAR(150) NOT NULL UNIQUE,
     estatus_especialidad BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

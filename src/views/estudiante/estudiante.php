@@ -48,7 +48,7 @@
                 actualizarEstudiante();
             });
 
-            document.getElementById('searchEstudiante').addEventListener('input', function() {
+            document.getElementById('searchEstudiante').addEventListener('input', function () {
                 const filter = this.value.toLowerCase();
                 const rows = document.querySelectorAll('#estudianteTable tbody tr');
                 rows.forEach(row => {
