@@ -10,7 +10,7 @@ $module_config = [
     'fields' => [
         'nombre_especialidad'
     ],
-    'view_path' => 'especialidad.php'
+    'view_path' => 'especialidad/especialidad.php'
 ];
 
 $model = new EspecialidadModel();
@@ -96,6 +96,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . '/views/especialidad/' . $module_config['view_path'];
+include __ROOT__ . '/views/' . $module_config['view_path'];
 
 die();

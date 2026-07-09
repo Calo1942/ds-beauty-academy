@@ -12,7 +12,7 @@ $module_config = [
         'url_archivo_recurso',
         'id_etiqueta'
     ],
-    'view_path' => 'recursos.php'
+    'view_path' => 'recurso/recurso.php'
 ];
 
 $model = new RecursoModel();

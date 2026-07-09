@@ -19,7 +19,7 @@ $module_config = [
         'usuario_instagram_instructor',
         'estatus_instructor'
     ],
-    'view_path' => 'instructor.php'
+    'view_path' => 'instructor/instructor.php'
 ];
 
 $model = new InstructorModel();
@@ -105,6 +105,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . '/views/instructor/' . $module_config['view_path'];
+include __ROOT__ . '/views/' . $module_config['view_path'];
 
 die();

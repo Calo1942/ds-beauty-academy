@@ -14,7 +14,7 @@ $module_config = [
         'estatus_clase',
         'id_instructor_curso'
     ],
-    'view_path' => 'clases.php'
+    'view_path' => 'clase/clase.php'
 ];
 
 $model = new ClaseModel();

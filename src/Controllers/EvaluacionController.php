@@ -14,7 +14,7 @@ $module_config = [
         'tipo_evaluacion',
         'estatus_evaluacion'
     ],
-    'view_path' => 'evaluaciones.php'
+    'view_path' => 'evaluacion/evaluacion.php'
 ];
 
 $model = new EvaluacionModel();
