@@ -19,7 +19,7 @@ $module_config = [
         'limite_cupos',
         'estatus_curso'
     ],
-    'view_path' => 'cursos.php'
+    'view_path' => 'curso/curso.php'
 ];
 
 $model = new CursoModel();

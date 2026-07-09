@@ -19,7 +19,7 @@ $module_config = [
         'usuario_instagram_estudiante',
         'estatus_estudiante'
     ],
-    'view_path' => 'estudiante.php'
+    'view_path' => 'estudiante/estudiante.php'
 ];
 
 $model = new EstudianteModel();
@@ -105,6 +105,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . '/views/estudiante/' . $module_config['view_path'];
+include __ROOT__ . '/views/' . $module_config['view_path'];
 
 die();

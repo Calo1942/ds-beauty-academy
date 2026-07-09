@@ -14,7 +14,7 @@ $module_config = [
         'estatus_pago',
         'estatus_cupo'
     ],
-    'view_path' => 'matriculas.php'
+    'view_path' => 'matricula/matricula.php'
 ];
 
 $model = new MatriculaModel();
