@@ -8,7 +8,7 @@ use DsBeautyAcademy\Models\BancoModel;
 $module_config = [
     'primary_key' => 'id_banco',
     'fields' => ['nombre_banco', 'estatus_banco'],
-    'view_path' => '/views/banco/banco.php'
+    'view_path' => 'banco/banco.php'
 ];
 
 $model = new BancoModel();
@@ -94,6 +94,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . $module_config['view_path'];
+include __ROOT__ . "/views/" . $module_config['view_path'];
 
 die();

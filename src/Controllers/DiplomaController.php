@@ -7,14 +7,14 @@ use DsBeautyAcademy\Models\DiplomaModel;
 $module_config = [
     'primary_key' => 'id_diploma',
     'fields' => [
-        'titulo_diploma',
+        'nombre_diploma',
         'descripcion_diploma',
         'categoria_diploma',
         'url_pdf_diploma',
         'id_instructor',
         'estatus_diploma',
     ],
-    'view_path' => 'diploma.php'
+    'view_path' => 'diploma/diploma.php'
 ];
 
 $model = new DiplomaModel();
@@ -97,6 +97,6 @@ if ($action) {
     }
 }
 
-include __ROOT__ . '/views/diploma/' . $module_config['view_path'];
+include __ROOT__ . '/views/' . $module_config['view_path'];
 
 die();

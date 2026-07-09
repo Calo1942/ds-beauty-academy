@@ -40,7 +40,7 @@ CREATE TABLE instructores (
     correo_instructor VARCHAR(150) NOT NULL UNIQUE,
     telefono_principal_instructor VARCHAR(50) NOT NULL,
     telefono_alternativo_instructor VARCHAR(50),
-    usuario_instagram_instructor VARCHAR(100),
+    usuario_instagram_instructor VARCHAR(100) UNIQUE,
     estatus_instructor BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -66,7 +66,7 @@ CREATE TABLE especialidad_instructor (
 
 CREATE TABLE diplomas (
     id_diploma INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    titulo_diploma VARCHAR(255) NOT NULL,
+    nombre_diploma VARCHAR(255) NOT NULL,
     descripcion_diploma TEXT,
     categoria_diploma VARCHAR(100) NOT NULL,
     url_pdf_diploma VARCHAR(512),
@@ -84,10 +84,10 @@ CREATE TABLE estudiantes (
     primer_apellido_estudiante VARCHAR(100) NOT NULL,
     segundo_apellido_estudiante VARCHAR(100),
     cedula_estudiante VARCHAR(50) NOT NULL UNIQUE,
-    correo_estudiante VARCHAR(150) NOT NULL,
-    telefono_principal_estudiante VARCHAR(50) NOT NULL,
+    correo_estudiante VARCHAR(150) NOT NULL UNIQUE,
+    telefono_principal_estudiante VARCHAR(50) NOT NULL UNIQUE,
     telefono_alternativo_estudiante VARCHAR(50),
-    usuario_instagram_estudiante VARCHAR(100),
+    usuario_instagram_estudiante VARCHAR(100) UNIQUE,
     estatus_estudiante BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -148,7 +148,7 @@ CREATE TABLE etiquetas (
 
 CREATE TABLE recursos (
     id_recurso INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nombre_recurso VARCHAR(150) NOT NULL,
+    nombre_recurso VARCHAR(150) NOT NULL UNIQUE,
     descripcion_recurso TEXT,
     url_archivo_recurso VARCHAR(512) NOT NULL,
     id_etiqueta INT NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE entregas_evaluaciones (
     id_entrega_evaluacion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_matricula INT NOT NULL,
     id_evaluacion INT NOT NULL,
-    url_archivo_entrega VARCHAR(512) NOT NULL,
+    url_archivo_entrega VARCHAR(512) NOT NULL UNIQUE,
     estatus_entrega ENUM('Pendiente','En Revisión','Repetir','Aprobada') DEFAULT 'Pendiente',
     feedback_instructora_entrega TEXT,
     fecha_entrega DATETIME DEFAULT CURRENT_TIMESTAMP,

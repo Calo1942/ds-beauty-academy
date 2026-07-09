@@ -101,18 +101,18 @@
             data.forEach(diploma => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${diploma.id_certificado_instructor}</td>
-                    <td>${diploma.titulo_certificado_instructor}</td>
-                    <td>${diploma.categoria_certificado_instructor}</td>
+                    <td>${diploma.id_diploma}</td>
+                    <td>${diploma.nombre_diploma}</td>
+                    <td>${diploma.categoria_diploma}</td>
                     <td>${diploma.nombre_instructor}</td>
                     <td class="action-btns">
-                        <button class="btn-action btn-view" onclick="verDetalle(${diploma.id_certificado_instructor})" title="Ver Detalle">
+                        <button class="btn-action btn-view" onclick="verDetalle(${diploma.id_diploma})" title="Ver Detalle">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="btn-action btn-edit" onclick="editarDiploma(${diploma.id_certificado_instructor})" title="Editar">
+                        <button class="btn-action btn-edit" onclick="editarDiploma(${diploma.id_diploma})" title="Editar">
                             <i class="fas fa-pen"></i>
                         </button>
-                        <button class="btn-action btn-delete" onclick="eliminarDiploma(${diploma.id_certificado_instructor})" title="Eliminar">
+                        <button class="btn-action btn-delete" onclick="eliminarDiploma(${diploma.id_diploma})" title="Eliminar">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -167,11 +167,11 @@
                 const diploma = result.data;
                 await cargarInstructores('id_instructor_editar');
 
-                document.getElementById('edit_id_certificado_instructor').value = diploma.id_certificado_instructor;
-                document.querySelector('#formEditarDiploma [name="titulo_certificado_instructor"]').value = diploma.titulo_certificado_instructor;
-                document.querySelector('#formEditarDiploma [name="descripcion_certificado_instructor"]').value = diploma.descripcion_certificado_instructor;
-                document.querySelector('#formEditarDiploma [name="categoria_certificado_instructor"]').value = diploma.categoria_certificado_instructor;
-                document.querySelector('#formEditarDiploma [name="url_pdf_certificado_instructor"]').value = diploma.url_pdf_certificado_instructor;
+                document.getElementById('edit_id_diploma').value = diploma.id_diploma;
+                document.querySelector('#formEditarDiploma [name="nombre_diploma"]').value = diploma.nombre_diploma;
+                document.querySelector('#formEditarDiploma [name="descripcion_diploma"]').value = diploma.descripcion_diploma;
+                document.querySelector('#formEditarDiploma [name="categoria_diploma"]').value = diploma.categoria_diploma;
+                document.querySelector('#formEditarDiploma [name="url_pdf_diploma"]').value = diploma.url_pdf_diploma;
                 document.querySelector('#formEditarDiploma [name="id_instructor"]').value = diploma.id_instructor;
 
                 abrirModal('modalEditar');
@@ -215,10 +215,10 @@
             const result = await apiRequest('?url=certificadoinstructor', formData);
             if (result.code === 200) {
                 const diploma = result.data;
-                document.getElementById('detail_id_certificado_instructor').textContent = diploma.id_certificado_instructor;
-                document.getElementById('detail_titulo').textContent = diploma.titulo_certificado_instructor;
-                document.getElementById('detail_descripcion').textContent = diploma.descripcion_certificado_instructor || 'N/A';
-                document.getElementById('detail_categoria').textContent = diploma.categoria_certificado_instructor;
+                document.getElementById('detail_id_diploma').textContent = diploma.id_diploma;
+                document.getElementById('detail_titulo').textContent = diploma.nombre_diploma;
+                document.getElementById('detail_descripcion').textContent = diploma.descripcion_diploma || 'N/A';
+                document.getElementById('detail_categoria').textContent = diploma.categoria_diploma;
                 document.getElementById('detail_instructor').textContent = diploma.nombre_instructor || diploma.id_instructor;
 
                 abrirModal('modalDetalle');

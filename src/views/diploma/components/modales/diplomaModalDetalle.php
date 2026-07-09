@@ -7,7 +7,7 @@
         <div class="modal-body">
             <div class="detail-item">
                 <span class="detail-label">ID:</span>
-                <span id="detail_id_certificado_instructor" class="detail-value"></span>
+                <span id="detail_id_diploma" class="detail-value"></span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Título:</span>
