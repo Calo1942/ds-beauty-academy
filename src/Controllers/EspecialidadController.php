@@ -8,10 +8,9 @@ use DsBeautyAcademy\Models\EspecialidadModel;
 $module_config = [
     'primary_key' => 'id_especialidad',
     'fields' => [
-        'nombre_especialidad',
-        'estatus_especialidad'
+        'nombre_especialidad'
     ],
-    'view_path' => 'especialidades.php'
+    'view_path' => 'especialidad.php'
 ];
 
 $model = new EspecialidadModel();
@@ -97,6 +96,6 @@ if ($action) {
 }
 
 // Incluir vista
-include __ROOT__ . '/views/' . $module_config['view_path'];
+include __ROOT__ . '/views/especialidad/' . $module_config['view_path'];
 
 die();

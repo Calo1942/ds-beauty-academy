@@ -14,7 +14,7 @@ class CertificadoInstructorModel extends DBConnect implements Crud
 
     private $table = 'certificado_instructor';
     private $idField = 'id_certificado_instructor';
-    
+
     private $titulo_certificado_instructor;
     private $descripcion_certificado_instructor;
     private $categoria_certificado_instructor;
@@ -116,7 +116,6 @@ class CertificadoInstructorModel extends DBConnect implements Crud
                 return self::success(201, "{$this->module_name['singular']} creado exitosamente");
             }
             throw new Exception('Error al guardar');
-
         } catch (Exception $e) {
             return self::error(500, 'Error al almacenar', $e->getMessage());
         }
@@ -125,7 +124,10 @@ class CertificadoInstructorModel extends DBConnect implements Crud
     public function buscarTodos()
     {
         try {
-            $stmt = $this->con->query("SELECT * FROM {$this->table}");
+            $sql = "SELECT c.*, CONCAT(i.primer_nombre_instructor, ' ', i.primer_apellido_instructor) as nombre_instructor 
+                    FROM {$this->table} c
+                    JOIN instructores i ON c.id_instructor = i.id_instructor";
+            $stmt = $this->con->query($sql);
             $result = $stmt->fetchAll();
             return self::success(200, "{$this->module_name['plural']} obtenidos", $result);
         } catch (Exception $e) {
@@ -137,7 +139,11 @@ class CertificadoInstructorModel extends DBConnect implements Crud
     {
         try {
             $this->validarId($id);
-            $stmt = $this->con->prepare("SELECT * FROM {$this->table} WHERE {$this->idField} = ?");
+            $sql = "SELECT c.*, CONCAT(i.primer_nombre_instructor, ' ', i.primer_apellido_instructor) as nombre_instructor 
+                    FROM {$this->table} c
+                    JOIN instructores i ON c.id_instructor = i.id_instructor
+                    WHERE c.{$this->idField} = ?";
+            $stmt = $this->con->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch();
             return self::success(200, "{$this->module_name['singular']} obtenido", $result);
@@ -175,7 +181,6 @@ class CertificadoInstructorModel extends DBConnect implements Crud
                 return self::success(200, "{$this->module_name['singular']} actualizado");
             }
             throw new Exception('Error al actualizar');
-
         } catch (Exception $e) {
             return self::error(500, 'Error al actualizar', $e->getMessage());
         }

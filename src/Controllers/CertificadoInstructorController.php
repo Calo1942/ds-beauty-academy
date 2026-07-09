@@ -13,7 +13,7 @@ $module_config = [
         'url_pdf_certificado_instructor',
         'id_instructor'
     ],
-    'view_path' => 'certificado_instructor.php'
+    'view_path' => 'diploma.php'
 ];
 
 $model = new CertificadoInstructorModel();
@@ -96,6 +96,6 @@ if ($action) {
     }
 }
 
-include __ROOT__ . '/views/' . $module_config['view_path'];
+include __ROOT__ . '/views/diploma/' . $module_config['view_path'];
 
 die();
