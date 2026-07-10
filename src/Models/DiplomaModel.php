@@ -13,7 +13,7 @@ class DiplomaModel extends DBConnect implements Crud
     use ApiResponse, Validations;
 
     private $id_diploma;
-    private $titulo_diploma;
+    private $nombre_diploma;
     private $descripcion_diploma;
     private $categoria_diploma;
     private $url_pdf_diploma;
@@ -23,7 +23,7 @@ class DiplomaModel extends DBConnect implements Crud
     private function validarDatos($data, $isUpdate = false)
     {
         $id = $data['id_diploma'] ?? null;
-        $titulo = $data['titulo_diploma'] ?? null;
+        $nombre = $data['nombre_diploma'] ?? null;
         $descripcion = $data['descripcion_diploma'] ?? null;
         $categoria = $data['categoria_diploma'] ?? null;
         $url_pdf = $data['url_pdf_diploma'] ?? null;
@@ -37,8 +37,8 @@ class DiplomaModel extends DBConnect implements Crud
             $this->id_diploma = $id;
         }
 
-        if (self::validator($titulo, $this->validate_text_long) !== true) {
-            throw new Exception("El título del certificado es inválido.");
+        if (self::validator($nombre, $this->validate_text_long) !== true) {
+            throw new Exception("El nombre del certificado es inválido.");
         }
 
         if (!empty($descripcion) && self::validator($descripcion, $this->validate_description) !== true) {
@@ -57,11 +57,13 @@ class DiplomaModel extends DBConnect implements Crud
             throw new Exception("El ID del instructor es inválido.");
         }
 
-        if (!in_array($estatus, $this->validate_boolean, false)) {
+        $estatus = $this->parseBoolean($estatus);
+
+        if (!in_array($estatus, $this->validate_boolean, true)) {
             throw new Exception("El estatus del diploma es inválido.");
         }
 
-        $this->titulo_diploma = $titulo;
+        $this->nombre_diploma = $nombre;
         $this->descripcion_diploma = empty($descripcion) ? null : $descripcion;
         $this->categoria_diploma = $categoria;
         $this->url_pdf_diploma = empty($url_pdf) ? null : $url_pdf;
@@ -74,7 +76,7 @@ class DiplomaModel extends DBConnect implements Crud
     private function obtenerParametros()
     {
         return [
-            ':titulo' => $this->titulo_diploma,
+            ':nombre' => $this->nombre_diploma,
             ':descripcion' => $this->descripcion_diploma,
             ':categoria' => $this->categoria_diploma,
             ':url_pdf' => $this->url_pdf_diploma,
@@ -98,14 +100,14 @@ class DiplomaModel extends DBConnect implements Crud
     {
         try {
             $sqlInsert = "INSERT INTO diplomas (
-                titulo_diploma, 
+                nombre_diploma, 
                 descripcion_diploma, 
                 categoria_diploma, 
                 url_pdf_diploma, 
                 id_instructor, 
                 estatus_diploma
             ) VALUES (
-                :titulo, :descripcion, :categoria, :url_pdf, :id_instructor, :estatus
+                :nombre, :descripcion, :categoria, :url_pdf, :id_instructor, :estatus
             )";
             $stmtInsert = $this->con->prepare($sqlInsert);
             $stmtInsert->execute($this->obtenerParametros());
@@ -173,7 +175,7 @@ class DiplomaModel extends DBConnect implements Crud
     {
         try {
             $sql = "UPDATE diplomas SET 
-                titulo_diploma = :titulo,
+                nombre_diploma = :nombre,
                 descripcion_diploma = :descripcion,
                 categoria_diploma = :categoria,
                 url_pdf_diploma = :url_pdf,
@@ -182,7 +184,7 @@ class DiplomaModel extends DBConnect implements Crud
                 WHERE id_diploma = :id";
 
             $stmt = $this->con->prepare($sql);
-            
+
             $parametros = $this->obtenerParametros();
             $parametros[':id'] = $this->id_diploma;
             $stmt->execute($parametros);

@@ -88,7 +88,7 @@
             const formData = new FormData();
             formData.append('buscarTodos', 'true');
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 200) {
                 renderTable(result.data);
             }
@@ -148,7 +148,7 @@
             const formData = new FormData(form);
             formData.append('guardar', 'true');
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 201) {
                 cerrarModal('modalCrear');
                 buscarTodos();
@@ -162,7 +162,7 @@
             const formData = new FormData();
             formData.append('buscar', id);
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 200) {
                 const diploma = result.data;
                 await cargarInstructores('id_instructor_editar');
@@ -183,7 +183,7 @@
             const formData = new FormData(form);
             formData.append('actualizar', 'true');
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 200) {
                 cerrarModal('modalEditar');
                 buscarTodos();
@@ -199,7 +199,7 @@
             const formData = new FormData();
             formData.append('eliminar', id);
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 200) {
                 buscarTodos();
                 alert(result.message);
@@ -212,7 +212,7 @@
             const formData = new FormData();
             formData.append('buscar', id);
 
-            const result = await apiRequest('?url=certificadoinstructor', formData);
+            const result = await apiRequest('?url=diploma', formData);
             if (result.code === 200) {
                 const diploma = result.data;
                 document.getElementById('detail_id_diploma').textContent = diploma.id_diploma;

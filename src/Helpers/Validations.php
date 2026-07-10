@@ -42,4 +42,21 @@ trait Validations
         }
         return false;
     }
+
+    public function parseBoolean($value, $default = 1)
+    {
+        if ($value === '' || $value === null) {
+            return $default;
+        }
+        if (is_string($value)) {
+            $val = strtolower(trim($value));
+            if (in_array($val, ['inactivo', 'false', '0', 'off', 'no'], true)) {
+                return 0;
+            }
+            if (in_array($val, ['activo', 'true', '1', 'on', 'yes'], true)) {
+                return 1;
+            }
+        }
+        return filter_var($value, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+    }
 }

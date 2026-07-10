@@ -82,7 +82,9 @@ class InstructorModel extends DBConnect implements Crud
             throw new Exception("El usuario de Instagram es inválido.");
         }
 
-        if (!in_array($estatus, $this->validate_boolean, false)) {
+        $estatus = $this->parseBoolean($estatus);
+
+        if (!in_array($estatus, $this->validate_boolean, true)) {
             throw new Exception("El estatus del instructor es inválido.");
         }
 
@@ -161,7 +163,11 @@ class InstructorModel extends DBConnect implements Crud
                 if ($instructorExistente['estatus_instructor'] == 1) {
                     throw new Exception("Ya existe un instructor registrado con esa cédula.");
                 } else {
-                    echo ("hoa");
+                    // Reactivar instructor inactivo y actualizar sus datos
+                    $this->id_instructor = $instructorExistente['id_instructor'];
+                    $this->estatus_instructor = 1;
+                    $this->actualizarDatos();
+                    return;
                 }
             }
 

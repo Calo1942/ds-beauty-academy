@@ -17,11 +17,11 @@ class BancoModel extends DBConnect implements Crud
     private $estatus_banco;
 
     // Metodo para validar datos
-    private function validarDatos($data, $isUpdate = false)
+    public function validarDatos($data, $isUpdate = false)
     {
         $id = $data['id_banco'] ?? null;
         $nombre_banco = $data['nombre_banco'] ?? null;
-        $status = $data['estatus_banco'] ?? 1;
+        $status = $this->parseBoolean($data['estatus_banco'] ?? 1);
 
         if ($isUpdate || $id !== null) {
             if ($this->validator($id, $this->validate_id) !== true) {
