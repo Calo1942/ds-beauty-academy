@@ -49,7 +49,7 @@
                 actualizarEstudiante();
             });
 
-            document.getElementById('searchEstudiante').addEventListener('input', function () {
+            document.getElementById('searchEstudiante').addEventListener('input', function() {
                 const filter = this.value.toLowerCase();
                 const rows = document.querySelectorAll('#estudianteTable tbody tr');
                 rows.forEach(row => {
@@ -208,6 +208,7 @@
                 document.getElementById('detail_cedula').textContent = estudiante.cedula_estudiante;
                 document.getElementById('detail_correo').textContent = estudiante.correo_estudiante;
                 document.getElementById('detail_telefono').textContent = estudiante.telefono_principal_estudiante;
+                document.getElementById('detail_telefono_alternativo').textContent = estudiante.telefono_alternativo_estudiante || 'N/A';
                 document.getElementById('detail_instagram').textContent = estudiante.usuario_instagram_estudiante || 'N/A';
 
                 abrirModal('modalDetalle');

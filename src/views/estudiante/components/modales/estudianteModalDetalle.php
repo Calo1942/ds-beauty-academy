@@ -32,6 +32,10 @@
                     <span id="detail_telefono" class="detail-value"></span>
                 </div>
                 <div class="detail-item">
+                    <span class="detail-label">Teléfono alternativo:</span>
+                    <span id="detail_telefono_alternativo" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
                     <span class="detail-label">Instagram:</span>
                     <span id="detail_instagram" class="detail-value"></span>
                 </div>
