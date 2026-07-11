@@ -1,5 +1,5 @@
 -- ==========================================
--- DS Beauty Academy - Modelo Fisico - Version 4.0 - 23/06/2026
+-- DS Beauty Academy - Modelo Fisico - Version 5.0 - 09/07/2026
 -- ==========================================
 
 DROP DATABASE IF EXISTS ds_beauty_academy_db;
