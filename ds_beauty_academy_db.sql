@@ -1,5 +1,9 @@
 -- ==========================================
+<<<<<<< HEAD
 -- DS Beauty Academy - Modelo Fisico - Version 6.0 - 10/09/2026
+=======
+-- DS Beauty Academy - Modelo Fisico - Version 5.0 - 09/07/2026
+>>>>>>> da97cc238c52587ab0780bce82b6efe6289e3d5c
 -- ==========================================
 
 DROP DATABASE IF EXISTS ds_beauty_academy_db;

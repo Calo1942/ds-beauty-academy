@@ -38,7 +38,7 @@ class DiplomaModel extends DBConnect implements Crud
         }
 
         if (self::validator($nombre, $this->validate_text_long) !== true) {
-            throw new Exception("El nombre del certificado es inválido.");
+            throw new Exception("El nombre del Diploma.");
         }
 
         if (!empty($descripcion) && self::validator($descripcion, $this->validate_description) !== true) {
@@ -90,7 +90,7 @@ class DiplomaModel extends DBConnect implements Crud
         try {
             $this->validarDatos($data);
             $this->guardarDatos();
-            return $this->success(201, "Certificado de Instructor creado exitosamente.");
+            return $this->success(201, "Diploma creado exitosamente.");
         } catch (Exception $e) {
             return $this->error(400, $e->getMessage());
         }
@@ -127,7 +127,7 @@ class DiplomaModel extends DBConnect implements Crud
             $stmt->execute();
 
             $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            return $this->success(200, "Certificados de Instructores obtenidos", $result);
+            return $this->success(200, "Diplomas obtenidos", $result);
         } catch (\PDOException $e) {
             return $this->error(400, "Error de base de datos", $e->getMessage());
         }
@@ -149,9 +149,9 @@ class DiplomaModel extends DBConnect implements Crud
             $stmt->execute();
             $result = $stmt->fetch(\PDO::FETCH_ASSOC);
             if ($result) {
-                return $this->success(200, "Certificado de Instructor obtenido", $result);
+                return $this->success(200, "Diploma obtenido", $result);
             }
-            return $this->error(404, "Certificado no encontrado");
+            return $this->error(404, "Diploma");
         } catch (\PDOException $e) {
             return $this->error(400, "Error de base de datos", $e->getMessage());
         } catch (Exception $e) {
@@ -165,7 +165,7 @@ class DiplomaModel extends DBConnect implements Crud
             $data['id_diploma'] = $id;
             $this->validarDatos($data, true);
             $this->actualizarDatos();
-            return $this->success(200, "Certificado de Instructor actualizado");
+            return $this->success(200, "Diploma actualizado");
         } catch (Exception $e) {
             return $this->error(400, $e->getMessage());
         }
@@ -201,7 +201,7 @@ class DiplomaModel extends DBConnect implements Crud
             }
             $this->id_diploma = $id;
             $this->eliminarDatos();
-            return $this->success(200, "Certificado de Instructor eliminado");
+            return $this->success(200, "Diploma eliminado");
         } catch (Exception $e) {
             return $this->error(400, $e->getMessage());
         }

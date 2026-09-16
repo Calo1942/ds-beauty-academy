@@ -260,7 +260,7 @@ body {
 .detail-name-header {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-main);
     text-transform: capitalize;
 }
 
