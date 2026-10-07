@@ -37,6 +37,7 @@ body {
     position: fixed;
     height: 100vh;
     z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .brand {
@@ -671,6 +672,9 @@ tr:last-child td {
     border-radius: 16px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     animation: modalFadeIn 0.3s ease;
 }
@@ -686,6 +690,7 @@ tr:last-child td {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .modal-title {
@@ -707,6 +712,8 @@ tr:last-child td {
 
 .modal-body {
     padding: 24px;
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
 }
 
 .modal-footer {
@@ -798,4 +805,186 @@ tr:last-child td {
     font-size: 16px;
     color: white;
     font-weight: 500;
+}
+
+/* ==========================================================================
+   SISTEMA DE DISEÑO RESPONSIVE Y MEDIA QUERIES
+   ========================================================================== */
+
+/* Botón Toggle del Sidebar y Overlay */
+.btn-sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 18px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-sidebar-toggle:hover {
+    background-color: rgba(232, 51, 130, 0.15);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(3px);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Contenedor de Tablas con Scroll Suave */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+}
+
+.data-table {
+    width: 100%;
+    min-width: 650px; /* Evita que las columnas colapsen en exceso */
+}
+
+/* --- Breakpoint 1: Tablets y Laptops Pequeñas (<= 992px) --- */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .btn-sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .content {
+        padding: 24px 18px;
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .header-actions .btn {
+        width: 100%;
+    }
+}
+
+/* --- Breakpoint 2: Móviles y Phablets (<= 768px) --- */
+@media (max-width: 768px) {
+    .content {
+        padding: 16px 12px;
+    }
+
+    .topbar {
+        padding: 0 12px;
+        height: 64px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        margin: 10px;
+    }
+
+    .modal-header {
+        padding: 16px 20px;
+    }
+
+    .modal-body {
+        padding: 16px 20px;
+    }
+
+    .modal-footer {
+        padding: 14px 20px;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+
+    /* Tarjetas del Dashboard en 1 Columna */
+    .dashboard-grid, .stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* --- Breakpoint 3: Móviles Pequeños (<= 576px) --- */
+@media (max-width: 576px) {
+    .brand-logo {
+        font-size: 28px;
+    }
+
+    .user-profile .user-role {
+        display: none; /* Ahorra espacio en topbar */
+    }
+
+    .user-name {
+        font-size: 13px;
+    }
+
+    .modal-footer {
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+    }
+
+    .action-btns {
+        gap: 4px;
+    }
+
+    .btn-action {
+        font-size: 14px;
+        padding: 6px;
+    }
 }

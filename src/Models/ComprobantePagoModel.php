@@ -3,6 +3,8 @@
 namespace DsBeautyAcademy\Models;
 
 use Exception;
+use PDO;
+use PDOException;
 use DsBeautyAcademy\config\connect\DBConnect;
 use DsBeautyAcademy\config\interfaces\Crud;
 use DsBeautyAcademy\Helpers\ApiResponse;
@@ -47,12 +49,12 @@ class ComprobantePagoModel extends DBConnect implements Crud
             throw new Exception("El ID del banco es inválido.");
         }
 
-        if (self::validator($referencia_transaccion, $this->validate_text) !== true) {
+        if (self::validator($referencia_transaccion, $this->validate_referencia) !== true) {
             throw new Exception("La referencia de la transacción es inválida.");
         }
 
-        if (self::validator($monto, $this->validate_decimal) !== true) {
-            throw new Exception("El monto es inválido.");
+        if (self::validator($monto, $this->validate_decimal) !== true || (float)$monto <= 0) {
+            throw new Exception("El monto debe ser un número decimal mayor a cero.");
         }
 
         if (!empty($url_img_comprobante) && strlen($url_img_comprobante) > 512) {
@@ -93,10 +95,10 @@ class ComprobantePagoModel extends DBConnect implements Crud
                 $stmt->bindValue(':id_excluir', $id_excluir);
             }
             $stmt->execute();
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return ($result) ? $result : false;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception("Error al verificar existencia: " . $e->getMessage());
         }
     }
@@ -118,20 +120,12 @@ class ComprobantePagoModel extends DBConnect implements Crud
     {
         try {
             $this->validarDatos($data);
-            $this->guardarDatos();
-            return $this->success(201, "Comprobante de pago creado exitosamente.");
-        } catch (Exception $e) {
-            return $this->error(400, $e->getMessage());
-        }
-    }
 
-    private function guardarDatos()
-    {
-        try {
+            $this->con->beginTransaction();
+
             $comprobanteExistente = $this->verificarDatosExistentes($this->referencia_transaccion);
-
             if ($comprobanteExistente) {
-                throw new Exception("Ya existe un comprobante con esta referencia de transacción.");
+                throw new Exception("Ya existe un comprobante registrado con esta referencia de transacción.");
             }
 
             $sqlInsert = "INSERT INTO comprobante_pagos (
@@ -147,8 +141,69 @@ class ComprobantePagoModel extends DBConnect implements Crud
             )";
             $stmtInsert = $this->con->prepare($sqlInsert);
             $stmtInsert->execute($this->obtenerParametros());
-        } catch (\PDOException $e) {
-            throw new Exception("Error en la base de datos: " . $e->getMessage());
+            $id_generado = $this->con->lastInsertId();
+
+            $this->con->commit();
+
+            return $this->success(201, "Comprobante de pago creado exitosamente.", [
+                'id_comprobante_pago' => $id_generado
+            ]);
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, "Error en base de datos: " . $e->getMessage());
+        } catch (Exception $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, $e->getMessage());
+        }
+    }
+
+    /**
+     * Conciliación Transaccional de Pagos (ACID)
+     * Verifica o rechaza el pago y el trigger trg_pago_estatus_change sincroniza la matrícula
+     */
+    public function conciliarPago($id_comprobante, $nuevo_estatus)
+    {
+        try {
+            if (self::validator($id_comprobante, $this->validate_id) !== true) {
+                throw new Exception("ID de comprobante inválido.");
+            }
+
+            if (!in_array($nuevo_estatus, ['Verificado', 'Rechazado'], true)) {
+                throw new Exception("El estatus debe ser 'Verificado' o 'Rechazado'.");
+            }
+
+            $this->con->beginTransaction();
+
+            // Bloqueo pesimista con FOR UPDATE
+            $stmtCheck = $this->con->prepare("SELECT id_comprobante_pago, id_matricula, estatus_pago FROM comprobante_pagos WHERE id_comprobante_pago = ? FOR UPDATE");
+            $stmtCheck->execute([$id_comprobante]);
+            $comprobante = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+            if (!$comprobante) {
+                throw new Exception("Comprobante de pago no encontrado.");
+            }
+
+            $stmtUpdate = $this->con->prepare("UPDATE comprobante_pagos SET estatus_pago = ?, fecha_actualizacion = NOW() WHERE id_comprobante_pago = ?");
+            $stmtUpdate->execute([$nuevo_estatus, $id_comprobante]);
+
+            $this->con->commit();
+
+            return $this->success(200, "Comprobante conciliado como '{$nuevo_estatus}' exitosamente.");
+
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, "Error al conciliar pago: " . $e->getMessage());
+        } catch (Exception $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, $e->getMessage());
         }
     }
 
@@ -156,21 +211,24 @@ class ComprobantePagoModel extends DBConnect implements Crud
     {
         try {
             $sql = "SELECT cp.*, 
-                    b.nombre_banco,
-                    CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) as nombre_estudiante,
-                    cu.nombre_curso 
+                           b.nombre_banco,
+                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           e.cedula_estudiante,
+                           cu.nombre_curso,
+                           m.precio_acordado,
+                           m.estatus_pago AS estatus_matricula
                     FROM comprobante_pagos cp
                     JOIN banco b ON cp.id_banco = b.id_banco
                     JOIN matriculas m ON cp.id_matricula = m.id_matricula
                     JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN cursos cu ON m.id_curso = cu.id_curso
-                    WHERE cp.estatus_pago != 'Rechazado'";
-            $stmt = $this->con->prepare($sql);
-            $stmt->execute();
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    ORDER BY cp.id_comprobante_pago DESC";
 
-            $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $stmt = $this->con->query($sql);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $this->success(200, "Comprobantes de pago obtenidos", $result);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return $this->error(400, "Error de base de datos", $e->getMessage());
         }
     }
@@ -183,24 +241,28 @@ class ComprobantePagoModel extends DBConnect implements Crud
             }
 
             $sql = "SELECT cp.*, 
-                    b.nombre_banco,
-                    CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) as nombre_estudiante,
-                    cu.nombre_curso 
+                           b.nombre_banco,
+                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           e.cedula_estudiante,
+                           cu.nombre_curso,
+                           m.precio_acordado,
+                           m.estatus_pago AS estatus_matricula
                     FROM comprobante_pagos cp
                     JOIN banco b ON cp.id_banco = b.id_banco
                     JOIN matriculas m ON cp.id_matricula = m.id_matricula
                     JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN cursos cu ON m.id_curso = cu.id_curso
-                    WHERE cp.id_comprobante_pago = :id";
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    WHERE cp.id_comprobante_pago = ?";
+
             $stmt = $this->con->prepare($sql);
-            $stmt->bindValue(':id', $id);
-            $stmt->execute();
-            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $stmt->execute([$id]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result) {
                 return $this->success(200, "Comprobante de pago obtenido", $result);
             }
             return $this->error(404, "Comprobante de pago no encontrado");
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return $this->error(400, "Error de base de datos", $e->getMessage());
         } catch (Exception $e) {
             return $this->error(400, $e->getMessage());
@@ -212,16 +274,9 @@ class ComprobantePagoModel extends DBConnect implements Crud
         try {
             $data['id_comprobante_pago'] = $id;
             $this->validarDatos($data, true);
-            $this->actualizarDatos();
-            return $this->success(200, "Comprobante de pago actualizado correctamente");
-        } catch (Exception $e) {
-            return $this->error(400, $e->getMessage());
-        }
-    }
 
-    private function actualizarDatos()
-    {
-        try {
+            $this->con->beginTransaction();
+
             $comprobanteExistente = $this->verificarDatosExistentes($this->referencia_transaccion, $this->id_comprobante_pago);
             if ($comprobanteExistente) {
                 throw new Exception("Ya existe otro comprobante registrado con esta referencia.");
@@ -242,8 +297,20 @@ class ComprobantePagoModel extends DBConnect implements Crud
             $parametros = $this->obtenerParametros();
             $parametros[':id'] = $this->id_comprobante_pago;
             $stmt->execute($parametros);
-        } catch (\PDOException $e) {
-            throw new Exception("Error al actualizar: " . $e->getMessage());
+
+            $this->con->commit();
+
+            return $this->success(200, "Comprobante de pago actualizado correctamente");
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, "Error al actualizar: " . $e->getMessage());
+        } catch (Exception $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, $e->getMessage());
         }
     }
 
@@ -253,23 +320,26 @@ class ComprobantePagoModel extends DBConnect implements Crud
             if (self::validator($id, $this->validate_id) !== true) {
                 throw new Exception("El ID del comprobante es inválido.");
             }
-            $this->id_comprobante_pago = $id;
-            $this->eliminarDatos();
-            return $this->success(200, "Comprobante de pago rechazado/eliminado correctamente");
-        } catch (Exception $e) {
-            return $this->error(400, $e->getMessage());
-        }
-    }
 
-    private function eliminarDatos()
-    {
-        try {
-            $sql = "UPDATE comprobante_pagos SET estatus_pago = 'Rechazado' WHERE id_comprobante_pago = :id";
+            $this->con->beginTransaction();
+
+            $sql = "UPDATE comprobante_pagos SET estatus_pago = 'Rechazado' WHERE id_comprobante_pago = ?";
             $stmt = $this->con->prepare($sql);
-            $stmt->bindValue(':id', $this->id_comprobante_pago);
-            $stmt->execute();
-        } catch (\PDOException $e) {
-            throw new Exception("Error al eliminar: " . $e->getMessage());
+            $stmt->execute([$id]);
+
+            $this->con->commit();
+
+            return $this->success(200, "Comprobante de pago rechazado correctamente");
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, "Error al eliminar: " . $e->getMessage());
+        } catch (Exception $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return $this->error(400, $e->getMessage());
         }
     }
 }

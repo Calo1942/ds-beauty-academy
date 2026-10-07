@@ -8,7 +8,7 @@ $module_config = [
     'primary_key' => 'id_matricula',
     'fields' => [
         'id_estudiante',
-        'id_curso',
+        'id_instructor_curso',
         'fecha_solicitud',
         'precio_acordado',
         'estatus_pago',

@@ -118,15 +118,26 @@ class EvaluacionModel extends DBConnect implements Crud
             $sql = "INSERT INTO {$this->table} (" . implode(', ', $columns) . ") 
                     VALUES (" . implode(', ', $placeholders) . ")";
 
+            $this->con->beginTransaction();
             $stmt = $this->con->prepare($sql);
+            $stmt->execute($values);
+            $id = $this->con->lastInsertId();
+            $this->con->commit();
 
-            if ($stmt->execute($values)) {
-                return self::success(201, "{$this->module_name['singular']} creada exitosamente");
+            return self::success(201, "{$this->module_name['singular']} creada exitosamente", [
+                'id_evaluacion' => $id
+            ]);
+
+        } catch (\PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
             }
-            throw new Exception('Error al guardar');
-
+            return self::error(400, 'Error al guardar evaluación: ' . $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al almacenar', $e->getMessage());
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, $e->getMessage());
         }
     }
 

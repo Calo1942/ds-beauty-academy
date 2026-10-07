@@ -7,7 +7,7 @@ use DsBeautyAcademy\Models\EtiquetaModel;
 $module_config = [
     'primary_key' => 'id_etiqueta',
     'fields' => ['nombre_etiqueta'],
-    'view_path' => 'etiquetas.php'
+    'view_path' => 'etiqueta/etiqueta.php'
 ];
 
 $model = new EtiquetaModel();

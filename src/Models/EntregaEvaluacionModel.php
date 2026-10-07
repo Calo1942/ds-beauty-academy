@@ -3,6 +3,8 @@
 namespace DsBeautyAcademy\Models;
 
 use Exception;
+use PDO;
+use PDOException;
 use DsBeautyAcademy\config\connect\DBConnect;
 use DsBeautyAcademy\config\interfaces\Crud;
 use DsBeautyAcademy\Helpers\ApiResponse;
@@ -12,16 +14,16 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
 {
     use ApiResponse, Validations;
 
-    private $table = 'entrega_evaluaciones';
+    private $table = 'entregas_evaluaciones';
     private $idField = 'id_entrega_evaluacion';
     
     private $id_evaluacion;
     private $id_matricula;
     private $url_archivo_entrega;
     private $comentarios_estudiante;
-    private $fecha_entrega;
     private $calificacion_entrega;
-    private $retroalimentacion_instructor;
+    private $feedback_instructora_entrega;
+    private $fecha_entrega;
     private $estatus_entrega;
 
     private $module_name = [
@@ -29,7 +31,7 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
         'plural' => 'Entregas de Evaluaciones'
     ];
 
-    public $validate_estatus_entrega_opciones = ['Enviado', 'Calificado', 'Rechazado'];
+    public $validate_estatus_entrega_opciones = ['Pendiente', 'En Revisión', 'Repetir', 'Aprobada'];
 
     public function setIdEvaluacion($valor)
     {
@@ -85,7 +87,7 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
 
     public function setCalificacionEntrega($valor)
     {
-        if (!empty($valor) || $valor === '0' || $valor === 0) {
+        if ($valor !== null && $valor !== '') {
             if (self::validator($valor, $this->validate_decimal) !== true) {
                 throw new Exception("La calificación es inválida.");
             }
@@ -95,15 +97,15 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
         }
     }
 
-    public function setRetroalimentacionInstructor($valor)
+    public function setFeedbackInstructoraEntrega($valor)
     {
         if (!empty($valor)) {
             if (self::validator($valor, $this->validate_description) !== true) {
-                throw new Exception("La retroalimentación es inválida.");
+                throw new Exception("El feedback es inválido.");
             }
-            $this->retroalimentacion_instructor = $valor;
+            $this->feedback_instructora_entrega = $valor;
         } else {
-            $this->retroalimentacion_instructor = null;
+            $this->feedback_instructora_entrega = null;
         }
     }
 
@@ -141,8 +143,10 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
             $validatedData = $this->validarYSetearDatos($data);
 
             if (empty($validatedData)) {
-                throw new Exception('No hay datos válidos para guardar');
+                throw new Exception('No hay datos válidos para registrar la entrega.');
             }
+
+            $this->con->beginTransaction();
 
             $columns = array_keys($validatedData);
             $placeholders = array_fill(0, count($validatedData), '?');
@@ -152,22 +156,94 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
                     VALUES (" . implode(', ', $placeholders) . ")";
 
             $stmt = $this->con->prepare($sql);
+            $stmt->execute($values);
+            $id = $this->con->lastInsertId();
 
-            if ($stmt->execute($values)) {
-                return self::success(201, "{$this->module_name['singular']} creada exitosamente");
+            $this->con->commit();
+
+            return self::success(201, "{$this->module_name['singular']} registrada exitosamente.", [
+                'id_entrega_evaluacion' => $id
+            ]);
+
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
             }
-            throw new Exception('Error al guardar');
-
+            return self::error(400, "Error en entrega: " . $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al almacenar', $e->getMessage());
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, $e->getMessage());
+        }
+    }
+
+    /**
+     * Calificación y Retroalimentación Transaccional
+     * Cuando se aprueba la entrega, el trigger trg_entregas_completadas evalúa si se emite certificado
+     */
+    public function calificarEntrega($id, $calificacion, $feedback, $estatus)
+    {
+        try {
+            $this->validarId($id);
+            $this->setCalificacionEntrega($calificacion);
+            $this->setFeedbackInstructoraEntrega($feedback);
+            $this->setEstatusEntrega($estatus);
+
+            $this->con->beginTransaction();
+
+            $sql = "UPDATE {$this->table} SET 
+                    calificacion_entrega = ?, 
+                    feedback_instructora_entrega = ?, 
+                    estatus_entrega = ?,
+                    fecha_actualizacion = NOW() 
+                    WHERE {$this->idField} = ?";
+
+            $stmt = $this->con->prepare($sql);
+            $stmt->execute([
+                $this->calificacion_entrega,
+                $this->feedback_instructora_entrega,
+                $this->estatus_entrega,
+                $id
+            ]);
+
+            $this->con->commit();
+
+            return self::success(200, "Entrega calificada como '{$estatus}' exitosamente.");
+
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, "Error al calificar entrega: " . $e->getMessage());
+        } catch (Exception $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, $e->getMessage());
         }
     }
 
     public function buscarTodos()
     {
         try {
-            $stmt = $this->con->query("SELECT * FROM {$this->table}");
-            $result = $stmt->fetchAll();
+            $sql = "SELECT ee.*, 
+                           ev.titulo_evaluacion, 
+                           ev.tipo_evaluacion,
+                           ev.orden_evaluacion,
+                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           e.cedula_estudiante,
+                           cu.nombre_curso
+                    FROM {$this->table} ee
+                    JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
+                    JOIN matriculas m ON ee.id_matricula = m.id_matricula
+                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    ORDER BY ee.id_entrega_evaluacion DESC";
+
+            $stmt = $this->con->query($sql);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return self::success(200, "{$this->module_name['plural']} obtenidas", $result);
         } catch (Exception $e) {
             return self::error(500, 'Error al obtener', $e->getMessage());
@@ -178,12 +254,29 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
     {
         try {
             $this->validarId($id);
-            $stmt = $this->con->prepare("SELECT * FROM {$this->table} WHERE {$this->idField} = ?");
+            $sql = "SELECT ee.*, 
+                           ev.titulo_evaluacion, 
+                           ev.tipo_evaluacion,
+                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           e.cedula_estudiante,
+                           cu.nombre_curso
+                    FROM {$this->table} ee
+                    JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
+                    JOIN matriculas m ON ee.id_matricula = m.id_matricula
+                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    WHERE ee.{$this->idField} = ?";
+
+            $stmt = $this->con->prepare($sql);
             $stmt->execute([$id]);
-            $result = $stmt->fetch();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$result) {
+                throw new Exception("Entrega no encontrada");
+            }
             return self::success(200, "{$this->module_name['singular']} obtenida", $result);
         } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            return self::error(400, $e->getMessage());
         }
     }
 
@@ -191,12 +284,13 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
     {
         try {
             $this->validarId($id);
-
             $validatedData = $this->validarYSetearDatos($data);
 
             if (empty($validatedData)) {
                 throw new Exception('No hay datos válidos para actualizar');
             }
+
+            $this->con->beginTransaction();
 
             $updates = [];
             $values = [];
@@ -212,13 +306,22 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
                     WHERE {$this->idField} = ?";
 
             $stmt = $this->con->prepare($sql);
-            if ($stmt->execute($values)) {
-                return self::success(200, "{$this->module_name['singular']} actualizada");
-            }
-            throw new Exception('Error al actualizar');
+            $stmt->execute($values);
 
+            $this->con->commit();
+
+            return self::success(200, "{$this->module_name['singular']} actualizada correctamente");
+
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, "Error al actualizar: " . $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al actualizar', $e->getMessage());
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, $e->getMessage());
         }
     }
 
@@ -227,15 +330,25 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
         try {
             $this->validarId($id);
 
-            // Hard delete as no specific soft delete column is designated for simple deletion
+            $this->con->beginTransaction();
+
             $sql = "DELETE FROM {$this->table} WHERE {$this->idField} = ?";
             $stmt = $this->con->prepare($sql);
-            if ($stmt->execute([$id])) {
-                return self::success(200, "{$this->module_name['singular']} eliminada");
+            $stmt->execute([$id]);
+
+            $this->con->commit();
+
+            return self::success(200, "{$this->module_name['singular']} eliminada correctamente");
+        } catch (PDOException $e) {
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
             }
-            throw new Exception('Error al eliminar');
+            return self::error(400, "Error al eliminar: " . $e->getMessage());
         } catch (Exception $e) {
-            return self::error(500, 'Error al eliminar', $e->getMessage());
+            if ($this->con->inTransaction()) {
+                $this->con->rollBack();
+            }
+            return self::error(400, $e->getMessage());
         }
     }
 }

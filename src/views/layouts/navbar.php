@@ -2,8 +2,10 @@
 <div class="main-wrapper">
     <!-- TOPBAR -->
     <header class="topbar">
-        <div class="">
-
+        <div class="topbar-left">
+            <button class="btn-sidebar-toggle" id="btnSidebarToggle" type="button" aria-label="Abrir menú de navegación">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
         <div class="topbar-right">
             <div class="notification">
@@ -19,3 +21,24 @@
             </div>
         </div>
     </header>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnToggle = document.getElementById('btnSidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (btnToggle && sidebar && overlay) {
+                btnToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                });
+
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+        });
+    </script>

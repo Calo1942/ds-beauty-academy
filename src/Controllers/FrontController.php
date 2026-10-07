@@ -33,7 +33,14 @@ class FrontController
         if (file_exists($controllerFile)) {
             require $controllerFile;
         } else {
-            throw new \Exception("Controlador {$this->controller} no encontrado");
+            http_response_code(404);
+            $errorView = __DIR__ . '/../views/error/404.php';
+            if (file_exists($errorView)) {
+                require $errorView;
+            } else {
+                echo "<h1>404 - Módulo no encontrado</h1>";
+            }
+            exit;
         }
     }
 }

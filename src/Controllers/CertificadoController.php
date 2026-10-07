@@ -8,9 +8,10 @@ $module_config = [
     'primary_key' => 'id_certificado',
     'fields' => [
         'id_matricula',
-        'codigo_certificado',
+        'titulo_certificado',
+        'descripcion_certificado',
+        'categoria_certificado',
         'url_pdf_certificado',
-        'fecha_emision',
         'estatus_certificado'
     ],
     'view_path' => 'certificado/certificado.php'
