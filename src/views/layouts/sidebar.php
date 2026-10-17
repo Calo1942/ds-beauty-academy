@@ -5,7 +5,7 @@ $actualUrl = isset($_GET['url']) ? $_GET['url'] : 'dashboard';
 $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'clase');
 $isInstructor = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'certificado');
-$isPagos = ($actualUrl == 'pago' || $actualUrl == 'banco');
+$isPagos = ($actualUrl == 'comprobantePago' || $actualUrl == 'banco');
 $isConfig = ($actualUrl == 'configuracion');
 ?>
 
@@ -116,7 +116,7 @@ $isConfig = ($actualUrl == 'configuracion');
             </div>
             <ul class="submenu <?php if ($isPagos)
                 echo 'show'; ?>">
-                <li><a href="?url=pago" class="<?php if ($actualUrl == 'pago')
+                <li><a href="?url=comprobantePago" class="<?php if ($actualUrl == 'comprobantePago')
                     echo 'active'; ?>"><i
                             class="fas fa-check-circle"></i> Verificación de Pagos</a></li>
                 <li><a href="?url=banco" class="<?php if ($actualUrl == 'banco')

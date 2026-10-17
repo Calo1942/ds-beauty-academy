@@ -63,7 +63,7 @@
             try {
                 const formData = new FormData();
                 formData.append('buscarTodos', 'true');
-                const response = await fetch('src/Controllers/MatriculaController.php', {
+                const response = await fetch('?url=matricula', {
                     method: 'POST',
                     body: formData
                 });
@@ -101,7 +101,7 @@
             const formData = new FormData();
             formData.append('eliminar', 'true');
             formData.append('id_matricula', id);
-            const response = await fetch('src/Controllers/MatriculaController.php', {
+            const response = await fetch('?url=matricula', {
                 method: 'POST',
                 body: formData
             });

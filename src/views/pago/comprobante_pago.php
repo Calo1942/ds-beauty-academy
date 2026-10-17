@@ -17,7 +17,7 @@
 
     <main class="content">
         <div class="page-header">
-            <h1 class="page-title">Conciliación de Pagos</h1>
+            <h1 class="page-title">Verificación de Pagos</h1>
         </div>
 
         <div class="table-container">
@@ -52,7 +52,7 @@
             try {
                 const formData = new FormData();
                 formData.append('buscarTodos', 'true');
-                const response = await fetch('src/Controllers/ComprobantePagoController.php', {
+                const response = await fetch('?url=comprobantePago', {
                     method: 'POST',
                     body: formData
                 });
@@ -97,7 +97,7 @@
             formData.append('id_comprobante_pago', id);
             formData.append('estatus_pago', estatus);
 
-            const response = await fetch('src/Controllers/ComprobantePagoController.php', {
+            const response = await fetch('?url=comprobantePago', {
                 method: 'POST',
                 body: formData
             });
@@ -107,4 +107,5 @@
         }
     </script>
 </body>
+
 </html>
