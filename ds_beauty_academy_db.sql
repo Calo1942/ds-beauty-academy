@@ -113,7 +113,7 @@ CREATE TABLE cursos (
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CHECK (precio_normal >= 0),
     CHECK (precio_preventa IS NULL OR (precio_preventa >= 0 AND precio_preventa < precio_normal)),
-    CHECK (fecha_fin_preventa IS NULL OR fecha_fin_preventa < fecha_inicio_curso),
+    CHECK (fecha_fin_preventa IS NULL OR fecha_fin_preventa <= fecha_inicio_curso),
     CHECK (fecha_fin_curso IS NULL OR fecha_fin_curso >= fecha_inicio_curso),
     CHECK (limite_cupos > 0)
 ) ENGINE=InnoDB;
@@ -168,14 +168,12 @@ CREATE TABLE matriculas (
     id_matricula INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_estudiante INT NOT NULL,
     id_instructor_curso INT NOT NULL,
-    id_instructor_curso INT NOT NULL,
     fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
     precio_acordado DECIMAL(10,2) NOT NULL,
     estatus_pago ENUM('Deudora','Solvente') DEFAULT 'Deudora',
     estatus_cupo ENUM('Reservado','Confirmado','Cancelado') DEFAULT 'Reservado',
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_estudiante_instructor_curso (id_estudiante, id_instructor_curso),
     UNIQUE KEY unique_estudiante_instructor_curso (id_estudiante, id_instructor_curso),
     FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id_estudiante) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (id_instructor_curso) REFERENCES instructor_curso(id_instructor_curso) ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -243,7 +241,8 @@ CREATE TABLE entregas_evaluaciones (
     FOREIGN KEY (id_evaluacion) REFERENCES evaluaciones(id_evaluacion) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_matricula) REFERENCES matriculas(id_matricula) ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX idx_matricula (id_matricula),
-    INDEX idx_estatus_entrega (estatus_entrega)
+    INDEX idx_estatus_entrega (estatus_entrega),
+    CHECK (calificacion_entrega IS NULL OR (calificacion_entrega >= 0 AND calificacion_entrega <= 100))
 ) ENGINE=InnoDB;
 
 CREATE TABLE certificados (
@@ -372,11 +371,6 @@ BEGIN
         WHERE ic.id_curso = v_id_curso
           AND m.estatus_cupo = 'Confirmado'
           AND m.id_matricula != NEW.id_matricula;
-        FROM matriculas m
-        JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
-        WHERE ic.id_curso = v_id_curso
-          AND m.estatus_cupo = 'Confirmado'
-          AND m.id_matricula != NEW.id_matricula;
         
         IF cupos_confirmados >= limite THEN
             SIGNAL SQLSTATE '45000'
@@ -460,7 +454,7 @@ BEGIN
         -- Verificar si ya cuenta con certificado emitido o pendiente
         SELECT COUNT(*) INTO existe_cert
         FROM certificados
-        WHERE id_matricula = v_id_matricula;
+        WHERE id_matricula = NEW.id_matricula;
         
         -- Solo emitir si hay evaluaciones requeridas y todas fueron aprobadas
         IF total_eval > 0 AND total_eval = aprobadas AND existe_cert = 0 THEN
