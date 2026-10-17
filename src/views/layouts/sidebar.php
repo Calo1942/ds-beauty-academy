@@ -6,7 +6,7 @@ $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'c
 $isInstructor = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'banco');
-$isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'etiqueta');
+$isConfig = ($actualUrl == 'configuracion');
 ?>
 
 <!-- SIDEBAR -->
@@ -143,9 +143,6 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'etiqueta');
             </div>
             <ul class="submenu <?php if ($isConfig)
                 echo 'show'; ?>">
-                <li><a href="?url=etiqueta" class="<?php if ($actualUrl == 'etiqueta')
-                    echo 'active'; ?>"><i
-                            class="fas fa-tags"></i> Etiquetas de Recursos</a></li>
                 <li><a href="?url=configuracion" class="<?php if ($actualUrl == 'configuracion')
                     echo 'active'; ?>"><i
                             class="fas fa-sliders-h"></i> Ajustes Generales</a></li>

@@ -28,7 +28,7 @@ Se tomó la decisión de alinear las funciones de eliminación (`eliminar()`) se
 - **Soft Delete (Lógico):** Utilizado en entidades que tienen historiales, pagos, o dependencias fuertes.
   - *Ejemplos:* `Clases`, `Evaluaciones` (modifican `estatus = 0`), `Matriculas` (`estatus_cupo = 'Cancelado'`), `Certificados` (`estatus_certificado = 'Anulado'`), `ComprobantePagos` (`estatus_comprobante = 'Rechazado'`).
 - **Hard Delete (Físico):** Utilizado en catálogos simples o relaciones donde no se requiere mantener el rastro.
-  - *Ejemplos:* `Etiquetas`, `CertificadoInstructor`, `Recursos`, y las tablas pivote.
+  - *Ejemplos:* `CertificadoInstructor`, `Recursos`, y las tablas pivote.
 - *Nota sobre seguridad:* En modelos con Hard Delete como `Cursos`, la base de datos cuenta con *Triggers* (ej. `trg_cursos_no_delete_con_matriculas`) que impiden a nivel de motor SQL el borrado si hay alumnos inscritos. El modelo de PHP simplemente capturará la excepción SQL y devolverá un error 500 controlado al usuario.
 
 ### B. Manejo de Tablas Pivote Complejas (N:M)

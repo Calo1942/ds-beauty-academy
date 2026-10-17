@@ -14,23 +14,35 @@ class RecursoModel extends DBConnect implements Crud
 
     private $table = 'recursos';
     private $idField = 'id_recurso';
-    
-    private $titulo_recurso;
+
+    private $nombre_recurso;
     private $descripcion_recurso;
     private $url_archivo_recurso;
-    private $id_etiqueta;
 
     private $module_name = [
         'singular' => 'Recurso',
         'plural' => 'Recursos'
     ];
 
-    public function setTituloRecurso($valor)
+    public function getNombreRecurso()
     {
-        if (self::validator($valor, $this->validate_text_long) !== true) {
-            throw new Exception("El título del recurso es inválido.");
+        return $this->nombre_recurso;
+    }
+
+    public function setNombreRecurso($nombre)
+    {
+        $this->validarString($nombre, 3, 100, 'Nombre del recurso');
+        $this->nombre_recurso = $nombre;
+    }
+
+    private function validarString($valor, $min = 3, $max = 100, $campo = 'Nombre del recurso')
+    {
+        if (empty($valor) || strlen($valor) < $min || strlen($valor) > $max) {
+            throw new Exception("El {$campo} debe tener entre {$min} y {$max} caracteres.");
         }
-        $this->titulo_recurso = $valor;
+        if (self::validator($valor, $this->validate_text_long) !== true) {
+            throw new Exception("El {$campo} es inválido.");
+        }
     }
 
     public function setDescripcionRecurso($valor)
@@ -51,14 +63,6 @@ class RecursoModel extends DBConnect implements Crud
             throw new Exception("La URL del archivo es inválida o muy larga.");
         }
         $this->url_archivo_recurso = $valor;
-    }
-
-    public function setIdEtiqueta($valor)
-    {
-        if (self::validator($valor, $this->validate_id) !== true) {
-            throw new Exception("El ID de etiqueta es inválido.");
-        }
-        $this->id_etiqueta = $valor;
     }
 
     private function validarYSetearDatos($data)

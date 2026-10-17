@@ -9,8 +9,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Título del Recurso</th>
-                    <th>ID Etiqueta</th>
+                    <th>Nombre del Recurso</th>
                     <th style="text-align: right;">Acciones</th>
                 </tr>
             </thead>

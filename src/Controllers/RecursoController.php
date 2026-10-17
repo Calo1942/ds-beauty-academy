@@ -7,10 +7,9 @@ use DsBeautyAcademy\Models\RecursoModel;
 $module_config = [
     'primary_key' => 'id_recurso',
     'fields' => [
-        'titulo_recurso',
+        'nombre_recurso',
         'descripcion_recurso',
-        'url_archivo_recurso',
-        'id_etiqueta'
+        'url_archivo_recurso'
     ],
     'view_path' => 'recurso/recurso.php'
 ];

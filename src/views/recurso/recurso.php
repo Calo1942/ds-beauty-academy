@@ -93,8 +93,7 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${recurso.id_recurso}</td>
-                    <td>${recurso.titulo_recurso}</td>
-                    <td>${recurso.id_etiqueta}</td>
+                    <td>${recurso.nombre_recurso}</td>
                     <td class="action-btns">
                         <button class="btn-action btn-view" onclick="verDetalle(${recurso.id_recurso})" title="Ver Detalle"><i class="fas fa-eye"></i></button>
                         <button class="btn-action btn-edit" onclick="editarRecurso(${recurso.id_recurso})" title="Editar"><i class="fas fa-pen"></i></button>
@@ -123,7 +122,7 @@
             if (result.code === 200) {
                 const r = result.data;
                 document.getElementById('edit_id_recurso').value = r.id_recurso;
-                ['titulo_recurso', 'descripcion_recurso', 'url_archivo_recurso', 'id_etiqueta'].forEach(f => {
+                ['nombre_recurso', 'descripcion_recurso', 'url_archivo_recurso'].forEach(f => {
                     const el = document.querySelector(`#formEditarRecurso [name="${f}"]`);
                     if (el) el.value = r[f] || '';
                 });
@@ -160,10 +159,9 @@
             if (result.code === 200) {
                 const r = result.data;
                 document.getElementById('detail_id_recurso').textContent = r.id_recurso;
-                document.getElementById('detail_titulo_recurso').textContent = r.titulo_recurso;
+                document.getElementById('detail_nombre_recurso').textContent = r.nombre_recurso;
                 document.getElementById('detail_descripcion_recurso').textContent = r.descripcion_recurso || 'N/A';
                 document.getElementById('detail_url_archivo_recurso').textContent = r.url_archivo_recurso;
-                document.getElementById('detail_id_etiqueta').textContent = r.id_etiqueta;
                 abrirModal('modalDetalle');
             }
         }

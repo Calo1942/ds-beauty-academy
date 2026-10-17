@@ -10,8 +10,8 @@
                 <span class="detail-value" id="detail_id_recurso">-</span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Título</span>
-                <span class="detail-value" id="detail_titulo_recurso">-</span>
+                <span class="detail-label">Nombre del Recurso</span>
+                <span class="detail-value" id="detail_nombre_recurso">-</span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Descripción</span>
@@ -20,10 +20,6 @@
             <div class="detail-item">
                 <span class="detail-label">URL del Archivo</span>
                 <span class="detail-value" id="detail_url_archivo_recurso">-</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Etiqueta</span>
-                <span class="detail-value" id="detail_nombre_etiqueta">-</span>
             </div>
         </div>
         <div class="modal-footer">

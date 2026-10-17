@@ -35,7 +35,6 @@ Tras las implementaciones realizadas, el catálogo de vistas queda estructurado 
 | **Recursos** | `?url=recurso` | `recurso/recurso.php` | `recursoDataTable.php` | `recursoModalCrear`, `recursoModalEditar`, `recursoModalDetalle` | **Completado** ✅ |
 | **Evaluaciones** | `?url=evaluacion` | `evaluacion/evaluacion.php` | `evaluacionDataTable.php` | `evaluacionModalCrear`, `evaluacionModalEditar`, `evaluacionModalDetalle` | **Creado** ✅ |
 | **Certificados** | `?url=certificado` | `certificado/certificado.php`| `certificadoTable` | Vista y descarga PDF | **Creado** ✅ |
-| **Etiquetas** | `?url=etiqueta` | `etiqueta/etiqueta.php` | `etiquetaTable` | `modalCrear` | **Creado** ✅ |
 | **Matrículas** | `?url=matricula` | `matricula/matricula.php` | `matriculaTable` | Cancelación y badges | **Creado** ✅ |
 | **Pagos** | `?url=pago` | `pago/comprobante_pago.php` | `pagoTable` | Conciliación inmediata | **Creado** ✅ |
 | **En Desarrollo / 404** | Cualquier ruta rota | `error/404.php` | N/A | Diseño estético temático | **Creado** ✅ |

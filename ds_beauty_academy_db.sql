@@ -1,5 +1,5 @@
 -- ==========================================
--- DS Beauty Academy - Modelo Fisico - Version 7.0 (Corregida) - 28/09/2026
+-- DS Beauty Academy - Modelo Fisico - Version 8.0 (Corregida) - 11/10/2026
 -- ==========================================
 
 DROP DATABASE IF EXISTS ds_beauty_academy_db;
@@ -144,25 +144,14 @@ CREATE TABLE clases (
     INDEX idx_orden (orden_clase)
 ) ENGINE=InnoDB;
 
-CREATE TABLE etiquetas (
-    id_etiqueta INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nombre_etiqueta VARCHAR(100) NOT NULL,
-    estatus_etiqueta BOOLEAN DEFAULT TRUE,
-    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
 CREATE TABLE recursos (
     id_recurso INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nombre_recurso VARCHAR(150) NOT NULL, -- Corregido: sin UNIQUE global para permitir nombres comunes en varios cursos
     descripcion_recurso TEXT,
     url_archivo_recurso VARCHAR(512) NOT NULL,
-    id_etiqueta INT NOT NULL,
     estatus_recurso BOOLEAN DEFAULT TRUE,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_etiqueta) REFERENCES etiquetas(id_etiqueta) ON DELETE RESTRICT ON UPDATE CASCADE,
-    INDEX idx_etiqueta (id_etiqueta)
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 CREATE TABLE recursos_curso (

@@ -7,8 +7,8 @@
         <form id="formCrearRecurso">
             <div class="modal-body">
                 <div class="form-group mb-3">
-                    <label class="form-label">Título del Recurso</label>
-                    <input type="text" name="titulo_recurso" class="form-control" placeholder="Ingrese el título" required>
+                    <label class="form-label">Nombre del Recurso</label>
+                    <input type="text" name="nombre_recurso" id="nombre_recurso" class="form-control" placeholder="Ingrese el nombre" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Descripción</label>
@@ -17,10 +17,6 @@
                 <div class="form-group mb-3">
                     <label class="form-label">URL del Archivo</label>
                     <input type="text" name="url_archivo_recurso" class="form-control" placeholder="Ingrese la URL del archivo" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label">ID Etiqueta</label>
-                    <input type="number" name="id_etiqueta" class="form-control" placeholder="ID de la etiqueta" required>
                 </div>
             </div>
             <div class="modal-footer">
