@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | DS Beauty Academy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="src/assets/bootstrap-5.3.8/css/bootstrap.min.css">
-    <link rel="stylesheet" href="src/views/styles.css">
+    <?php
+    // Inclusión centralizada de dependencias CSS y fuentes
+    include_once __DIR__ . '/../../assets/linksFront.php';
+    echo $css_links;
+    ?>
 </head>
 
 <body>
@@ -162,7 +163,12 @@
             </div>
         </div>
     </main>
-    <script src="src/assets/bootstrap-5.3.8/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Cierre de main-wrapper -->
+    </div>
+
+    <!-- Scripts y librerías globales -->
+    <?php echo $scripts_links; ?>
 </body>
 
 </html>

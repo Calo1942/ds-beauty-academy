@@ -1,22 +1,38 @@
 <div class="panel">
-    <div class="search-table-box">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchDiploma" placeholder="Buscar diploma...">
+    <!-- Skeleton loader mientras carga la información -->
+    <div id="diplomaSkeleton" class="skeleton-table">
+        <div class="skeleton-header">
+            <div class="skeleton-header-cell" style="flex: 0.5;"></div>
+            <div class="skeleton-header-cell" style="flex: 2;"></div>
+            <div class="skeleton-header-cell"></div>
+            <div class="skeleton-header-cell"></div>
+            <div class="skeleton-header-cell"></div>
+        </div>
+        <?php for ($i = 0; $i < 5; $i++): ?>
+            <div class="skeleton-row">
+                <div class="skeleton-cell" style="flex: 0.5;"></div>
+                <div class="skeleton-cell" style="flex: 2;"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell"></div>
+            </div>
+        <?php endfor; ?>
     </div>
 
-    <div class="table-responsive">
-        <table id="diplomaTable">
+    <!-- Contenedor de DataTable -->
+    <div class="table-responsive" id="diplomaTableContainer" style="display: none;">
+        <table id="diplomaTable" class="table table-dark table-hover w-100">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Categoría</th>
-                    <th>Instructor</th>
-                    <th style="text-align: right;">Acciones</th>
+                    <th style="width: 10%;">ID</th>
+                    <th style="width: 35%;">Título</th>
+                    <th style="width: 20%;">Categoría</th>
+                    <th style="width: 20%;">Instructor</th>
+                    <th style="width: 15%; text-align: right;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Se llenará dinámicamente con JS -->
+                <!-- Contenido cargado dinámicamente mediante DataTables y AJAX -->
             </tbody>
         </table>
     </div>

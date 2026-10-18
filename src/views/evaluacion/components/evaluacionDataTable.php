@@ -1,24 +1,43 @@
-<div class="table-container">
-    <div class="table-header">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchEvaluacion" placeholder="Buscar evaluación...">
+<div class="panel">
+    <!-- Skeleton loader mientras carga la información -->
+    <div id="evaluacionSkeleton" class="skeleton-table">
+        <div class="skeleton-header">
+            <div class="skeleton-header-cell" style="flex: 0.5;"></div>
+            <div class="skeleton-header-cell" style="flex: 2;"></div>
+            <div class="skeleton-header-cell"></div>
+            <div class="skeleton-header-cell"></div>
+            <div class="skeleton-header-cell"></div>
+            <div class="skeleton-header-cell"></div>
         </div>
+        <?php for ($i = 0; $i < 5; $i++): ?>
+            <div class="skeleton-row">
+                <div class="skeleton-cell" style="flex: 0.5;"></div>
+                <div class="skeleton-cell" style="flex: 2;"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell"></div>
+            </div>
+        <?php endfor; ?>
     </div>
-    <table class="data-table" id="evaluacionTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Tipo</th>
-                <th>Orden</th>
-                <th>Instancia / Curso</th>
-                <th>Estatus</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Dinámico vía JavaScript -->
-        </tbody>
-    </table>
+
+    <!-- Contenedor de DataTable -->
+    <div class="table-responsive" id="evaluacionTableContainer" style="display: none;">
+        <table id="evaluacionTable" class="table table-dark table-hover w-100">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">ID</th>
+                    <th style="width: 30%;">Título</th>
+                    <th style="width: 15%;">Tipo</th>
+                    <th style="width: 10%;">Orden</th>
+                    <th style="width: 15%;">Instructor-Curso</th>
+                    <th style="width: 10%;">Estatus</th>
+                    <th style="width: 12%; text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Contenido cargado dinámicamente mediante DataTables y AJAX -->
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -5,110 +5,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matrículas | DS Beauty Academy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="src/assets/bootstrap-5.3.8/css/bootstrap.min.css">
-    <link rel="stylesheet" href="src/views/styles.css">
+    <?php
+    // Inclusión centralizada de dependencias CSS y fuentes
+    include_once __DIR__ . '/../../assets/linksFront.php';
+    echo $css_links;
+    ?>
 </head>
 
 <body>
+    <!-- Sidebar de navegación -->
     <?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
+
+    <!-- Navbar superior (abre el .main-wrapper) -->
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
         <div class="page-header">
             <h1 class="page-title">Gestión de Matrículas</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary" onclick="alert('Formulario de nueva matrícula')">
-                    <i class="fas fa-plus"></i> Nueva Matrícula
-                </button>
-            </div>
         </div>
 
-        <div class="table-container">
-            <div class="table-header">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchMatricula" placeholder="Buscar por estudiante, curso...">
+        <div class="panel">
+            <!-- Skeleton loader mientras carga la información -->
+            <div id="matriculaSkeleton" class="skeleton-table">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 0.5;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell" style="flex: 1.5;"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
                 </div>
+                <?php for ($i = 0; $i < 5; $i++): ?>
+                    <div class="skeleton-row">
+                        <div class="skeleton-cell" style="flex: 0.5;"></div>
+                        <div class="skeleton-cell" style="flex: 2;"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell" style="flex: 1.5;"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                    </div>
+                <?php endfor; ?>
             </div>
-            <table class="data-table" id="matriculaTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Estudiante</th>
-                        <th>Cédula</th>
-                        <th>Curso</th>
-                        <th>Instructor</th>
-                        <th>Precio Acordado</th>
-                        <th>Estado Pago</th>
-                        <th>Estado Cupo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="matriculaTbody">
-                    <!-- Dinámico vía JavaScript / AJAX -->
-                </tbody>
-            </table>
+
+            <!-- Contenedor de DataTable -->
+            <div class="table-responsive" id="matriculaTableContainer" style="display: none;">
+                <table id="matriculaTable" class="table table-dark table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">ID</th>
+                            <th style="width: 18%;">Estudiante</th>
+                            <th style="width: 11%;">Cédula</th>
+                            <th style="width: 18%;">Curso</th>
+                            <th style="width: 14%;">Instructor</th>
+                            <th style="width: 10%;">Precio</th>
+                            <th style="width: 8%;">Pago</th>
+                            <th style="width: 8%;">Cupo</th>
+                            <th style="width: 7%; text-align: right;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Contenido cargado dinámicamente mediante DataTables y AJAX -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
+
+    <!-- Cierre de main-wrapper -->
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarMatriculas();
-        });
+    <!-- Scripts y librerías globales (jQuery, Bootstrap, DataTables, SweetAlert2) -->
+    <?php echo $scripts_links; ?>
 
-        async function cargarMatriculas() {
-            try {
-                const formData = new FormData();
-                formData.append('buscarTodos', 'true');
-                const response = await fetch('?url=matricula', {
-                    method: 'POST',
-                    body: formData
-                });
-                const res = await response.json();
-                if (res.code === 200 && res.data) {
-                    const tbody = document.getElementById('matriculaTbody');
-                    tbody.innerHTML = '';
-                    res.data.forEach(m => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${m.id_matricula}</td>
-                            <td>${m.nombre_estudiante}</td>
-                            <td>${m.cedula_estudiante}</td>
-                            <td>${m.nombre_curso}</td>
-                            <td>${m.nombre_instructor}</td>
-                            <td>$${parseFloat(m.precio_acordado).toFixed(2)}</td>
-                            <td><span class="badge ${m.estatus_pago === 'Solvente' ? 'bg-success' : 'bg-warning'}">${m.estatus_pago}</span></td>
-                            <td><span class="badge ${m.estatus_cupo === 'Confirmado' ? 'bg-success' : (m.estatus_cupo === 'Reservado' ? 'bg-info' : 'bg-danger')}">${m.estatus_cupo}</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger" onclick="cancelarMatricula(${m.id_matricula})">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                }
-            } catch (err) {
-                console.error("Error al cargar matrículas:", err);
-            }
-        }
-
-        async function cancelarMatricula(id) {
-            if (!confirm('¿Desea cancelar esta matrícula y liberar el cupo?')) return;
-            const formData = new FormData();
-            formData.append('eliminar', 'true');
-            formData.append('id_matricula', id);
-            const response = await fetch('?url=matricula', {
-                method: 'POST',
-                body: formData
-            });
-            const res = await response.json();
-            alert(res.message);
-            cargarMatriculas();
-        }
-    </script>
+    <!-- Módulo ES6 específico de Matrícula -->
+    <script type="module" src="src/assets/js/matricula/matriculaDataTable.js"></script>
 </body>
+
 </html>

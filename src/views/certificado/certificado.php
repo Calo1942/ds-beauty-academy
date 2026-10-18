@@ -5,14 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificados | DS Beauty Academy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="src/assets/bootstrap-5.3.8/css/bootstrap.min.css">
-    <link rel="stylesheet" href="src/views/styles.css">
+    <?php
+    // Inclusión centralizada de dependencias CSS y fuentes
+    include_once __DIR__ . '/../../assets/linksFront.php';
+    echo $css_links;
+    ?>
 </head>
 
 <body>
+    <!-- Sidebar de navegación -->
     <?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
+
+    <!-- Navbar superior (abre el .main-wrapper) -->
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
@@ -20,82 +24,64 @@
             <h1 class="page-title">Certificados Emitidos</h1>
         </div>
 
-        <div class="table-container">
-            <div class="table-header">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchCertificado" placeholder="Buscar certificado...">
+        <div class="panel">
+            <!-- Skeleton loader mientras carga la información -->
+            <div id="certificadoSkeleton" class="skeleton-table">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 0.5;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                    <div class="skeleton-header-cell" style="flex: 1.5;"></div>
+                    <div class="skeleton-header-cell" style="flex: 1.5;"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
+                    <div class="skeleton-header-cell"></div>
                 </div>
+                <?php for ($i = 0; $i < 5; $i++): ?>
+                    <div class="skeleton-row">
+                        <div class="skeleton-cell" style="flex: 0.5;"></div>
+                        <div class="skeleton-cell" style="flex: 2;"></div>
+                        <div class="skeleton-cell" style="flex: 1.5;"></div>
+                        <div class="skeleton-cell" style="flex: 1.5;"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                        <div class="skeleton-cell"></div>
+                    </div>
+                <?php endfor; ?>
             </div>
-            <table class="data-table" id="certificadoTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Título del Certificado</th>
-                        <th>Categoría</th>
-                        <th>Matrícula ID</th>
-                        <th>Estatus</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="certificadoTbody">
-                    <!-- Dinámico vía JavaScript -->
-                </tbody>
-            </table>
+
+            <!-- Contenedor de DataTable -->
+            <div class="table-responsive" id="certificadoTableContainer" style="display: none;">
+                <table id="certificadoTable" class="table table-dark table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%;">ID</th>
+                            <th style="width: 25%;">Título del Certificado</th>
+                            <th style="width: 18%;">Estudiante</th>
+                            <th style="width: 17%;">Curso</th>
+                            <th style="width: 12%;">Matrícula</th>
+                            <th style="width: 10%;">Categoría</th>
+                            <th style="width: 12%;">Estatus</th>
+                            <th style="width: 10%; text-align: right;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Contenido dinámico mediante DataTables y AJAX -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
+
+    <!-- Cierre de main-wrapper -->
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarCertificados();
+    <!-- Scripts y librerías globales (jQuery, Bootstrap, DataTables, SweetAlert2) -->
+    <?php echo $scripts_links; ?>
 
-            document.getElementById('searchCertificado').addEventListener('input', function() {
-                const filter = this.value.toLowerCase();
-                const rows = document.querySelectorAll('#certificadoTable tbody tr');
-                rows.forEach(row => {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = text.includes(filter) ? '' : 'none';
-                });
-            });
-        });
-
-        async function cargarCertificados() {
-            try {
-                const formData = new FormData();
-                formData.append('buscarTodos', 'true');
-                const response = await fetch('?url=certificado', {
-                    method: 'POST',
-                    body: formData
-                });
-                const res = await response.json();
-                if (res.code === 200 && res.data) {
-                    const tbody = document.getElementById('certificadoTbody');
-                    tbody.innerHTML = '';
-                    res.data.forEach(c => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${c.id_certificado}</td>
-                            <td><strong>${c.titulo_certificado}</strong></td>
-                            <td><span class="badge bg-secondary">${c.categoria_certificado}</span></td>
-                            <td>Matrícula #${c.id_matricula}</td>
-                            <td><span class="badge ${c.estatus_certificado === 'Emitido' ? 'bg-success' : (c.estatus_certificado === 'Pendiente de Emisión' ? 'bg-warning' : 'bg-danger')}">${c.estatus_certificado}</span></td>
-                            <td class="action-btns">
-                                ${c.url_pdf_certificado ? `
-                                    <a href="${c.url_pdf_certificado}" target="_blank" class="btn btn-sm btn-outline-primary" title="Descargar PDF">
-                                        <i class="fas fa-file-pdf"></i> PDF
-                                    </a>
-                                ` : '<span class="text-muted" style="font-size:12px;">Sin archivo</span>'}
-                            </td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                }
-            } catch (err) {
-                console.error("Error al cargar certificados:", err);
-            }
-        }
-    </script>
-    <script src="src/assets/bootstrap-5.3.8/js/bootstrap.bundle.min.js"></script>
+    <!-- Módulo ES6 específico de Certificados -->
+    <script type="module" src="src/assets/js/certificado/certificadoDataTable.js"></script>
 </body>
+
 </html>
