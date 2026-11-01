@@ -37,21 +37,28 @@ function actualizarBotonEnvio($form, errores) {
 }
 
 function asociarValidaciones($form, objetoErrores) {
-    // Nombre del Curso
+    // Nombre del Curso (VARCHAR(150))
     $form.find('[name="nombre_curso"]').on('input change', function () {
-        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 100 caracteres.');
+        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 150 caracteres.');
         objetoErrores.nombre = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // Precio Normal
+    // Precio Normal (DECIMAL(10,2) >= 0)
     $form.find('[name="precio_normal"]').on('input change', function () {
         const valido = validarMonto(this);
         objetoErrores.precio_normal = !valido;
+        
+        // Revalidar precio preventa si existe
+        const $preventa = $form.find('[name="precio_preventa"]');
+        if ($preventa.val() && $preventa.val().trim() !== '') {
+            $preventa.trigger('change');
+        }
+        
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // Precio Preventa (opcional)
+    // Precio Preventa (opcional, debe ser menor al precio normal)
     $form.find('[name="precio_preventa"]').on('input change', function () {
         const valor = $(this).val() ? $(this).val().trim() : '';
         if (valor === '') {
@@ -59,17 +66,26 @@ function asociarValidaciones($form, objetoErrores) {
             $(this).siblings('.invalid-feedback').hide();
             objetoErrores.precio_preventa = false;
         } else {
-            const valido = validarMonto(this);
+            let valido = validarMonto(this);
+            const precioNormalVal = $form.find('[name="precio_normal"]').val();
+            if (valido && precioNormalVal && precioNormalVal.trim() !== '') {
+                const normal = parseFloat(precioNormalVal);
+                const preventa = parseFloat(valor);
+                if (preventa >= normal) {
+                    valido = false;
+                    validarCampo(this, false, 'El precio de preventa debe ser menor al precio normal.');
+                }
+            }
             objetoErrores.precio_preventa = !valido;
         }
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // Límite de cupos
+    // Límite de cupos (CHECK limite_cupos > 0)
     $form.find('[name="limite_cupos"]').on('input change', function () {
         const valor = $(this).val() ? $(this).val().trim() : '';
-        const esValido = regExp.enteroPositivo.test(valor) && parseInt(valor) >= 0;
-        validarCampo(this, esValido, 'Ingrese una cantidad válida de cupos (número entero >= 0).');
+        const esValido = regExp.enteroPositivo.test(valor) && parseInt(valor, 10) >= 1;
+        validarCampo(this, esValido, 'Ingrese una cantidad válida de cupos (número entero >= 1).');
         objetoErrores.limite_cupos = !esValido;
         actualizarBotonEnvio($form, objetoErrores);
     });
@@ -81,6 +97,24 @@ function asociarValidaciones($form, objetoErrores) {
             showWarning('Formulario Incompleto', 'Por favor, corrija los campos marcados en rojo antes de enviar.');
             return false;
         }
+
+        // Validación de coherencia de fechas acorde a los CHECKs de la BD
+        const fInicio = $form.find('[name="fecha_inicio_curso"]').val();
+        const fFinPrev = $form.find('[name="fecha_fin_preventa"]').val();
+        const fFinCurso = $form.find('[name="fecha_fin_curso"]').val();
+
+        if (fFinPrev && fInicio && new Date(fFinPrev) > new Date(fInicio)) {
+            e.preventDefault();
+            showWarning('Fechas Inválidas', 'La fecha de fin de preventa no puede ser posterior al inicio del curso.');
+            return false;
+        }
+
+        if (fFinCurso && fInicio && new Date(fFinCurso) < new Date(fInicio)) {
+            e.preventDefault();
+            showWarning('Fechas Inválidas', 'La fecha de finalización del curso debe ser posterior o igual a la de inicio.');
+            return false;
+        }
+
         return true;
     });
 }

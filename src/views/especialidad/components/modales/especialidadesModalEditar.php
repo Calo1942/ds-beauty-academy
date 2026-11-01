@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">Nombre de la Especialidad</label>
-                    <input type="text" name="nombre_especialidad" class="form-control" required onfocus="this.select()">
+                    <input type="text" name="nombre_especialidad" class="form-control" maxlength="150" required onfocus="this.select()">
                 </div>
             </div>
             <div class="modal-footer">

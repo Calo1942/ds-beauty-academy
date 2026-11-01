@@ -29,7 +29,7 @@ class EspecialidadModel extends DBConnect implements Crud
             $this->id_especialidad = $id;
         }
 
-        if (self::validator($nombre, $this->validate_names) !== true) {
+        if (self::validator($nombre, $this->validate_especialidad ?? $this->validate_text_long) !== true) {
             throw new Exception("El nombre de la especialidad es inválido.");
         }
 

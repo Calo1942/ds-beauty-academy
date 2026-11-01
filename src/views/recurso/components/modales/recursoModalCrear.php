@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="form-group mb-3">
                     <label class="form-label">Nombre del Recurso</label>
-                    <input type="text" name="nombre_recurso" id="nombre_recurso" class="form-control" placeholder="Ingrese el nombre" required>
+                    <input type="text" name="nombre_recurso" id="nombre_recurso" class="form-control" placeholder="Ingrese el nombre" maxlength="150" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Descripción</label>
@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">URL del Archivo</label>
-                    <input type="text" name="url_archivo_recurso" class="form-control" placeholder="Ingrese la URL del archivo" required>
+                    <input type="text" name="url_archivo_recurso" class="form-control" placeholder="Ingrese la URL del archivo" maxlength="512" required>
                 </div>
             </div>
             <div class="modal-footer">

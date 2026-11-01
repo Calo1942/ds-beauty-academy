@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Título de la Evaluación</label>
-                    <input type="text" name="titulo_evaluacion" class="form-control" required>
+                    <input type="text" name="titulo_evaluacion" class="form-control" maxlength="150" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Descripción</label>
@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Orden Cronológico</label>
-                    <input type="number" name="orden_evaluacion" class="form-control" required>
+                    <input type="number" name="orden_evaluacion" class="form-control" min="1" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Tipo de Evaluación</label>

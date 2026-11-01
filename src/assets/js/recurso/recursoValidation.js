@@ -31,18 +31,18 @@ function actualizarBotonEnvio($form, errores) {
 }
 
 function asociarValidaciones($form, objetoErrores) {
-    // Nombre del Recurso
+    // Nombre del Recurso (VARCHAR(150))
     $form.find('[name="nombre_recurso"]').on('input change', function () {
-        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 100 caracteres.');
+        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 150 caracteres.');
         objetoErrores.nombre = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // URL del Archivo
+    // URL del Archivo (VARCHAR(512))
     $form.find('[name="url_archivo_recurso"]').on('input change', function () {
         const valor = $(this).val() ? $(this).val().trim() : '';
-        const esValido = valor.length >= 2 && valor.length <= 255;
-        validarCampo(this, esValido, 'Ingrese un enlace o ruta válida para el recurso.');
+        const esValido = valor.length >= 2 && valor.length <= 512;
+        validarCampo(this, esValido, 'Ingrese un enlace o ruta válida para el recurso (hasta 512 caracteres).');
         objetoErrores.url_archivo = !esValido;
         actualizarBotonEnvio($form, objetoErrores);
     });

@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="form-group mb-3">
                     <label for="nombre_curso" class="form-label">Nombre del Curso</label>
-                    <input type="text" name="nombre_curso" class="form-control" placeholder="Ingrese el nombre del curso" required>
+                    <input type="text" name="nombre_curso" class="form-control" placeholder="Ingrese el nombre del curso" maxlength="150" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="descripcion_curso" class="form-label">Descripción</label>
@@ -24,11 +24,11 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="precio_preventa" class="form-label">Precio Preventa</label>
-                    <input type="number" step="0.01" name="precio_preventa" class="form-control" placeholder="Ingrese el precio de preventa (opcional)">
+                    <input type="number" step="0.01" min="0" name="precio_preventa" class="form-control" placeholder="Ingrese el precio de preventa (opcional)">
                 </div>
                 <div class="form-group mb-3">
                     <label for="precio_normal" class="form-label">Precio Normal</label>
-                    <input type="number" step="0.01" name="precio_normal" class="form-control" required>
+                    <input type="number" step="0.01" min="0" name="precio_normal" class="form-control" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="fecha_fin_preventa" class="form-label">Fecha Fin Preventa</label>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="limite_cupos" class="form-label">Límite de Cupos</label>
-                    <input type="number" name="limite_cupos" class="form-control" required>
+                    <input type="number" name="limite_cupos" class="form-control" min="1" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="estatus_curso" class="form-label">Estatus</label>

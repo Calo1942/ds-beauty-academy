@@ -26,11 +26,10 @@ function actualizarBotonEnvio($form, errores) {
         $btn.removeClass('opacity-50 cursor-not-allowed');
     }
 }
-
 function asociarValidaciones($form, objetoErrores) {
-    // Nombre del Banco
+    // Nombre del Banco (VARCHAR(150))
     $form.find('[name="nombre_banco"]').on('input change', function () {
-        const valido = validarTexto(this, 'El nombre del banco debe tener entre 2 y 60 caracteres.');
+        const valido = validarTexto(this, 'El nombre del banco debe tener entre 2 y 150 caracteres.');
         objetoErrores.nombre_banco = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });

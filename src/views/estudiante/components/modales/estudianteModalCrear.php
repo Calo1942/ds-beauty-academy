@@ -9,39 +9,39 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
                         <label class="form-label">Primer Nombre</label>
-                        <input type="text" name="primer_nombre_estudiante" class="form-control" placeholder="Ej: Juan" required onfocus="this.select()">
+                        <input type="text" name="primer_nombre_estudiante" class="form-control" placeholder="Ej: Juan" maxlength="100" required onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Segundo Nombre</label>
-                        <input type="text" name="segundo_nombre_estudiante" class="form-control" placeholder="Ej: Carlos" onfocus="this.select()">
+                        <input type="text" name="segundo_nombre_estudiante" class="form-control" placeholder="Ej: Carlos" maxlength="100" onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Primer Apellido</label>
-                        <input type="text" name="primer_apellido_estudiante" class="form-control" placeholder="Ej: Rodríguez" required onfocus="this.select()">
+                        <input type="text" name="primer_apellido_estudiante" class="form-control" placeholder="Ej: Rodríguez" maxlength="100" required onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Segundo Apellido</label>
-                        <input type="text" name="segundo_apellido_estudiante" class="form-control" placeholder="Ej: López" onfocus="this.select()">
+                        <input type="text" name="segundo_apellido_estudiante" class="form-control" placeholder="Ej: López" maxlength="100" onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Cédula</label>
-                        <input type="text" name="cedula_estudiante" class="form-control" placeholder="Ej: 87654321" required onfocus="this.select()">
+                        <input type="text" name="cedula_estudiante" class="form-control" placeholder="Ej: 87654321 o V-87654321" maxlength="50" required onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Correo Electrónico</label>
-                        <input type="email" name="correo_estudiante" class="form-control" placeholder="Ej: juan@gmail.com" required onfocus="this.select()">
+                        <input type="email" name="correo_estudiante" class="form-control" placeholder="Ej: juan@gmail.com" maxlength="150" required onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Teléfono Principal</label>
-                        <input type="text" name="telefono_principal_estudiante" class="form-control" placeholder="Ej: 04128765432" required onfocus="this.select()">
+                        <input type="text" name="telefono_principal_estudiante" class="form-control" placeholder="Ej: 04128765432" maxlength="50" required onfocus="this.select()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Teléfono Alternativo</label>
-                        <input type="text" name="telefono_alternativo_estudiante" class="form-control" placeholder="Ej: 04148765432" onfocus="this.select()">
+                        <input type="text" name="telefono_alternativo_estudiante" class="form-control" placeholder="Ej: 04148765432" maxlength="50" onfocus="this.select()">
                     </div>
                     <div class="form-group" style="grid-column: span 2;">
                         <label class="form-label">Usuario Instagram</label>
-                        <input type="text" name="usuario_instagram_estudiante" class="form-control" placeholder="Ej: @juan_rodriguez" onfocus="this.select()">
+                        <input type="text" name="usuario_instagram_estudiante" class="form-control" placeholder="Ej: @juan_rodriguez" maxlength="100" onfocus="this.select()">
                     </div>
                 </div>
             </div>

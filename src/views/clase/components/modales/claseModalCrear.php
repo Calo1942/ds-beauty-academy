@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <div class="form-group mb-3">
                     <label class="form-label">Título de la Clase</label>
-                    <input type="text" name="titulo_clase" class="form-control" placeholder="Ingrese el título de la clase" required>
+                    <input type="text" name="titulo_clase" class="form-control" placeholder="Ingrese el título de la clase" maxlength="150" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Descripción</label>
@@ -16,11 +16,11 @@
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">URL del Video</label>
-                    <input type="text" name="url_video_clase" class="form-control" placeholder="Ingrese la URL del video" required>
+                    <input type="text" name="url_video_clase" class="form-control" placeholder="Ingrese la URL del video" maxlength="512" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Orden</label>
-                    <input type="number" name="orden_clase" class="form-control" placeholder="Número de orden" required>
+                    <input type="number" name="orden_clase" class="form-control" min="1" placeholder="Número de orden" required>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">ID Instructor Curso</label>

@@ -37,7 +37,7 @@ class CertificadoModel extends DBConnect implements Crud
         if (self::validator($id_matricula, $this->validate_id) !== true) {
             throw new Exception("El ID de la matrícula es inválido.");
         }
-        if (self::validator($titulo, $this->validate_text_long) !== true) {
+        if (self::validator($titulo, $this->validate_text_very_long) !== true) {
             throw new Exception("El título del certificado es inválido.");
         }
         if (!empty($descripcion) && self::validator($descripcion, $this->validate_description) !== true) {

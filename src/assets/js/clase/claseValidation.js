@@ -36,18 +36,18 @@ function actualizarBotonEnvio($form, errores) {
 }
 
 function asociarValidaciones($form, objetoErrores) {
-    // Título de la Clase
+    // Título de la Clase (VARCHAR(150))
     $form.find('[name="titulo_clase"]').on('input change', function () {
-        const valido = validarTexto(this, 'El título debe tener entre 2 y 100 caracteres.');
+        const valido = validarTexto(this, 'El título debe tener entre 2 y 150 caracteres.');
         objetoErrores.titulo = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // URL del Video
+    // URL del Video (VARCHAR(512))
     $form.find('[name="url_video_clase"]').on('input change', function () {
         const valor = $(this).val() ? $(this).val().trim() : '';
-        const esValido = valor.length >= 5 && valor.length <= 255;
-        validarCampo(this, esValido, 'Ingrese una URL o enlace válido para el video.');
+        const esValido = valor.length >= 5 && valor.length <= 512;
+        validarCampo(this, esValido, 'Ingrese una URL o enlace válido para el video (hasta 512 caracteres).');
         objetoErrores.url_video = !esValido;
         actualizarBotonEnvio($form, objetoErrores);
     });

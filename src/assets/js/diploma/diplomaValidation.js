@@ -1,6 +1,7 @@
 // diplomaValidation.js - Validaciones en tiempo real para formularios de Diplomas
 import {
     validarTexto,
+    validarTextoMuyLargo,
     validarCampo
 } from '../helpers/validation.js';
 import { showWarning } from '../helpers/sweetalert.js';
@@ -33,16 +34,16 @@ function actualizarBotonEnvio($form, errores) {
 }
 
 function asociarValidaciones($form, objetoErrores) {
-    // Título del Diploma
+    // Título del Diploma (VARCHAR(255))
     $form.find('[name="nombre_diploma"]').on('input change', function () {
-        const valido = validarTexto(this, 'El título debe tener entre 2 y 100 caracteres.');
+        const valido = validarTextoMuyLargo(this, 'El título del diploma debe tener entre 2 y 255 caracteres.');
         objetoErrores.nombre = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });
 
-    // Categoría
+    // Categoría (VARCHAR(100))
     $form.find('[name="categoria_diploma"]').on('input change', function () {
-        const valido = validarTexto(this, 'La categoría debe tener entre 2 y 60 caracteres.');
+        const valido = validarTexto(this, 'La categoría debe tener entre 2 y 100 caracteres.');
         objetoErrores.categoria = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });

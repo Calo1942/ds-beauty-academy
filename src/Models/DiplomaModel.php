@@ -37,8 +37,8 @@ class DiplomaModel extends DBConnect implements Crud
             $this->id_diploma = $id;
         }
 
-        if (self::validator($nombre, $this->validate_text_long) !== true) {
-            throw new Exception("El nombre del Diploma.");
+        if (self::validator($nombre, $this->validate_text_very_long) !== true) {
+            throw new Exception("El nombre del diploma es inválido.");
         }
 
         if (!empty($descripcion) && self::validator($descripcion, $this->validate_description) !== true) {

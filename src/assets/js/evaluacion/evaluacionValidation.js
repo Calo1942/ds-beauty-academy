@@ -32,11 +32,10 @@ function actualizarBotonEnvio($form, errores) {
         $btn.removeClass('opacity-50 cursor-not-allowed');
     }
 }
-
 function asociarValidaciones($form, objetoErrores) {
-    // Título de la Evaluación
+    // Título de la Evaluación (VARCHAR(150))
     $form.find('[name="titulo_evaluacion"]').on('input change', function () {
-        const valido = validarTexto(this, 'El título debe tener entre 2 y 100 caracteres.');
+        const valido = validarTexto(this, 'El título debe tener entre 2 y 150 caracteres.');
         objetoErrores.titulo = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });

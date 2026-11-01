@@ -28,9 +28,9 @@ function actualizarBotonEnvio($form, errores) {
 }
 
 function asociarValidaciones($form, objetoErrores) {
-    // Nombre de la Especialidad
+    // Nombre de la Especialidad (VARCHAR(150))
     $form.find('[name="nombre_especialidad"]').on('input change', function () {
-        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 60 caracteres.');
+        const valido = validarTexto(this, 'El nombre debe tener entre 2 y 150 caracteres.');
         objetoErrores.nombre_especialidad = !valido;
         actualizarBotonEnvio($form, objetoErrores);
     });

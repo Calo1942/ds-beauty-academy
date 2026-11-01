@@ -30,7 +30,7 @@ class BancoModel extends DBConnect implements Crud
             $this->id_banco = $id;
         }
 
-        if (self::validator($nombre_banco, $this->validate_names) !== true) {
+        if (self::validator($nombre_banco, $this->validate_banco ?? $this->validate_text_long) !== true) {
             throw new Exception("El nombre del banco es inválido.");
         }
 

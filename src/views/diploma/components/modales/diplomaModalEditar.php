@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">Título del Diploma</label>
-                    <input type="text" name="nombre_diploma" class="form-control" required onfocus="this.select()">
+                    <input type="text" name="nombre_diploma" class="form-control" maxlength="255" required onfocus="this.select()">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Descripción</label>
@@ -17,11 +17,11 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Categoría</label>
-                    <input type="text" name="categoria_diploma" class="form-control" required onfocus="this.select()">
+                    <input type="text" name="categoria_diploma" class="form-control" maxlength="100" required onfocus="this.select()">
                 </div>
                 <div class="form-group">
                     <label class="form-label">URL PDF (Opcional)</label>
-                    <input type="url" name="url_pdf_diploma" class="form-control" onfocus="this.select()">
+                    <input type="url" name="url_pdf_diploma" class="form-control" maxlength="512" onfocus="this.select()">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Instructor</label>

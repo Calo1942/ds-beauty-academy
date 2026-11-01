@@ -31,11 +31,11 @@ class RecursoModel extends DBConnect implements Crud
 
     public function setNombreRecurso($nombre)
     {
-        $this->validarString($nombre, 3, 100, 'Nombre del recurso');
+        $this->validarString($nombre, 2, 150, 'Nombre del recurso');
         $this->nombre_recurso = $nombre;
     }
 
-    private function validarString($valor, $min = 3, $max = 100, $campo = 'Nombre del recurso')
+    private function validarString($valor, $min = 2, $max = 150, $campo = 'Nombre del recurso')
     {
         if (empty($valor) || strlen($valor) < $min || strlen($valor) > $max) {
             throw new Exception("El {$campo} debe tener entre {$min} y {$max} caracteres.");

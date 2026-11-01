@@ -33,7 +33,7 @@ const crearValidador = (regex, campo, mensajeError) => {
 
 // Validadores específicos
 export const validarNombre = (campo) => 
-    crearValidador(regExp.nombreApellido, campo, 'Ingrese un nombre válido (2-30 letras, sin números).');
+    crearValidador(regExp.nombreApellido, campo, 'Ingrese un nombre válido (2 a 100 letras, sin números).');
 
 export const validarNombreOpcional = (campo) => {
     const $campo = $(campo);
@@ -43,11 +43,11 @@ export const validarNombreOpcional = (campo) => {
         $campo.siblings('.invalid-feedback').hide();
         return true;
     }
-    return crearValidador(regExp.nombreApellido, campo, 'Ingrese un nombre válido (2-30 letras).');
+    return crearValidador(regExp.nombreApellido, campo, 'Ingrese un nombre válido (2 a 100 letras).');
 };
 
 export const validarApellido = (campo) => 
-    crearValidador(regExp.nombreApellido, campo, 'Ingrese un apellido válido (2-30 letras, sin números).');
+    crearValidador(regExp.nombreApellido, campo, 'Ingrese un apellido válido (2 a 100 letras, sin números).');
 
 export const validarApellidoOpcional = (campo) => {
     const $campo = $(campo);
@@ -57,17 +57,17 @@ export const validarApellidoOpcional = (campo) => {
         $campo.siblings('.invalid-feedback').hide();
         return true;
     }
-    return crearValidador(regExp.nombreApellido, campo, 'Ingrese un apellido válido (2-30 letras).');
+    return crearValidador(regExp.nombreApellido, campo, 'Ingrese un apellido válido (2 a 100 letras).');
 };
 
 export const validarCedula = (campo) => 
-    crearValidador(regExp.cedula, campo, 'La cédula debe contener entre 7 y 9 números.');
+    crearValidador(regExp.cedula, campo, 'Ingrese una cédula válida (ej: 12345678 o V-12345678).');
 
 export const validarEmail = (campo) => 
     crearValidador(regExp.email, campo, 'Ingrese un correo electrónico válido (ej: usuario@gmail.com).');
 
 export const validarTelefono = (campo) => 
-    crearValidador(regExp.telefono, campo, 'El teléfono debe tener exactamente 11 dígitos numéricos (ej: 04121234567).');
+    crearValidador(regExp.telefono, campo, 'Ingrese un teléfono válido (ej: 04121234567 o +58 412 1234567).');
 
 export const validarTelefonoOpcional = (campo) => {
     const $campo = $(campo);
@@ -77,7 +77,7 @@ export const validarTelefonoOpcional = (campo) => {
         $campo.siblings('.invalid-feedback').hide();
         return true;
     }
-    return crearValidador(regExp.telefono, campo, 'El teléfono alternativo debe tener 11 dígitos numéricos.');
+    return crearValidador(regExp.telefono, campo, 'Ingrese un teléfono alternativo válido (ej: 04141234567 o +58 414 1234567).');
 };
 
 export const validarInstagram = (campo) => {
@@ -88,14 +88,41 @@ export const validarInstagram = (campo) => {
         $campo.siblings('.invalid-feedback').hide();
         return true;
     }
-    return crearValidador(regExp.instagram, campo, 'Formato inválido. Ej: @usuario o usuario.');
+    return crearValidador(regExp.instagram, campo, 'Formato inválido. Ej: @usuario o usuario (hasta 100 caracteres).');
 };
 
 export const validarTexto = (campo, mensaje = 'Este campo no cumple con el formato requerido.') => 
     crearValidador(regExp.texto, campo, mensaje);
 
+export const validarTextoMuyLargo = (campo, mensaje = 'Este campo debe contener entre 2 y 255 caracteres.') => 
+    crearValidador(regExp.textoMuyLargo, campo, mensaje);
+
+export const validarDescripcion = (campo, mensaje = 'Ingrese una descripción válida.') => {
+    const $campo = $(campo);
+    const valor = $campo.val() ? $campo.val().trim() : '';
+    if (valor === '') {
+        $campo.removeClass('is-invalid is-valid');
+        $campo.siblings('.invalid-feedback').hide();
+        return true;
+    }
+    return crearValidador(regExp.descripcion, campo, mensaje);
+};
+
 export const validarMonto = (campo) => 
     crearValidador(regExp.monto, campo, 'Ingrese un monto numérico válido mayor o igual a 0.');
+
+export const validarReferencia = (campo, mensaje = 'La referencia debe tener entre 4 y 150 caracteres.') => 
+    crearValidador(regExp.referencia, campo, mensaje);
+
+export const validarCalificacion = (campo) => 
+    crearValidador(regExp.calificacion, campo, 'La calificación debe estar comprendida entre 0 y 100.');
+
+export const validarUrl = (campo, mensaje = 'Ingrese una URL o enlace válido (hasta 512 caracteres).') => {
+    const $campo = $(campo);
+    const valor = $campo.val() ? $campo.val().trim() : '';
+    const esValido = valor.length >= 2 && valor.length <= 512 && regExp.url.test(valor);
+    return validarCampo($campo, esValido, mensaje);
+};
 
 /**
  * Limpia todas las clases y mensajes de validación de un formulario
