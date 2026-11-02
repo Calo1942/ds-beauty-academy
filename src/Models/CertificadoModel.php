@@ -133,7 +133,8 @@ class CertificadoModel extends DBConnect implements Crud
                     FROM certificados c
                     JOIN matriculas m ON c.id_matricula = m.id_matricula
                     JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN cursos cu ON m.id_curso = cu.id_curso
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
                     WHERE c.estatus_certificado != 'Anulado'";
             $stmt = $this->con->prepare($sql);
             $stmt->execute();
@@ -155,7 +156,8 @@ class CertificadoModel extends DBConnect implements Crud
                     FROM certificados c
                     JOIN matriculas m ON c.id_matricula = m.id_matricula
                     JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN cursos cu ON m.id_curso = cu.id_curso
+                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    JOIN cursos cu ON ic.id_curso = cu.id_curso
                     WHERE c.id_certificado = :id";
             $stmt = $this->con->prepare($sql);
             $stmt->bindValue(':id', $id);

@@ -23,16 +23,21 @@
 --    - nelson.ramirez@beautyacademy.com     | Clave: Instructor123*  (Colorimetría / Balayage)
 --
 -- 3. ESTUDIANTES (Rol: Estudiante, Catálogo, Clases, Entregas y Certificados):
---    - camila.herrera@gmail.com          | Clave: Estudiante123*  (Solvente, múltiples cursos y certificado)
---    - sofia.morales@hotmail.com         | Clave: Estudiante123*  (Solvente, entregas aprobadas)
---    - mariana.pena@gmail.com            | Clave: Estudiante123*  (Solvente, cursos cruzados)
---    - isabella.castro@gmail.com         | Clave: Estudiante123*  (Solvente, graduada)
---    - valentina.ortiz@outlook.com       | Clave: Estudiante123*  (Solvente, entregas activas)
---    - lucia.mendez@gmail.com            | Clave: Estudiante123*  (Deudora / Cupo Reservado sin pago)
---    - valeria.navarro@yahoo.com         | Clave: Estudiante123*  (Deudora / Pago en revisión 'Pendiente')
---    - maria.rivas@gmail.com             | Clave: Estudiante123*  (Deudora / Pago en revisión 'Pendiente')
---    - gabriel.pineda@gmail.com          | Clave: Estudiante123*  (Barbería graduado con Certificado)
---    - kevin.colmenarez@gmail.com        | Clave: Estudiante123*  (Barbería graduado con Certificado)
+--    - Clave universal para todos los estudiantes (IDs 1 al 32): Estudiante123*
+--    - camila.herrera@gmail.com          | (Solvente, múltiples cursos y certificado emitido)
+--    - sofia.morales@hotmail.com         | (Solvente, entregas aprobadas y certificado emitido)
+--    - mariana.pena@gmail.com            | (Solvente, cursos cruzados)
+--    - isabella.castro@gmail.com         | (Solvente, graduada con certificado)
+--    - valentina.ortiz@outlook.com       | (Solvente, entregas activas en revisión)
+--    - lucia.mendez@gmail.com            | (Deudora / Cupo Reservado sin pago registrado)
+--    - valeria.navarro@yahoo.com         | (Deudora / Pago en revisión 'Pendiente')
+--    - maria.rivas@gmail.com             | (Deudora / Pago en revisión 'Pendiente')
+--    - andrea.torres@gmail.com           | (Estudiante inactiva / Matrícula cancelada)
+--    - gabriel.pineda@gmail.com          | (Barbería graduado con Certificado emitido)
+--    - kevin.colmenarez@gmail.com        | (Barbería graduado con Certificado emitido)
+--    - paola.benitez@outlook.com         | (Graduada / Certificado 'Pendiente de Emisión')
+--    - anthony.mendoza@gmail.com         | (Graduado / Certificado 'Pendiente de Emisión')
+--    - nayelis.teran@gmail.com           | (Activa en Colorimetría)
 -- ==============================================================================
 
 USE ds_beauty_academy_db;
@@ -255,7 +260,7 @@ INSERT INTO recursos (id_recurso, nombre_recurso, descripcion_recurso, url_archi
 (10, 'Rueda de Decoloración y Fondos de Aclaración Capilar', 'Tabla de fondos residuales del 1 al 10 y fórmulas exactas de matización pastel para rubios platinados.', 'assets/uploads/recursos/rueda_fondos_aclaracion.pdf', 1, '2026-10-06 15:00:00'),
 (11, 'Ficha Clínica Cosmiátrica y Evaluación de Biotipos Cutáneos', 'Formato clínico para registro de hidratación, sensibilidad, pigmentaciones y registro fotográfico.', 'assets/uploads/recursos/ficha_evaluacion_facial.pdf', 1, '2026-01-15 11:00:00'),
 (12, 'Guía de Tipos de Ácidos y pH para Peelings Químicos Seguros', 'Resumen dosimétrico de alfahidroxiácidos (AHA) y betahidroxiácidos (BHA) para cabina cosmética.', 'assets/uploads/recursos/guia_peelings_esteticos.pdf', 1, '2026-01-15 11:30:00'),
-(13, 'Póster de Ángulos de Elevación y Corte de Cabello Masculino', 'Diagrama ilustrativo de grados de corte (0°, 45°, 90°, 180°) y líneas de peso en barbería.', 'assets/uploads/recursos/poster_angulos_corte.pdf', 1, '2026-02-05 16:00:00'),
+(13, 'Póster de Ángulos de Elevación y Corte de Cabello Masculino', 'Diagrama ilustrativo de grados de corte (0 grados, 45 grados, 90 grados, 180 grados) y líneas de peso en barbería.', 'assets/uploads/recursos/poster_angulos_corte.pdf', 1, '2026-02-05 16:00:00'),
 (14, 'Guía de Mantenimiento y Calibración de Máquinas Clipper', 'Procedimiento de desmontaje, desinfección ultravioleta y cambio de resortes y levas oscilantes.', 'assets/uploads/recursos/mantenimiento_maquinas_barber.pdf', 1, '2026-02-05 16:30:00');
 
 -- ==============================================================================
@@ -294,7 +299,7 @@ INSERT INTO estudiantes (id_estudiante, primer_nombre_estudiante, segundo_nombre
 (6, 'Lucía', 'Gabriela', 'Méndez', 'Paredes', 'V-28472910', 'lucia.mendez@gmail.com', '+58 414 6918234', NULL, '@lucia_g_mendez', 1, '2026-01-22 14:00:00'),
 (7, 'Valeria', 'Coromoto', 'Navarro', 'Gil', 'V-26341890', 'valeria.navarro@yahoo.com', '+58 424 7182930', '+58 251 7182930', '@valeria_navarro_nails', 1, '2026-01-23 09:45:00'),
 (8, 'María', 'Alejandra', 'Rivas', 'Zambrano', 'V-27123894', 'maria.rivas@gmail.com', '+58 412 8291047', NULL, '@mariale_rivas_estilismo', 1, '2026-01-23 11:20:00'),
-(9, 'Andrea', 'Carolina', 'Torres', 'Medina', 'V-28901234', 'andrea.torres@gmail.com', '+58 414 9382019', '+58 251 9382019', '@andrea_torres_vzla', 1, '2026-01-24 10:00:00'),
+(9, 'Andrea', 'Carolina', 'Torres', 'Medina', 'V-28901234', 'andrea.torres@gmail.com', '+58 414 9382019', '+58 251 9382019', '@andrea_torres_vzla', 0, '2026-01-24 10:00:00'),
 (10, 'Natalia', 'Fabiana', 'Salazar', 'Pinto', 'V-26781290', 'natalia.salazar@hotmail.com', '+58 424 1029485', NULL, '@natalia_skincare_pro', 1, '2026-01-24 15:30:00'),
 (11, 'Oriana', 'Beatriz', 'Romero', 'Crespo', 'V-27543891', 'oriana.romero@gmail.com', '+58 412 2193840', '+58 251 2193840', '@oriana_lashes_barquisimeto', 1, '2026-02-01 09:10:00'),
 (12, 'Stephany', 'Paola', 'Márquez', 'Ramos', 'V-28341902', 'stephany.marquez@gmail.com', '+58 416 3284910', NULL, '@stephany_lashes_art', 1, '2026-02-01 11:45:00'),
@@ -317,7 +322,7 @@ INSERT INTO estudiantes (id_estudiante, primer_nombre_estudiante, segundo_nombre
 (29, 'José', 'Daniel', 'Morales', 'Bastidas', 'V-28190283', 'jose.morales@gmail.com', '+58 412 2928374', '+58 251 2928374', '@josedaniel_barber', 1, '2026-02-11 08:40:00'),
 (30, 'Anthony', 'Miguel', 'Mendoza', 'Peña', 'V-26819203', 'anthony.mendoza@gmail.com', '+58 414 3039485', NULL, '@anthony_fades_master', 1, '2026-02-11 15:10:00'),
 (31, 'Bárbara', 'Cristina', 'Aguilar', 'Flores', 'V-27591823', 'barbara.aguilar@gmail.com', '+58 424 4140596', '+58 251 4140596', '@barbara_aguilar_cejas', 1, '2026-02-12 09:25:00'),
-(32, 'Nayelis', 'Milagros', 'Terán', 'Silva', 'V-28381920', 'nayelis.teran@gmail.com', '+58 412 5251607', NULL, '@nayelis_color_hair', 0, '2026-02-12 14:00:00');
+(32, 'Nayelis', 'Milagros', 'Terán', 'Silva', 'V-28381920', 'nayelis.teran@gmail.com', '+58 412 5251607', NULL, '@nayelis_color_hair', 1, '2026-02-12 14:00:00');
 
 -- ==============================================================================
 -- 13. TABLA: usuarios (Cuentas de autenticación verificadas con password_verify)
@@ -342,7 +347,7 @@ INSERT INTO usuarios (id_usuario, email_usuario, password_usuario, id_rol, id_in
 (9, 'nelson.ramirez@beautyacademy.com', '$2y$10$ZCxxpto.t0TIwxqz/37RYuvN3d9ZBGdjhDIxhDB/6WK4s.K/TYE3.', 2, 7, NULL, 1, '2026-01-13 10:00:00'),
 (10, 'patricia.rojas@beautyacademy.com', '$2y$10$ZCxxpto.t0TIwxqz/37RYuvN3d9ZBGdjhDIxhDB/6WK4s.K/TYE3.', 2, 8, NULL, 0, '2026-01-13 16:30:00'),
 
--- Cuentas de Estudiantes para Pruebas del Portal del Alumno
+-- Cuentas de Estudiantes para Pruebas del Portal del Alumno (Todos los 32 estudiantes)
 (11, 'camila.herrera@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 1, 1, '2026-01-20 09:00:00'),
 (12, 'sofia.morales@hotmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 2, 1, '2026-01-20 09:30:00'),
 (13, 'mariana.pena@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 3, 1, '2026-01-21 10:15:00'),
@@ -351,10 +356,30 @@ INSERT INTO usuarios (id_usuario, email_usuario, password_usuario, id_rol, id_in
 (16, 'lucia.mendez@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 6, 1, '2026-01-22 14:00:00'),
 (17, 'valeria.navarro@yahoo.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 7, 1, '2026-01-23 09:45:00'),
 (18, 'maria.rivas@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 8, 1, '2026-01-23 11:20:00'),
-(19, 'andrea.torres@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 9, 1, '2026-01-24 10:00:00'),
+(19, 'andrea.torres@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 9, 0, '2026-01-24 10:00:00'),
 (20, 'natalia.salazar@hotmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 10, 1, '2026-01-24 15:30:00'),
-(21, 'gabriel.pineda@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 27, 1, '2026-02-10 11:30:00'),
-(22, 'kevin.colmenarez@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 28, 1, '2026-02-10 16:00:00');
+(21, 'oriana.romero@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 11, 1, '2026-02-01 09:10:00'),
+(22, 'stephany.marquez@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 12, 1, '2026-02-01 11:45:00'),
+(23, 'daniela.quintero@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 13, 1, '2026-02-02 08:50:00'),
+(24, 'paola.benitez@outlook.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 14, 1, '2026-02-02 14:15:00'),
+(25, 'genesis.blanco@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 15, 1, '2026-02-03 10:20:00'),
+(26, 'adriana.suarez@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 16, 1, '2026-02-03 16:00:00'),
+(27, 'claudia.altuve@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 17, 1, '2026-02-04 09:30:00'),
+(28, 'michelle.chacon@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 18, 1, '2026-02-05 11:00:00'),
+(29, 'fabiana.villegas@hotmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 19, 1, '2026-02-05 15:40:00'),
+(30, 'yoselin.guanipa@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 20, 1, '2026-02-06 08:20:00'),
+(31, 'vanessa.leon@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 21, 1, '2026-02-06 13:50:00'),
+(32, 'kimberly.montilla@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 22, 1, '2026-02-07 10:10:00'),
+(33, 'carmen.briceno@yahoo.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 23, 1, '2026-02-07 16:30:00'),
+(34, 'laura.maldonado@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 24, 1, '2026-02-08 09:00:00'),
+(35, 'anabella.carrizo@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 25, 1, '2026-02-08 14:40:00'),
+(36, 'victoria.palacios@outlook.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 26, 1, '2026-02-09 10:50:00'),
+(37, 'gabriel.pineda@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 27, 1, '2026-02-10 11:30:00'),
+(38, 'kevin.colmenarez@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 28, 1, '2026-02-10 16:00:00'),
+(39, 'jose.morales@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 29, 1, '2026-02-11 08:40:00'),
+(40, 'anthony.mendoza@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 30, 1, '2026-02-11 15:10:00'),
+(41, 'barbara.aguilar@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 31, 1, '2026-02-12 09:25:00'),
+(42, 'nayelis.teran@gmail.com', '$2y$10$68e7MkYKF15PhaCPgu.mTOjVvosaPAQluuUDnK1HoTcaKnGxLwYdS', 3, NULL, 32, 1, '2026-02-12 14:00:00');
 
 -- ==============================================================================
 -- 14. TABLA: matriculas
@@ -510,7 +535,7 @@ INSERT INTO evaluaciones (id_evaluacion, id_instructor_curso, titulo_evaluacion,
 -- ==============================================================================
 INSERT INTO entregas_evaluaciones (id_entrega_evaluacion, id_evaluacion, id_matricula, url_archivo_entrega, comentarios_estudiante, calificacion_entrega, feedback_instructora_entrega, fecha_entrega, estatus_entrega, fecha_creacion) VALUES
 -- Curso 1: Entregas de Práctica 1 (Evaluación 1)
-(1, 1, 1, 'assets/uploads/entregas/entrega_camila_eval1.pdf', 'Instructora Daniela, adjunto el paso a paso de la preparación con suero de ácido hialurónico y corrección naranja para las ojeras pigmentadas de mi modelo.', 95.00, '¡Excelente trabajo Camila! La piel luce luminosa, hidratada y sin textura acartonada. El difuminado del corrector complementario fue impecable.', '2026-09-25 14:30:00', 'Aprobada', '2026-09-25 14:30:00'),
+(1, 1, 1, 'assets/uploads/entregas/entrega_camila_eval1.pdf', 'Instructora Daniela, adjunto el paso a paso de la preparación con suero de ácido hialurónico y corrección naranja para las ojeras pigmentadas de mi modelo.', 95.00, 'Excelente trabajo Camila! La piel luce luminosa, hidratada y sin textura acartonada. El difuminado del corrector complementario fue impecable.', '2026-09-25 14:30:00', 'Aprobada', '2026-09-25 14:30:00'),
 (2, 1, 2, 'assets/uploads/entregas/entrega_sofia_eval1.pdf', 'Profe, apliqué primer matificante en la zona T y base ligera. Adjunto fotos con luz natural y con aro de luz.', 90.00, 'Muy buen manejo de la piel mixta Sofía. Cuida sellar muy suavemente con la borla en las aletas nasales para evitar que se acumule producto.', '2026-09-26 11:15:00', 'Aprobada', '2026-09-26 11:15:00'),
 (3, 1, 3, 'assets/uploads/entregas/entrega_mariana_eval1.pdf', 'Adjunto mi registro de corrección de manchas de sol y rojeces con corrector verde.', 88.00, 'Buen trabajo neutralizando las rojeces Mariana. Para la próxima sesión, aplica una capa más fina de base para que el acabado sea aún más natural.', '2026-09-27 16:40:00', 'Aprobada', '2026-09-27 16:40:00'),
 (4, 1, 4, 'assets/uploads/entregas/entrega_isabella_eval1.pdf', 'Subiendo mi entrega de preparación de piel seca madura.', 92.00, 'Hermosa jugosidad lograda en piel madura Isabella. La elección de bases satinadas fue muy acertada.', '2026-09-28 10:20:00', 'Aprobada', '2026-09-28 10:20:00'),
@@ -518,15 +543,15 @@ INSERT INTO entregas_evaluaciones (id_entrega_evaluacion, id_evaluacion, id_matr
 (6, 1, 10, 'assets/uploads/entregas/entrega_natalia_eval1.pdf', 'Envío de práctica 1 con piel con tendencia acnéica.', 55.00, 'Natalia, el tono del corrector naranja quedó muy visible por debajo de la base. Debes difuminar mejor los bordes antes de asentar el pigmento. Por favor realiza una nueva prueba.', '2026-09-29 15:00:00', 'Repetir', '2026-09-29 15:00:00'),
 
 -- Curso 1: Entregas de Quiz Teórico (Evaluación 2)
-(7, 2, 1, 'assets/uploads/entregas/quiz_camila.pdf', 'Respuestas al examen de círculo cromático y proporciones.', 98.00, '¡Puntaje casi perfecto Camila! Dominas muy bien los conceptos de armonía análoga y complementaria.', '2026-10-02 09:30:00', 'Aprobada', '2026-10-02 09:30:00'),
+(7, 2, 1, 'assets/uploads/entregas/quiz_camila.pdf', 'Respuestas al examen de círculo cromático y proporciones.', 98.00, 'Puntaje casi perfecto Camila! Dominas muy bien los conceptos de armonía análoga y complementaria.', '2026-10-02 09:30:00', 'Aprobada', '2026-10-02 09:30:00'),
 (8, 2, 2, 'assets/uploads/entregas/quiz_sofia.pdf', 'Adjunto cuestionario resuelto.', 85.00, 'Respuestas muy acertadas. Repasa únicamente la diferencia entre tinte, tono y matiz.', '2026-10-03 14:00:00', 'Aprobada', '2026-10-03 14:00:00'),
 
 -- Curso 2: Entregas de Pestañas (Evaluación 5)
-(9, 5, 11, 'assets/uploads/entregas/abanicos_oriana.jpg', 'Buenas tardes Instructora Valeria, envío foto macro de mis abanicos 4D con fibra 0.07.', 92.00, '¡Bases súper compactas Oriana! La apertura del ramo es muy equilibrada. Estás lista para modelo real.', '2026-10-12 11:00:00', 'Aprobada', '2026-10-12 11:00:00'),
+(9, 5, 11, 'assets/uploads/entregas/abanicos_oriana.jpg', 'Buenas tardes Instructora Valeria, envío foto macro de mis abanicos 4D con fibra 0.07.', 92.00, 'Bases súper compactas Oriana! La apertura del ramo es muy equilibrada. Estás lista para modelo real.', '2026-10-12 11:00:00', 'Aprobada', '2026-10-12 11:00:00'),
 (10, 5, 12, 'assets/uploads/entregas/abanicos_stephany.jpg', 'Adjunto mi práctica de abanicos en esponja.', NULL, NULL, '2026-10-15 16:30:00', 'En Revisión', '2026-10-15 16:30:00'),
 
 -- Curso 3: Entregas de Uñas (Evaluación 7)
-(11, 7, 18, 'assets/uploads/entregas/cuticula_michelle.jpg', 'Profe Mariana, foto del corte de cutícula y reflejo con base rubber.', 94.00, '¡Limpieza impecable Michelle! El eponiquio no presenta rojeces ni cortes y el blique de luz es completamente redondo.', '2026-09-30 15:00:00', 'Aprobada', '2026-09-30 15:00:00'),
+(11, 7, 18, 'assets/uploads/entregas/cuticula_michelle.jpg', 'Profe Mariana, foto del corte de cutícula y reflejo con base rubber.', 94.00, 'Limpieza impecable Michelle! El eponiquio no presenta rojeces ni cortes y el blique de luz es completamente redondo.', '2026-09-30 15:00:00', 'Aprobada', '2026-09-30 15:00:00'),
 (12, 7, 19, 'assets/uploads/entregas/cuticula_fabiana.jpg', 'Adjunto práctica de manicura rusa combinada.', NULL, NULL, '2026-10-16 10:20:00', 'Pendiente', '2026-10-16 10:20:00'),
 
 -- Curso 6: Entregas Completas y Aprobadas para Alumnas Graduadas (id_matricula 33 a 38)
@@ -588,16 +613,12 @@ INSERT INTO certificados (id_certificado, id_matricula, titulo_certificado, desc
 (3, 35, 'Certificado de Aprobación - Diplomado en Cosmetología Facial y Tratamientos Antiage', 'Por haber demostrado excelencia técnica y criterio cosmiátrico superior con promedio de 94.00 pts.', 'Cosmetología', 'assets/uploads/certificados/cert_cosmetologia_isabella_castro.pdf', 'Emitido', '2026-06-16 10:30:00'),
 (4, 36, 'Certificado de Aprobación - Diplomado en Cosmetología Facial y Tratamientos Antiage', 'Por su dedicación y cumplimiento cabal del programa de estética facial con promedio de 89.00 pts.', 'Cosmetología', 'assets/uploads/certificados/cert_cosmetologia_natalia_salazar.pdf', 'Emitido', '2026-06-16 10:45:00'),
 (5, 37, 'Certificado de Aprobación - Diplomado en Cosmetología Facial y Tratamientos Antiage', 'Por aprobar satisfactoriamente el ciclo académico y las evaluaciones clínicas con promedio de 92.00 pts.', 'Cosmetología', 'assets/uploads/certificados/cert_cosmetologia_oriana_romero.pdf', 'Emitido', '2026-06-16 11:00:00'),
-(6, 38, 'Certificado de Aprobación - Diplomado en Cosmetología Facial y Tratamientos Antiage', 'Por su destacada labor práctica en cabina estética y formulación química con promedio de 96.00 pts.', 'Cosmetología', 'assets/uploads/certificados/cert_cosmetologia_paola_benitez.pdf', 'Pendiente de Emisión', '2026-06-16 11:15:00'),
+(6, 38, 'Certificado de Aprobación - Diplomado en Cosmetología Facial y Tratamientos Antiage', 'Por su destacada labor práctica en cabina estética y formulación química con promedio de 96.00 pts.', 'Cosmetología', NULL, 'Pendiente de Emisión', '2026-06-16 11:15:00'),
 
 -- Certificados de Barbería Integral (Curso 7)
-(7, 39, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado', 'Por demostrar maestría en desvanecidos a navaja limpia, visagismo masculino y afeitado tradicional con promedio de 96.50 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_gabriel_pineda.pdf', 'Emitido', '2026-07-16 14:00:00'),
-(8, 40, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado', 'Por haber superado con solvencia las prácticas de corte clásico y moderno con promedio de 91.00 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_kevin_colmenarez.pdf', 'Emitido', '2026-07-16 14:30:00'),
-(9, 41, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado', 'Por culminar satisfactoriamente el programa técnico de degradados y arreglo de barba con promedio de 88.50 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_jose_morales.pdf', 'Emitido', '2026-07-16 15:00:00'),
-(10, 42, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado', 'Por su pulcritud, higiene y técnica destacada en cortes contemporáneos con promedio de 95.00 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_anthony_mendoza.pdf', 'Pendiente de Emisión', '2026-07-16 15:30:00');
+(7, 39, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado (Fades)', 'Por demostrar maestría en desvanecidos a navaja limpia, visagismo masculino y afeitado tradicional con promedio de 96.50 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_gabriel_pineda.pdf', 'Emitido', '2026-07-16 14:00:00'),
+(8, 40, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado (Fades)', 'Por haber superado con solvencia las prácticas de corte clásico y moderno con promedio de 91.00 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_kevin_colmenarez.pdf', 'Emitido', '2026-07-16 14:30:00'),
+(9, 41, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado (Fades)', 'Por culminar satisfactoriamente el programa técnico de degradados y arreglo de barba con promedio de 88.50 pts.', 'Barbería', 'assets/uploads/certificados/cert_barberia_jose_morales.pdf', 'Emitido', '2026-07-16 15:00:00'),
+(10, 42, 'Certificado de Aprobación - Curso de Barbería Integral y Técnicas de Degradado (Fades)', 'Por su pulcritud, higiene y técnica destacada en cortes contemporáneos con promedio de 95.00 pts.', 'Barbería', NULL, 'Pendiente de Emisión', '2026-07-16 15:30:00');
 
 SET FOREIGN_KEY_CHECKS = 1;
-
--- ==============================================================================
--- FIN DEL SCRIPT DE DATOS DE PRUEBA
--- ==============================================================================

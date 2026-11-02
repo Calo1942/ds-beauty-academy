@@ -32,6 +32,8 @@ class FrontController
         'comprobante_pago' => 'ComprobantePagoController.php',
         'login'            => 'LoginController.php',
         'logout'           => 'LoginController.php',
+        'recuperar'        => 'RecuperarController.php',
+        'restablecer'      => 'RestablecerController.php',
     ];
 
     public function __construct()
@@ -52,21 +54,22 @@ class FrontController
     {
         $controllerName = $this->controller;
         $isLogout = ($controllerName === 'logout' || ($controllerName === 'login' && ($_GET['action'] ?? '') === 'logout'));
+        $publicRoutes = ['login', 'logout', 'recuperar', 'restablecer'];
 
-        // 1. Si no hay sesión iniciada y no está en login ni logout, redirigir a login
-        if (!in_array($controllerName, ['login', 'logout']) && empty($_SESSION['usuario_id'])) {
+        // 1. Si no hay sesión iniciada y no es una ruta pública, redirigir a login
+        if (!in_array($controllerName, $publicRoutes, true) && empty($_SESSION['usuario_id'])) {
             header('Location: ?url=login');
             exit;
         }
 
-        // 2. Si ya está autenticado e intenta ir a login (salvo que sea logout), redirigir al dashboard
-        if ($controllerName === 'login' && !empty($_SESSION['usuario_id']) && !$isLogout) {
+        // 2. Si ya está autenticado e intenta ir a login o recuperación (salvo que sea logout), redirigir al dashboard
+        if (in_array($controllerName, ['login', 'recuperar', 'restablecer'], true) && !empty($_SESSION['usuario_id']) && !$isLogout) {
             header('Location: ?url=dashboard');
             exit;
         }
 
-        // 3. Control de permisos RBAC para rutas privadas (excluyendo login y logout)
-        if (!in_array($controllerName, ['login', 'logout'])) {
+        // 3. Control de permisos RBAC para rutas privadas (excluyendo rutas públicas)
+        if (!in_array($controllerName, $publicRoutes, true)) {
             $userRole = $_SESSION['rol'] ?? 'Invitado';
             $allowedRoutes = $this->permissionsByRole[$userRole] ?? [];
 

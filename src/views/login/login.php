@@ -214,7 +214,12 @@
             </div>
 
             <div class="form-group">
-                <label for="password">Contraseña</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label for="password" style="margin-bottom: 0;">Contraseña</label>
+                    <a href="?url=recuperar" style="color: var(--accent); font-size: 11.5px; text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
                 <div class="input-wrap">
                     <i class="fas fa-lock"></i>
                     <input type="password" id="password" name="password" required placeholder="••••••••">

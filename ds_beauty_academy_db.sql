@@ -59,6 +59,12 @@ CREATE TABLE usuarios (
     id_instructor INT NULL UNIQUE, -- Vinculación opcional con perfil de instructor
     id_estudiante INT NULL UNIQUE, -- Vinculación opcional con perfil de estudiante
     estatus_usuario BOOLEAN DEFAULT TRUE,
+    token_recuperacion VARCHAR(255) DEFAULT NULL,
+    expira_recuperacion DATETIME DEFAULT NULL,
+    reenvio_recuperacion DATETIME DEFAULT NULL,
+    intentos_recuperacion TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    login_intentos TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    login_bloqueado_hasta DATETIME DEFAULT NULL,
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol) ON DELETE RESTRICT ON UPDATE CASCADE,
