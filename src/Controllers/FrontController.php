@@ -15,25 +15,34 @@ class FrontController
         'Administrador' => [
             'dashboard', 'curso', 'recurso', 'clase', 'estudiante',
             'instructor', 'diploma', 'especialidad', 'matricula',
-            'evaluacion', 'certificado', 'pago', 'comprobante_pago',
-            'banco', 'reporte', 'configuracion'
+            'evaluacion', 'certificado', 'pago', 'comprobante_pago', 'comprobantepago',
+            'banco', 'reporte', 'configuracion', 'instructor_curso', 'instructorcurso',
+            'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ],
         'Instructor' => [
-            'dashboard', 'curso', 'clase', 'evaluacion', 'diploma'
+            'dashboard', 'curso', 'clase', 'evaluacion', 'diploma', 'instructor_curso', 'instructorcurso',
+            'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ],
         'Estudiante' => [
-            'dashboard', 'curso', 'clase', 'evaluacion', 'certificado'
+            'dashboard', 'curso', 'clase', 'evaluacion', 'certificado', 'instructor_curso', 'instructorcurso',
+            'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ]
     ];
 
     // Mapeo especial de nombres de rutas hacia archivos de controlador
     private $routeMap = [
-        'pago'             => 'ComprobantePagoController.php',
-        'comprobante_pago' => 'ComprobantePagoController.php',
-        'login'            => 'LoginController.php',
-        'logout'           => 'LoginController.php',
-        'recuperar'        => 'RecuperarController.php',
-        'restablecer'      => 'RestablecerController.php',
+        'pago'               => 'ComprobantePagoController.php',
+        'comprobante_pago'   => 'ComprobantePagoController.php',
+        'comprobantepago'    => 'ComprobantePagoController.php',
+        'instructor_curso'   => 'InstructorCursoController.php',
+        'instructorcurso'    => 'InstructorCursoController.php',
+        'entrega'            => 'EntregaEvaluacionController.php',
+        'entrega_evaluacion' => 'EntregaEvaluacionController.php',
+        'entregaevaluacion'  => 'EntregaEvaluacionController.php',
+        'login'              => 'LoginController.php',
+        'logout'             => 'LoginController.php',
+        'recuperar'          => 'RecuperarController.php',
+        'restablecer'        => 'RestablecerController.php',
     ];
 
     public function __construct()

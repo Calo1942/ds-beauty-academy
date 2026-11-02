@@ -22,7 +22,10 @@
     <main class="content">
         <div class="page-header">
             <h1 class="page-title">Gestión de Evaluaciones</h1>
-            <div class="header-actions">
+            <div class="header-actions d-flex gap-2">
+                <a href="?url=entrega" class="btn btn-outline-light">
+                    <i class="fas fa-tasks me-1"></i>Calificar Entregas
+                </a>
                 <button class="btn btn-primary btn-registrar-evaluacion" type="button" onclick="abrirModal('modalCrear')">
                     <i class="fas fa-plus"></i> Registrar Evaluación
                 </button>

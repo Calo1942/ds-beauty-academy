@@ -143,6 +143,12 @@ class ComprobantePagoModel extends DBConnect implements Crud
             $stmtInsert->execute($this->obtenerParametros());
             $id_generado = $this->con->lastInsertId();
 
+            // Si el comprobante se crea directamente como Verificado, sincronizar matrícula
+            if ($this->estatus_pago === 'Verificado') {
+                $stmtMat = $this->con->prepare("UPDATE matriculas SET estatus_pago = 'Solvente', estatus_cupo = 'Confirmado', fecha_actualizacion = NOW() WHERE id_matricula = ?");
+                $stmtMat->execute([$this->id_matricula]);
+            }
+
             $this->con->commit();
 
             return $this->success(201, "Comprobante de pago creado exitosamente.", [
@@ -152,7 +158,8 @@ class ComprobantePagoModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return $this->error(400, "Error en base de datos: " . $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return $this->error(400, "Error en base de datos: " . $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -163,7 +170,7 @@ class ComprobantePagoModel extends DBConnect implements Crud
 
     /**
      * Conciliación Transaccional de Pagos (ACID)
-     * Verifica o rechaza el pago y el trigger trg_pago_estatus_change sincroniza la matrícula
+     * Verifica o rechaza el pago y sincroniza la matrícula
      */
     public function conciliarPago($id_comprobante, $nuevo_estatus)
     {
@@ -172,14 +179,14 @@ class ComprobantePagoModel extends DBConnect implements Crud
                 throw new Exception("ID de comprobante inválido.");
             }
 
-            if (!in_array($nuevo_estatus, ['Verificado', 'Rechazado'], true)) {
-                throw new Exception("El estatus debe ser 'Verificado' o 'Rechazado'.");
+            if (!in_array($nuevo_estatus, ['Verificado', 'Rechazado', 'Pendiente'], true)) {
+                throw new Exception("El estatus debe ser 'Verificado', 'Rechazado' o 'Pendiente'.");
             }
 
             $this->con->beginTransaction();
 
             // Bloqueo pesimista con FOR UPDATE
-            $stmtCheck = $this->con->prepare("SELECT id_comprobante_pago, id_matricula, estatus_pago FROM comprobante_pagos WHERE id_comprobante_pago = ? FOR UPDATE");
+            $stmtCheck = $this->con->prepare("SELECT id_comprobante_pago, id_matricula, estatus_pago, monto FROM comprobante_pagos WHERE id_comprobante_pago = ? FOR UPDATE");
             $stmtCheck->execute([$id_comprobante]);
             $comprobante = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
@@ -190,6 +197,22 @@ class ComprobantePagoModel extends DBConnect implements Crud
             $stmtUpdate = $this->con->prepare("UPDATE comprobante_pagos SET estatus_pago = ?, fecha_actualizacion = NOW() WHERE id_comprobante_pago = ?");
             $stmtUpdate->execute([$nuevo_estatus, $id_comprobante]);
 
+            // Sincronizar estado de la matrícula en la misma transacción para consistencia garantizada
+            if ($nuevo_estatus === 'Verificado') {
+                $stmtMat = $this->con->prepare("UPDATE matriculas SET estatus_pago = 'Solvente', estatus_cupo = 'Confirmado', fecha_actualizacion = NOW() WHERE id_matricula = ?");
+                $stmtMat->execute([$comprobante['id_matricula']]);
+            } else {
+                // Si pasa a Rechazado o Pendiente, verificar si existen otros pagos verificados para esta matrícula
+                $stmtCheckOther = $this->con->prepare("SELECT COUNT(*) FROM comprobante_pagos WHERE id_matricula = ? AND id_comprobante_pago != ? AND estatus_pago = 'Verificado'");
+                $stmtCheckOther->execute([$comprobante['id_matricula'], $id_comprobante]);
+                $otherVerified = (int)$stmtCheckOther->fetchColumn();
+
+                if ($otherVerified === 0) {
+                    $stmtMat = $this->con->prepare("UPDATE matriculas SET estatus_pago = 'Deudora', estatus_cupo = 'Reservado', fecha_actualizacion = NOW() WHERE id_matricula = ?");
+                    $stmtMat->execute([$comprobante['id_matricula']]);
+                }
+            }
+
             $this->con->commit();
 
             return $this->success(200, "Comprobante conciliado como '{$nuevo_estatus}' exitosamente.");
@@ -198,7 +221,8 @@ class ComprobantePagoModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return $this->error(400, "Error al conciliar pago: " . $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return $this->error(400, "Error al conciliar pago: " . $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -211,18 +235,20 @@ class ComprobantePagoModel extends DBConnect implements Crud
     {
         try {
             $sql = "SELECT cp.*, 
-                           b.nombre_banco,
-                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           COALESCE(b.nombre_banco, 'Sin banco') AS nombre_banco,
+                           CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
                            e.cedula_estudiante,
-                           cu.nombre_curso,
+                           e.correo_estudiante,
+                           COALESCE(cu.nombre_curso, 'Sin curso asignado') AS nombre_curso,
                            m.precio_acordado,
-                           m.estatus_pago AS estatus_matricula
+                           m.estatus_pago AS estatus_matricula,
+                           m.estatus_cupo AS estatus_cupo_matricula
                     FROM comprobante_pagos cp
-                    JOIN banco b ON cp.id_banco = b.id_banco
-                    JOIN matriculas m ON cp.id_matricula = m.id_matricula
-                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
-                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN banco b ON cp.id_banco = b.id_banco
+                    LEFT JOIN matriculas m ON cp.id_matricula = m.id_matricula
+                    LEFT JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    LEFT JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    LEFT JOIN cursos cu ON ic.id_curso = cu.id_curso
                     ORDER BY cp.id_comprobante_pago DESC";
 
             $stmt = $this->con->query($sql);
@@ -241,18 +267,20 @@ class ComprobantePagoModel extends DBConnect implements Crud
             }
 
             $sql = "SELECT cp.*, 
-                           b.nombre_banco,
-                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           COALESCE(b.nombre_banco, 'Sin banco') AS nombre_banco,
+                           CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
                            e.cedula_estudiante,
-                           cu.nombre_curso,
+                           e.correo_estudiante,
+                           COALESCE(cu.nombre_curso, 'Sin curso asignado') AS nombre_curso,
                            m.precio_acordado,
-                           m.estatus_pago AS estatus_matricula
+                           m.estatus_pago AS estatus_matricula,
+                           m.estatus_cupo AS estatus_cupo_matricula
                     FROM comprobante_pagos cp
-                    JOIN banco b ON cp.id_banco = b.id_banco
-                    JOIN matriculas m ON cp.id_matricula = m.id_matricula
-                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
-                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN banco b ON cp.id_banco = b.id_banco
+                    LEFT JOIN matriculas m ON cp.id_matricula = m.id_matricula
+                    LEFT JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    LEFT JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    LEFT JOIN cursos cu ON ic.id_curso = cu.id_curso
                     WHERE cp.id_comprobante_pago = ?";
 
             $stmt = $this->con->prepare($sql);

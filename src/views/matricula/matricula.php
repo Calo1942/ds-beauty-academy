@@ -22,6 +22,11 @@
     <main class="content">
         <div class="page-header">
             <h1 class="page-title">Gestión de Matrículas</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary btn-registrar-matricula" type="button" onclick="abrirModal('modalCrear')">
+                    <i class="fas fa-plus"></i> Nueva Matrícula
+                </button>
+            </div>
         </div>
 
         <div class="panel">
@@ -79,6 +84,9 @@
 
     <!-- Cierre de main-wrapper -->
     </div>
+
+    <!-- Modales del Módulo -->
+    <?php include __DIR__ . '/components/modales/matriculaModalCrear.php'; ?>
 
     <!-- Scripts y librerías globales (jQuery, Bootstrap, DataTables, SweetAlert2) -->
     <?php echo $scripts_links; ?>

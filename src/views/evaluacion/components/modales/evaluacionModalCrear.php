@@ -7,8 +7,10 @@
         <form id="formCrearEvaluacion">
             <div class="modal-body">
                 <div class="form-group mb-3">
-                    <label class="form-label">ID Instructor-Curso</label>
-                    <input type="number" name="id_instructor_curso" class="form-control" placeholder="ID de asignación curso" required>
+                    <label class="form-label">Curso e Instructor Asignado</label>
+                    <select name="id_instructor_curso" id="select_instructor_curso" class="form-control" required>
+                        <option value="">-- Seleccione una asignación académica --</option>
+                    </select>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Título de la Evaluación</label>

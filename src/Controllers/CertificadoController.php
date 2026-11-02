@@ -20,6 +20,12 @@ $module_config = [
 $model = new CertificadoModel();
 $action = null;
 
+// Descarga o visualización dinámica de Certificado en PDF
+if (isset($_GET['action']) && $_GET['action'] === 'pdf' && !empty($_GET['id'])) {
+    header('Location: ?url=reporte&action=certificado&id=' . (int)$_GET['id']);
+    exit;
+}
+
 if (isset($_POST['guardar'])) {
     $action = 'guardar';
 } elseif (isset($_POST['actualizar'])) {

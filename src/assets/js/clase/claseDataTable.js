@@ -8,6 +8,38 @@ import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.claseApiUrl || '?url=clase';
 
+// Cargar opciones de Oferta Académica (instructor_curso) vía AJAX
+async function cargarAsignacionesAcademicas(selectSelector, valorSeleccionado = null) {
+    const $select = $(selectSelector);
+    if (!$select.length) return;
+
+    try {
+        const response = await $.ajax({
+            url: '?url=instructor_curso',
+            method: 'POST',
+            data: { buscarTodos: true },
+            dataType: 'json'
+        });
+
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+            let options = '<option value="">-- Seleccione una asignación académica --</option>';
+            response.data.forEach(item => {
+                const id = item.id_instructor_curso;
+                const curso = item.nombre_curso || 'Curso sin nombre';
+                const instructor = item.nombre_instructor || 'Sin instructor';
+                const selected = (valorSeleccionado && valorSeleccionado == id) ? 'selected' : '';
+                options += `<option value="${id}" ${selected}>${curso} - Prof. ${instructor}</option>`;
+            });
+            $select.html(options);
+            if (valorSeleccionado) {
+                $select.val(valorSeleccionado);
+            }
+        }
+    } catch (err) {
+        console.error('Error cargando asignaciones académicas:', err);
+    }
+}
+
 // Helpers para abrir y cerrar modales del sistema
 export function abrirModal(id) {
     const modal = document.getElementById(id);
@@ -73,6 +105,7 @@ $(document).ready(function () {
             form.reset();
             limpiarValidaciones(form);
         }
+        cargarAsignacionesAcademicas('#select_instructor_curso');
         abrirModal('modalCrear');
     });
 
@@ -153,12 +186,14 @@ $(document).ready(function () {
 
                 const fields = [
                     'titulo_clase', 'descripcion_clase', 'url_video_clase',
-                    'orden_clase', 'id_instructor_curso', 'estatus_clase'
+                    'orden_clase', 'estatus_clase'
                 ];
 
                 fields.forEach(field => {
                     $(`#formEditarClase [name="${field}"]`).val(cl[field] || '');
                 });
+
+                cargarAsignacionesAcademicas('#edit_select_instructor_curso', cl.id_instructor_curso);
 
                 abrirModal('modalEditar');
             }

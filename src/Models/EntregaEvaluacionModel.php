@@ -88,10 +88,14 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
     public function setCalificacionEntrega($valor)
     {
         if ($valor !== null && $valor !== '') {
-            if (self::validator($valor, $this->validate_decimal) !== true) {
+            if (self::validator($valor, $this->validate_decimal) !== true && !is_numeric($valor)) {
                 throw new Exception("La calificación es inválida.");
             }
-            $this->calificacion_entrega = $valor;
+            $num = (float)$valor;
+            if ($num < 0 || $num > 100) {
+                throw new Exception("La calificación debe ser un valor entre 0 y 100 puntos.");
+            }
+            $this->calificacion_entrega = number_format($num, 2, '.', '');
         } else {
             $this->calificacion_entrega = null;
         }
@@ -169,7 +173,11 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return self::error(400, "Error en entrega: " . $e->getMessage());
+            if ($e->getCode() == 23000 || strpos($e->getMessage(), 'unique_evaluacion_matricula') !== false) {
+                return self::error(400, "Ya existe una entrega registrada para esta evaluación y matrícula.");
+            }
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return self::error(400, "Error en entrega: " . $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -215,7 +223,8 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return self::error(400, "Error al calificar entrega: " . $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return self::error(400, "Error al calificar entrega: " . $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -231,22 +240,25 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
                            ev.titulo_evaluacion, 
                            ev.tipo_evaluacion,
                            ev.orden_evaluacion,
-                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
                            e.cedula_estudiante,
-                           cu.nombre_curso
+                           e.correo_estudiante,
+                           COALESCE(cu.nombre_curso, 'Sin curso') AS nombre_curso,
+                           CONCAT(COALESCE(i.primer_nombre_instructor, ''), ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
                     FROM {$this->table} ee
-                    JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
-                    JOIN matriculas m ON ee.id_matricula = m.id_matricula
-                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
-                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
+                    LEFT JOIN matriculas m ON ee.id_matricula = m.id_matricula
+                    LEFT JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    LEFT JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    LEFT JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN instructores i ON ic.id_instructor = i.id_instructor
                     ORDER BY ee.id_entrega_evaluacion DESC";
 
             $stmt = $this->con->query($sql);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return self::success(200, "{$this->module_name['plural']} obtenidas", $result);
         } catch (Exception $e) {
-            return self::error(500, 'Error al obtener', $e->getMessage());
+            return self::error(500, 'Error al obtener entregas', $e->getMessage());
         }
     }
 
@@ -257,15 +269,20 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
             $sql = "SELECT ee.*, 
                            ev.titulo_evaluacion, 
                            ev.tipo_evaluacion,
-                           CONCAT(e.primer_nombre_estudiante, ' ', e.primer_apellido_estudiante) AS nombre_estudiante,
+                           ev.orden_evaluacion,
+                           ev.descripcion_evaluacion,
+                           CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
                            e.cedula_estudiante,
-                           cu.nombre_curso
+                           e.correo_estudiante,
+                           COALESCE(cu.nombre_curso, 'Sin curso') AS nombre_curso,
+                           CONCAT(COALESCE(i.primer_nombre_instructor, ''), ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
                     FROM {$this->table} ee
-                    JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
-                    JOIN matriculas m ON ee.id_matricula = m.id_matricula
-                    JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
-                    JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
-                    JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
+                    LEFT JOIN matriculas m ON ee.id_matricula = m.id_matricula
+                    LEFT JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                    LEFT JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                    LEFT JOIN cursos cu ON ic.id_curso = cu.id_curso
+                    LEFT JOIN instructores i ON ic.id_instructor = i.id_instructor
                     WHERE ee.{$this->idField} = ?";
 
             $stmt = $this->con->prepare($sql);

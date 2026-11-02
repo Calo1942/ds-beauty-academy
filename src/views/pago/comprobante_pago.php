@@ -22,6 +22,11 @@
     <main class="content">
         <div class="page-header">
             <h1 class="page-title">Verificación de Pagos</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary btn-registrar-pago" type="button" onclick="abrirModal('modalCrear')">
+                    <i class="fas fa-plus"></i> Registrar Pago Manual
+                </button>
+            </div>
         </div>
 
         <div class="panel">
@@ -82,6 +87,10 @@
 
     <!-- Cierre de main-wrapper -->
     </div>
+
+    <!-- Modales del Módulo -->
+    <?php include __DIR__ . '/components/modales/pagoModalCrear.php'; ?>
+    <?php include __DIR__ . '/components/modales/pagoModalDetalle.php'; ?>
 
     <!-- Scripts y librerías globales (jQuery, Bootstrap, DataTables, SweetAlert2) -->
     <?php echo $scripts_links; ?>

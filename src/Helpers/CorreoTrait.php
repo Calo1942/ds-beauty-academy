@@ -8,18 +8,19 @@ use Throwable;
 /**
  * ---------------------------------------------------------
  * Proyecto: DS Beauty Academy
- * Archivo: src/Helpers/CorreoHelper.php
+ * Archivo: src/Helpers/CorreoTrait.php
  * Descripción:
- * Helper centralizado para el despacho de correos electrónicos
- * mediante PHPMailer. Utilizado en recuperación de contraseñas.
+ * Trait para inyectar capacidades de envío de correo electrónico
+ * mediante PHPMailer en los modelos (UsuarioModel) sin crear
+ * clases auxiliares independientes, respetando el diagrama de clases.
  * ---------------------------------------------------------
  */
-class CorreoHelper
+trait CorreoTrait
 {
     /**
      * Carga y almacena en caché la configuración de src/config/correo.php
      */
-    public static function obtenerConfiguracion(): array
+    public function obtenerConfiguracionCorreo(): array
     {
         static $config = null;
         if ($config === null) {
@@ -28,7 +29,6 @@ class CorreoHelper
         }
 
         if (!empty($config['clave'])) {
-            // Eliminar posibles espacios en la contraseña de aplicación de Google
             $config['clave'] = preg_replace('/\s+/', '', (string) $config['clave']);
         }
 
@@ -46,9 +46,9 @@ class CorreoHelper
     /**
      * Verifica si el servicio SMTP se encuentra listo para enviar correos reales.
      */
-    public static function estaConfigurado(): bool
+    public function correoEstaConfigurado(): bool
     {
-        $c = self::obtenerConfiguracion();
+        $c = $this->obtenerConfiguracionCorreo();
 
         return !empty($c['activo'])
             && !empty($c['host'])
@@ -67,15 +67,15 @@ class CorreoHelper
      * @param int $vigencia Minutos de vigencia
      * @return array ['respuesta' => true] o ['error' => '...']
      */
-    public static function enviarCodigoRecuperacion(string $email, string $nombre, string $codigo, int $vigencia = 10): array
+    public function enviarCodigoRecuperacion(string $email, string $nombre, string $codigo, int $vigencia = 10): array
     {
-        if (!self::estaConfigurado()) {
+        if (!$this->correoEstaConfigurado()) {
             return [
                 'error' => 'El servicio de correo aún no está configurado en el servidor. Por favor, contacta al administrador.'
             ];
         }
 
-        $c = self::obtenerConfiguracion();
+        $c = $this->obtenerConfiguracionCorreo();
 
         try {
             $mail = new PHPMailer(true);
@@ -97,7 +97,7 @@ class CorreoHelper
 
             $mail->isHTML(true);
             $mail->Subject = 'Código de Recuperación - DS Beauty Academy';
-            $mail->Body    = self::generarPlantillaHtml($nombre, $codigo, $vigencia, $urlRestablecer);
+            $mail->Body    = $this->generarPlantillaCorreoRecuperacion($nombre, $codigo, $vigencia, $urlRestablecer);
             $mail->AltBody = "Hola " . ($nombre ?: 'Usuario') . ",\n\n"
                 . "Tu código de recuperación es: " . $codigo . "\n\n"
                 . "Vence en " . (int) $vigencia . " minutos y solo puede usarse una vez.\n"
@@ -121,7 +121,7 @@ class CorreoHelper
     /**
      * Genera la plantilla HTML con la estética visual Dark Luxury / Glow Pink de DS Beauty Academy.
      */
-    private static function generarPlantillaHtml(string $nombre, string $codigo, int $vigencia, string $urlRestablecer): string
+    private function generarPlantillaCorreoRecuperacion(string $nombre, string $codigo, int $vigencia, string $urlRestablecer): string
     {
         $nombreSeguro = htmlspecialchars($nombre ?: 'Estimada/o usuaria/o', ENT_QUOTES, 'UTF-8');
         $codigoSeguro = htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8');

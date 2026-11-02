@@ -23,8 +23,10 @@
                     <input type="number" name="orden_clase" class="form-control" min="1" placeholder="Número de orden" required>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label">ID Instructor Curso</label>
-                    <input type="number" name="id_instructor_curso" class="form-control" placeholder="ID del instructor-curso" required>
+                    <label class="form-label">Curso e Instructor Asignado</label>
+                    <select name="id_instructor_curso" id="select_instructor_curso" class="form-control" required>
+                        <option value="">-- Seleccione una asignación académica --</option>
+                    </select>
                 </div>
                 <div class="form-group mb-3">
                     <label class="form-label">Estatus</label>

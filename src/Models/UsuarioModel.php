@@ -3,7 +3,7 @@
 namespace DsBeautyAcademy\Models;
 
 use DsBeautyAcademy\config\connect\DBConnect;
-use DsBeautyAcademy\Helpers\CorreoHelper;
+use DsBeautyAcademy\Helpers\CorreoTrait;
 use PDO;
 use PDOException;
 use Exception;
@@ -20,6 +20,8 @@ use Exception;
  */
 class UsuarioModel extends DBConnect
 {
+    use CorreoTrait;
+
     // Atributos privados para el encapsulamiento
     private $idUsuario;
     private $emailUsuario;
@@ -177,7 +179,7 @@ class UsuarioModel extends DBConnect
         $mensajeGenerico = 'Si el correo está registrado en DS Beauty Academy, recibirás un código de 6 dígitos válido por 10 minutos. Espera un minuto antes de solicitar otro.';
 
         try {
-            $config   = CorreoHelper::obtenerConfiguracion();
+            $config   = $this->obtenerConfiguracionCorreo();
             $cooldown = (int) ($config['cooldown'] ?? 60);
             $vigencia = (int) ($config['vigencia'] ?? 10);
 
@@ -231,8 +233,8 @@ class UsuarioModel extends DBConnect
             // Obtener el nombre para personalizar el correo
             $nombrePersona = $this->obtenerNombrePersona($usuario);
 
-            // Enviar correo con PHPMailer
-            $envio = CorreoHelper::enviarCodigoRecuperacion($this->emailUsuario, $nombrePersona, $codigo, $vigencia);
+            // Enviar correo con PHPMailer mediante CorreoTrait
+            $envio = $this->enviarCodigoRecuperacion($this->emailUsuario, $nombrePersona, $codigo, $vigencia);
 
             if (isset($envio['error'])) {
                 // Si el envío falla, anulamos el código en la base de datos

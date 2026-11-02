@@ -1,11 +1,97 @@
 // matriculaDataTable.js - Lógica de tabla DataTables y acciones para Matrículas
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
-import { executeAjax } from '../helpers/ajax.js';
+import { create, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
 import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.matriculaApiUrl || '?url=matricula';
+
+// Helpers para abrir y cerrar modales del sistema
+export function abrirModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.add('show');
+}
+
+export function cerrarModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.classList.remove('show');
+}
+
+window.abrirModal = abrirModal;
+window.cerrarModal = cerrarModal;
+
+// Cargar lista de estudiantes activos para el select
+async function cargarEstudiantes(selectSelector, valorSeleccionado = null) {
+    const $select = $(selectSelector);
+    if (!$select.length) return;
+
+    try {
+        const response = await $.ajax({
+            url: '?url=estudiante',
+            method: 'POST',
+            data: { buscarTodos: true },
+            dataType: 'json'
+        });
+
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+            let options = '<option value="">-- Seleccione una estudiante --</option>';
+            response.data
+                .filter(est => est.estatus_estudiante == 1 || est.estatus_estudiante === 'Activo')
+                .forEach(est => {
+                    const id = est.id_estudiante;
+                    const nombre = `${est.primer_nombre_estudiante} ${est.primer_apellido_estudiante}`;
+                    const cedula = est.cedula_estudiante ? `(C.I: ${est.cedula_estudiante})` : '';
+                    const selected = (valorSeleccionado && valorSeleccionado == id) ? 'selected' : '';
+                    options += `<option value="${id}" ${selected}>${nombre} ${cedula}</option>`;
+                });
+            $select.html(options);
+            if (valorSeleccionado) $select.val(valorSeleccionado);
+        }
+    } catch (err) {
+        console.error('Error cargando lista de estudiantes:', err);
+    }
+}
+
+// Cargar oferta académica (instructor_curso) para el select
+async function cargarOfertaAcademica(selectSelector, valorSeleccionado = null) {
+    const $select = $(selectSelector);
+    if (!$select.length) return;
+
+    try {
+        const response = await $.ajax({
+            url: '?url=instructor_curso',
+            method: 'POST',
+            data: { buscarTodos: true },
+            dataType: 'json'
+        });
+
+        if (response && response.status === 'success' && Array.isArray(response.data)) {
+            let options = '<option value="">-- Seleccione una oferta académica --</option>';
+            response.data.forEach(item => {
+                const id = item.id_instructor_curso;
+                const curso = item.nombre_curso || 'Curso sin nombre';
+                const instructor = item.nombre_instructor || 'Sin instructor';
+                const normal = parseFloat(item.precio_normal || 0);
+                const preventa = item.precio_preventa ? parseFloat(item.precio_preventa) : null;
+                const precioTxt = preventa ? `$${preventa.toFixed(2)} (Preventa) / $${normal.toFixed(2)}` : `$${normal.toFixed(2)}`;
+                const selected = (valorSeleccionado && valorSeleccionado == id) ? 'selected' : '';
+
+                options += `<option value="${id}" 
+                                data-precio-normal="${normal}" 
+                                data-precio-preventa="${preventa || ''}" 
+                                ${selected}>
+                                ${curso} - Prof. ${instructor} [${precioTxt}]
+                            </option>`;
+            });
+            $select.html(options);
+            if (valorSeleccionado) $select.val(valorSeleccionado);
+        }
+    } catch (err) {
+        console.error('Error cargando oferta académica:', err);
+    }
+}
 
 $(document).ready(function () {
     // 1. Mostrar skeleton mientras carga la tabla inicial
@@ -79,7 +165,59 @@ $(document).ready(function () {
         }
     });
 
-    // 3. Cancelar Matrícula con Confirmación SweetAlert2
+    // 3. Abrir modal Crear Matrícula
+    $(document).on('click', '.btn-registrar-matricula, [data-modal="modalCrear"]', function () {
+        const form = document.getElementById('formCrearMatricula');
+        if (form) {
+            form.reset();
+            limpiarValidaciones(form);
+        }
+        cargarEstudiantes('#select_estudiante_matricula');
+        cargarOfertaAcademica('#select_instructor_curso_matricula');
+        abrirModal('modalCrear');
+    });
+
+    // 4. Auto-sugerir precio al seleccionar curso e instructor
+    $(document).on('change', '#select_instructor_curso_matricula', function () {
+        const $option = $(this).find('option:selected');
+        const precioPreventa = $option.data('precio-preventa');
+        const precioNormal = $option.data('precio-normal');
+
+        const precioSugerido = (precioPreventa && parseFloat(precioPreventa) > 0)
+            ? parseFloat(precioPreventa).toFixed(2)
+            : (precioNormal ? parseFloat(precioNormal).toFixed(2) : '');
+
+        if (precioSugerido !== '') {
+            $('#precio_acordado_matricula').val(precioSugerido);
+        }
+    });
+
+    // 5. Submit Formulario Crear Matrícula (Manejo de triggers de aforo y duplicidad)
+    $(document).on('submit', '#formCrearMatricula', async function (e) {
+        e.preventDefault();
+
+        const form = this;
+        const formData = new FormData(form);
+        formData.append('guardar', 'true');
+
+        showLoading('Registrando...', 'Validando cupos y registrando matrícula');
+
+        const success = await executeAjax(
+            create(API_URL, formData),
+            'Matrícula registrada exitosamente',
+            () => {
+                closeLoading();
+                cerrarModal('modalCrear');
+                form.reset();
+                limpiarValidaciones(form);
+                reloadDataTable(tblMatricula);
+            }
+        );
+
+        if (!success) closeLoading();
+    });
+
+    // 6. Cancelar Matrícula con Confirmación SweetAlert2
     $(document).on('click', '.btn-cancelar-matricula', async function () {
         const id = this.value;
         if (!id) return;

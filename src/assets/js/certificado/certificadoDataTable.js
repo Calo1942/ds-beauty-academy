@@ -58,11 +58,12 @@ $(document).ready(function () {
             searchable: false,
             className: 'text-end',
             render: (data, type, row) => {
-                const pdfBtn = row.url_pdf_certificado ? `
-                    <a href="${row.url_pdf_certificado}" target="_blank" class="btn btn-sm btn-outline-info py-1 px-2" title="Descargar o visualizar PDF">
+                const pdfUrl = row.url_pdf_certificado || `?url=reporte&action=certificado&id=${row.id_certificado}`;
+                const pdfBtn = (row.estatus_certificado !== 'Anulado') ? `
+                    <a href="${pdfUrl}" target="_blank" class="btn btn-sm btn-outline-info py-1 px-2" title="Descargar o visualizar Certificado PDF">
                         <i class="fas fa-file-pdf me-1 text-danger"></i>PDF
                     </a>
-                ` : `<span class="text-muted small">Sin PDF</span>`;
+                ` : `<span class="text-muted small">Anulado</span>`;
 
                 const anularBtn = row.estatus_certificado !== 'Anulado' ? `
                     <button type="button" value="${row.id_certificado}" class="btn-action btn-delete btn-anular-certificado" title="Anular certificado">

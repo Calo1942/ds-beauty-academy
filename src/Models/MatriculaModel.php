@@ -144,7 +144,8 @@ class MatriculaModel extends DBConnect implements Crud
                 $this->con->rollBack();
             }
             // Retornar mensaje limpio del trigger o de la restricción
-            return self::error(400, $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return self::error(400, $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -244,7 +245,8 @@ class MatriculaModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return self::error(400, $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return self::error(400, $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
@@ -274,7 +276,8 @@ class MatriculaModel extends DBConnect implements Crud
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();
             }
-            return self::error(400, $e->getMessage());
+            $cleanMsg = $e->errorInfo[2] ?? $e->getMessage();
+            return self::error(400, $cleanMsg);
         } catch (Exception $e) {
             if ($this->con->inTransaction()) {
                 $this->con->rollBack();

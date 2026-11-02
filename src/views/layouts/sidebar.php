@@ -11,7 +11,7 @@ $actualUrl = isset($_GET['url']) ? $_GET['url'] : 'dashboard';
 // Variables booleanas para saber si estamos en páginas de submódulos
 $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'clase');
 $isStaff = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
-$isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'certificado');
+$isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'entrega' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'comprobantePago' || $actualUrl == 'banco');
 $isConfig = ($actualUrl == 'configuracion');
 ?>
@@ -93,6 +93,8 @@ $isConfig = ($actualUrl == 'configuracion');
                                 class="fas fa-id-card"></i> Matrículas</a></li>
                     <li><a href="?url=evaluacion" class="<?= ($actualUrl == 'evaluacion') ? 'active' : '' ?>"><i
                                 class="fas fa-clipboard-check"></i> Evaluaciones</a></li>
+                    <li><a href="?url=entrega" class="<?= ($actualUrl == 'entrega') ? 'active' : '' ?>"><i
+                                class="fas fa-tasks"></i> Entregas y Notas</a></li>
                     <li><a href="?url=certificado" class="<?= ($actualUrl == 'certificado') ? 'active' : '' ?>"><i
                                 class="fas fa-award"></i> Certificados</a></li>
                 </ul>
@@ -157,7 +159,13 @@ $isConfig = ($actualUrl == 'configuracion');
 
             <li class="nav-item">
                 <a href="?url=evaluacion" class="nav-link <?= ($actualUrl == 'evaluacion') ? 'active' : '' ?>">
-                    <i class="fas fa-clipboard-check"></i> Evaluaciones y Calificaciones
+                    <i class="fas fa-clipboard-check"></i> Evaluaciones
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="?url=entrega" class="nav-link <?= ($actualUrl == 'entrega') ? 'active' : '' ?>">
+                    <i class="fas fa-tasks"></i> Calificar Entregas
                 </a>
             </li>
 
@@ -185,6 +193,12 @@ $isConfig = ($actualUrl == 'configuracion');
             <li class="nav-item">
                 <a href="?url=evaluacion" class="nav-link <?= ($actualUrl == 'evaluacion') ? 'active' : '' ?>">
                     <i class="fas fa-clipboard-check"></i> Mis Evaluaciones
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="?url=entrega" class="nav-link <?= ($actualUrl == 'entrega') ? 'active' : '' ?>">
+                    <i class="fas fa-tasks"></i> Mis Entregas y Notas
                 </a>
             </li>
 
