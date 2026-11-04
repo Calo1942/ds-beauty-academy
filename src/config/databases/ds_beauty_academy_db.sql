@@ -1,5 +1,5 @@
 -- ==========================================
--- DS Beauty Academy - Modelo Fisico - Version 8.0 (Corregida) - 11/10/2026
+-- DS Beauty Academy - Modelo Fisico - Version 8.1 - 03/11/2026
 -- ==========================================
 
 DROP DATABASE IF EXISTS ds_beauty_academy_db;
@@ -43,7 +43,7 @@ CREATE TABLE estudiantes (
     segundo_apellido_estudiante VARCHAR(100),
     cedula_estudiante VARCHAR(50) NOT NULL UNIQUE,
     correo_estudiante VARCHAR(150) NOT NULL UNIQUE,
-    telefono_principal_estudiante VARCHAR(50) NOT NULL, -- Corregido: sin UNIQUE para permitir familiares/representantes
+    telefono_principal_estudiante VARCHAR(50) NOT NULL,
     telefono_alternativo_estudiante VARCHAR(50),
     usuario_instagram_estudiante VARCHAR(100) UNIQUE,
     estatus_estudiante BOOLEAN DEFAULT TRUE,
@@ -58,7 +58,7 @@ CREATE TABLE usuarios (
     id_rol INT NOT NULL,
     id_instructor INT NULL UNIQUE, -- Vinculación opcional con perfil de instructor
     id_estudiante INT NULL UNIQUE, -- Vinculación opcional con perfil de estudiante
-    foto_perfil_usuario VARCHAR(512) DEFAULT NULL, -- Ruta o URL de la imagen de perfil del usuario
+    foto_perfil_usuario VARCHAR(512) DEFAULT NULL,
     estatus_usuario BOOLEAN DEFAULT TRUE,
     token_recuperacion VARCHAR(255) DEFAULT NULL,
     expira_recuperacion DATETIME DEFAULT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE clases (
 
 CREATE TABLE recursos (
     id_recurso INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    nombre_recurso VARCHAR(150) NOT NULL, -- Corregido: sin UNIQUE global para permitir nombres comunes en varios cursos
+    nombre_recurso VARCHAR(150) NOT NULL,
     descripcion_recurso TEXT,
     url_archivo_recurso VARCHAR(512) NOT NULL,
     estatus_recurso BOOLEAN DEFAULT TRUE,
@@ -208,14 +208,14 @@ CREATE TABLE comprobante_pagos (
     estatus_pago ENUM('Pendiente','Verificado','Rechazado') DEFAULT 'Pendiente',
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_matricula) REFERENCES matriculas(id_matricula) ON DELETE RESTRICT ON UPDATE CASCADE, -- Corregido: RESTRICT protege auditoría contable
+    FOREIGN KEY (id_matricula) REFERENCES matriculas(id_matricula) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (id_banco) REFERENCES banco(id_banco) ON DELETE RESTRICT ON UPDATE CASCADE,
     INDEX idx_inscripcion (id_matricula),
     INDEX idx_estatus_pago (estatus_pago),
     CHECK (monto > 0)
 ) ENGINE=InnoDB;
 
--- Evaluaciones asociadas al curso impartido (alineado con la arquitectura MVC)
+-- Evaluaciones asociadas al curso impartido
 CREATE TABLE evaluaciones (
     id_evaluacion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_instructor_curso INT NOT NULL, -- Corregido: Pertenece a la instancia de curso impartido
@@ -235,7 +235,7 @@ CREATE TABLE evaluaciones (
 CREATE TABLE entregas_evaluaciones (
     id_entrega_evaluacion INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     id_evaluacion INT NOT NULL,
-    id_matricula INT NOT NULL, -- Corregido: Vinculación de entrega con la matrícula del alumno
+    id_matricula INT NOT NULL,
     url_archivo_entrega VARCHAR(512),
     comentarios_estudiante TEXT,
     calificacion_entrega DECIMAL(5,2),
