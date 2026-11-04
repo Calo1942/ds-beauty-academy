@@ -58,6 +58,7 @@ CREATE TABLE usuarios (
     id_rol INT NOT NULL,
     id_instructor INT NULL UNIQUE, -- Vinculación opcional con perfil de instructor
     id_estudiante INT NULL UNIQUE, -- Vinculación opcional con perfil de estudiante
+    foto_perfil_usuario VARCHAR(512) DEFAULT NULL, -- Ruta o URL de la imagen de perfil del usuario
     estatus_usuario BOOLEAN DEFAULT TRUE,
     token_recuperacion VARCHAR(255) DEFAULT NULL,
     expira_recuperacion DATETIME DEFAULT NULL,
