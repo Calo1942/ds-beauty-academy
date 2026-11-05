@@ -1,5 +1,5 @@
 // cursoDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Cursos
-import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
+import { reloadDataTable } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
@@ -26,57 +26,235 @@ $(document).ready(function () {
     // 1. Mostrar skeleton mientras carga la tabla inicial
     showSkeleton('#cursoSkeleton', '#cursoTableContainer');
 
-    // 2. Inicializar DataTable
-    const tblCurso = createDataTable('#cursoTable', API_URL, [
-        { 
-            data: 'id_curso',
-            className: 'text-muted fw-bold'
+    let tblCurso = null;
+
+    // Función para renderizar la paginación y la información personalizada de forma segura
+    function actualizarPaginacionYInfo(dtInstance) {
+        const api = dtInstance || tblCurso;
+        if (!api || typeof api.page !== 'function') return;
+
+        let info;
+        try {
+            info = api.page.info();
+        } catch (e) {
+            return;
+        }
+        if (!info) return;
+
+        // A. Actualizar texto de información "Mostrando X a Y de Z registros"
+        const start = info.recordsDisplay === 0 ? 0 : info.start + 1;
+        const end = info.end;
+        const total = info.recordsDisplay;
+        $('#customTableInfo').text(`Mostrando ${start} a ${end} de ${total} registros`);
+
+        // B. Renderizar botones de paginación
+        const totalPages = info.pages;
+        const currentPage = info.page; // Base 0
+        const $pagination = $('#customPagination');
+        $pagination.empty();
+
+        if (totalPages <= 1) {
+            $pagination.append(`<button type="button" class="custom-page-btn" disabled>Anterior</button>`);
+            $pagination.append(`<button type="button" class="custom-page-btn active">1</button>`);
+            $pagination.append(`<button type="button" class="custom-page-btn" disabled>Siguiente ></button>`);
+            return;
+        }
+
+        // Botón Anterior
+        const $btnPrev = $(`<button type="button" class="custom-page-btn">Anterior</button>`);
+        if (currentPage === 0) {
+            $btnPrev.prop('disabled', true);
+        } else {
+            $btnPrev.on('click', () => api.page('previous').draw('page'));
+        }
+        $pagination.append($btnPrev);
+
+        // Números de páginas
+        for (let i = 0; i < totalPages; i++) {
+            const pageNum = i + 1;
+            const $btnPage = $(`<button type="button" class="custom-page-btn ${i === currentPage ? 'active' : ''}">${pageNum}</button>`);
+            if (i !== currentPage) {
+                $btnPage.on('click', function () {
+                    api.page(i).draw('page');
+                });
+            }
+            $pagination.append($btnPage);
+        }
+
+        // Botón Siguiente
+        const $btnNext = $(`<button type="button" class="custom-page-btn">Siguiente ></button>`);
+        if (currentPage >= totalPages - 1) {
+            $btnNext.prop('disabled', true);
+        } else {
+            $btnNext.on('click', () => api.page('next').draw('page'));
+        }
+        $pagination.append($btnNext);
+    }
+
+    // 2. Inicializar DataTable con tamaño de página predeterminado de 5
+    tblCurso = $('#cursoTable').DataTable({
+        autoWidth: false,
+        responsive: true,
+        pageLength: 5,
+        dom: 'rt', // Sin controles nativos de DataTables/Bootstrap
+        language: {
+            emptyTable: "No hay cursos registrados",
+            zeroRecords: "No se encontraron cursos que coincidan con la búsqueda"
         },
-        { 
-            data: 'nombre_curso',
-            render: (data) => `<span class="fw-semibold text-white">${data || 'Sin nombre'}</span>`
+        ajax: {
+            url: API_URL,
+            method: 'POST',
+            data: { buscarTodos: 'true' },
+            dataSrc: 'data'
         },
-        { 
-            data: 'tipo_curso',
-            render: (data) => `<span class="badge bg-secondary text-light px-2 py-1">${data || 'General'}</span>`
-        },
-        { 
-            data: null,
-            render: (data) => {
-                const normal = parseFloat(data.precio_normal || 0).toFixed(2);
-                const preventa = data.precio_preventa ? parseFloat(data.precio_preventa).toFixed(2) : null;
-                if (preventa && preventa > 0) {
-                    return `<div><span class="text-accent fw-bold" style="color: var(--accent);">$${preventa}</span> <small class="text-muted text-decoration-line-through">$${normal}</small></div>`;
+        columns: [
+            // 0: # (Numeración secuencial)
+            // 0: ID (ID del registro)
+            {
+                data: 'id_curso',
+                className: 'fw-bold text-muted',
+                render: (data, type, row, meta) => `<span>${meta.row + 1}</span>`
+            },
+            // 1: Nombre del Curso
+            {
+                data: 'nombre_curso',
+                render: (data) => `<span class="fw-semibold text-white">${data || 'Sin nombre'}</span>`
+            },
+            // 2: Tipo de Curso (Morado para "Curso completo", Rosado para "Masterclass")
+            {
+                data: 'tipo_curso',
+                render: (data) => {
+                    const tipo = data || 'Curso completo';
+                    if (tipo.toLowerCase().includes('masterclass')) {
+                        return `<span class="badge-tipo-curso tipo-masterclass">${tipo}</span>`;
+                    }
+                    return `<span class="badge-tipo-curso tipo-completo">${tipo}</span>`;
                 }
-                return `<span class="text-light fw-bold">$${normal}</span>`;
+            },
+            // 3: Precio (Rosa para el precio activo, Morado claro pálido para el tachado)
+            {
+                data: null,
+                render: (data) => {
+                    const normal = parseFloat(data.precio_normal || 0).toFixed(2);
+                    const preventa = data.precio_preventa ? parseFloat(data.precio_preventa).toFixed(2) : null;
+                    if (preventa && parseFloat(preventa) > 0) {
+                        return `<div><span class="price-tag-modern">$${preventa}</span><span class="price-tag-struck">$${normal}</span></div>`;
+                    }
+                    return `<span class="price-tag-modern">$${normal}</span>`;
+                }
+            },
+            // 4: Estado (Dot indicador: Activo, En pausa, Cerrado)
+            {
+                data: 'estatus_curso',
+                render: (data) => {
+                    const status = data || 'Borrador';
+                    if (status === 'Venta Normal' || status === 'Activo') {
+                        return `<span class="badge-status-dot status-active">Activo</span>`;
+                    } else if (status === 'Preventa') {
+                        return `<span class="badge-status-dot status-active">Preventa</span>`;
+                    } else if (status === 'Borrador' || status === 'En pausa') {
+                        return `<span class="badge-status-dot status-pause">En pausa</span>`;
+                    } else if (status === 'Cerrado') {
+                        return `<span class="badge-status-dot status-closed">Cerrado</span>`;
+                    }
+                    return `<span class="badge-status-dot status-pause">${status}</span>`;
+                }
+            },
+            // 5: Fecha de Inicio (formato DD/MM/YYYY)
+            {
+                data: 'fecha_inicio_curso',
+                render: (data) => {
+                    if (!data) return '<span class="text-muted">-</span>';
+                    const parts = data.split(' ')[0].split('-');
+                    if (parts.length === 3) {
+                        return `<span>${parts[2]}/${parts[1]}/${parts[0]}</span>`;
+                    }
+                    return `<span>${data}</span>`;
+                }
+            },
+            // 6: Acciones (Iconos Circulares Rosas: Ver, Editar, Eliminar)
+            {
+                data: null,
+                orderable: false,
+                searchable: false,
+                className: 'text-end align-middle',
+                render: (data, type, row) => {
+                    const id = row.id_curso || '';
+                    return `
+                        <div class="modern-action-btns">
+                            <button value="${id}" class="btn-circle-action btn-table-ver" title="Ver Detalle" type="button">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button value="${id}" class="btn-circle-action btn-table-editar" title="Editar" type="button">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button value="${id}" class="btn-circle-action btn-table-eliminar" title="Eliminar" type="button">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                }
             }
-        },
-        { 
-            data: 'estatus_curso',
-            render: (data) => {
-                let badgeClass = 'bg-secondary';
-                if (data === 'Preventa') badgeClass = 'bg-warning text-dark';
-                else if (data === 'Venta Normal') badgeClass = 'bg-success text-white';
-                else if (data === 'Cerrado') badgeClass = 'bg-danger text-white';
-                return `<span class="badge ${badgeClass} px-2 py-1">${data || 'Borrador'}</span>`;
-            }
-        },
-        createActionsColumn({
-            idField: 'id_curso',
-            btnVer: true,
-            btnEditar: true,
-            btnEliminar: true
-        })
-    ], {
+        ],
         initComplete: function () {
+            const api = this.api();
             setTimeout(() => {
                 hideSkeleton('#cursoSkeleton', '#cursoTableContainer');
                 animateIn('#cursoTableContainer', 300);
-            }, 400);
+            }, 300);
+            actualizarPaginacionYInfo(api);
+        },
+        drawCallback: function () {
+            actualizarPaginacionYInfo(this.api());
         }
     });
 
-    // 3. Abrir modal Crear
+    // 3. Lógica de Dropdowns Personalizados (Puro CSS y JS, sin azul nativo)
+    $(document).on('click', '.custom-dropdown-toggle', function (e) {
+        e.stopPropagation();
+        const $parent = $(this).closest('.custom-dropdown');
+        $('.custom-dropdown').not($parent).removeClass('active');
+        $parent.toggleClass('active');
+    });
+
+    $(document).on('click', function () {
+        $('.custom-dropdown').removeClass('active');
+    });
+
+    // Selección de opción en dropdowns
+    $(document).on('click', '.custom-dropdown-item', function (e) {
+        e.stopPropagation();
+        const $item = $(this);
+        const $parent = $item.closest('.custom-dropdown');
+        const val = $item.data('value');
+        const text = $item.text();
+
+        $parent.find('.custom-dropdown-item').removeClass('active');
+        $item.addClass('active');
+        $parent.find('.dropdown-selected-text').text(text);
+        $parent.find('input[type="hidden"]').val(val);
+        $parent.removeClass('active');
+
+        // Trigger para filtrar según el dropdown
+        if ($parent.attr('id') === 'dropdownTipoCurso') {
+            tblCurso.column(2).search(val).draw();
+        } else if ($parent.attr('id') === 'dropdownEstadoCurso') {
+            if (val === 'Activo') {
+                tblCurso.column(4).search('Activo|Preventa', true, false).draw();
+            } else {
+                tblCurso.column(4).search(val).draw();
+            }
+        } else if ($parent.attr('id') === 'dropdownPerPage') {
+            tblCurso.page.len(parseInt(val, 10)).draw();
+        }
+    });
+
+    // 4. Búsqueda en vivo por nombre del curso
+    $('#filterSearchInput').on('keyup input', function () {
+        tblCurso.column(1).search(this.value).draw();
+    });
+
+    // 5. Abrir modal Crear
     $(document).on('click', '.btn-registrar-curso, [data-modal="modalCrear"]', function () {
         const form = document.getElementById('formCrearCurso');
         if (form) {
@@ -86,7 +264,7 @@ $(document).ready(function () {
         abrirModal('modalCrear');
     });
 
-    // 4. Ver Detalle de Curso
+    // 6. Ver Detalle de Curso
     $(document).on('click', '.btn-table-ver', async function () {
         const id = this.value;
         if (!id) return;
@@ -118,7 +296,7 @@ $(document).ready(function () {
         );
     });
 
-    // 5. Submit Formulario Crear
+    // 7. Submit Formulario Crear
     $(document).on('submit', '#formCrearCurso', async function (e) {
         e.preventDefault();
 
@@ -142,7 +320,7 @@ $(document).ready(function () {
         if (!success) closeLoading();
     });
 
-    // 6. Cargar y abrir Modal Editar
+    // 8. Cargar y abrir Modal Editar
     $(document).on('click', '.btn-table-editar', async function () {
         const id = this.value;
         if (!id) return;
@@ -180,7 +358,7 @@ $(document).ready(function () {
         );
     });
 
-    // 7. Submit Formulario Editar
+    // 9. Submit Formulario Editar
     $(document).on('submit', '#formEditarCurso', async function (e) {
         e.preventDefault();
 
@@ -204,7 +382,7 @@ $(document).ready(function () {
         if (!success) closeLoading();
     });
 
-    // 8. Eliminar Curso con Confirmación SweetAlert2
+    // 10. Eliminar Curso con Confirmación SweetAlert2
     $(document).on('click', '.btn-table-eliminar', async function () {
         const id = this.value;
         if (!id) return;
@@ -230,7 +408,7 @@ $(document).ready(function () {
         }
     });
 
-    // 9. Cierre de modales con botones de cancelar / cruz
+    // 11. Cierre de modales con botones de cancelar / cruz
     $(document).on('click', '.close-modal, .btn-cerrar-modal, [data-close-modal]', function () {
         const modalId = $(this).closest('.modal').attr('id');
         if (modalId) cerrarModal(modalId);

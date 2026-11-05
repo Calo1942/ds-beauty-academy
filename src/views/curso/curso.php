@@ -20,16 +20,13 @@
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
-        <div class="page-header">
-            <h1 class="page-title">Gestión de Cursos</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary btn-registrar-curso" type="button" onclick="abrirModal('modalCrear')">
-                    <i class="fas fa-plus"></i> Registrar Curso
-                </button>
-            </div>
-        </div>
+        <!-- 1. Encabezado con Icono del Menú, Título y Botón de Registro -->
+        <?php include __DIR__ . '/components/cursoHeader.php'; ?>
 
-        <!-- Componente de Tabla DataTables con Skeleton Loader -->
+        <!-- 2. Barra de Filtros (Búsqueda, Tipo, Estado, Botón Filtrar) -->
+        <?php include __DIR__ . '/components/cursoFiltros.php'; ?>
+
+        <!-- 3. Componente de Tabla DataTables con Skeleton Loader -->
         <?php include __DIR__ . '/components/cursoDataTable.php'; ?>
     </main>
 
