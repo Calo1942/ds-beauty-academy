@@ -1,3 +1,41 @@
+<?php
+// Asegurar disponibilidad de la variable $metrics en caso de carga directa
+if (!isset($metrics)) {
+    $metrics = [
+        'kpi' => [
+            'estudiantes_activos' => '2,150',
+            'estudiantes_trend' => '+12.8%',
+            'ingresos_mes' => '$12,450',
+            'ingresos_trend' => '+8.4%',
+            'inscripciones_confirmadas' => '186',
+            'inscripciones_trend' => '+10.1%',
+            'cupos_alcanzados_pct' => 78,
+            'cupos_alcanzados_detalle' => '156 / 200 cupos'
+        ],
+        'cursos_mas_vendidos' => [
+            ['nombre' => 'Diseño de Cejas', 'cantidad' => 48, 'porcentaje' => 96],
+            ['nombre' => 'Pestañas Pelo a Pelo', 'cantidad' => 36, 'porcentaje' => 72],
+            ['nombre' => 'Micropigmentación', 'cantidad' => 29, 'porcentaje' => 58],
+            ['nombre' => 'Uñas Acrílicas', 'cantidad' => 24, 'porcentaje' => 48],
+            ['nombre' => 'Maquillaje Profesional', 'cantidad' => 18, 'porcentaje' => 36]
+        ],
+        'cupos_cursos' => [
+            ['nombre' => 'Diseño de Cejas', 'ocupados' => 18, 'total' => 20, 'porcentaje' => 90],
+            ['nombre' => 'Pestañas', 'ocupados' => 14, 'total' => 18, 'porcentaje' => 78],
+            ['nombre' => 'Micropigmentación', 'ocupados' => 12, 'total' => 15, 'porcentaje' => 80]
+        ],
+        'resumen_pagos' => [
+            'total' => '$12,450',
+            'verificados_monto' => '$9,750',
+            'verificados_pct' => 78,
+            'pendientes_monto' => '$1,850',
+            'pendientes_pct' => 15,
+            'rechazados_monto' => '$850',
+            'rechazados_pct' => 7
+        ]
+    ];
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,165 +48,68 @@
     include_once __DIR__ . '/../../assets/linksFront.php';
     echo $css_links;
     ?>
+    <!-- Chart.js 4.4 UMD para gráficos interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
+    <!-- Sidebar de navegación -->
     <?php require_once __DIR__ . '/../layouts/sidebar.php'; ?>
 
-
+    <!-- Navbar superior (abre el .main-wrapper) -->
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
-    <!-- CONTENT -->
-    <main class="content">
-        <div class="page-header">
-            <h1 class="page-title">Dashboard</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary"><i class="fas fa-plus"></i> Añadir Nuevo Curso</button>
-                <button class="btn btn-primary" style="background-color: var(--accent);">Ver Reportes</button>
-            </div>
-        </div>
+    <!-- CONTENIDO PRINCIPAL DEL DASHBOARD (MODULARIZADO) -->
+    <main class="content" style="padding: 24px 28px;">
+        <div class="container-fluid px-0">
+            <h1 class="page-title mb-3">Dashboard</h1>
 
-        <!-- STATS GRID -->
-        <div class="stats-grid">
-            <!-- Stat 1 -->
-            <div class="stat-card">
-                <div class="stat-title">Estudiantes Activos</div>
-                <div class="stat-value"><?= htmlspecialchars($stats['estudiantes_activos']) ?></div>
-                <div class="stat-chart-container"
-                    style="position: absolute; bottom: 0; left: 0; height: 50px; width: 100%;">
-                    <svg viewBox="0 0 100 30" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#E83382" stop-opacity="0.5" />
-                                <stop offset="100%" stop-color="#E83382" stop-opacity="0" />
-                            </linearGradient>
-                        </defs>
-                        <path d="M0 30 L0 25 Q20 30 40 15 T80 20 T100 5 L100 30 Z" fill="url(#gradient)"></path>
-                        <path d="M0 25 Q20 30 40 15 T80 20 T100 5" fill="none" stroke="#E83382" stroke-width="2">
-                        </path>
-                    </svg>
+            <!-- FILA 1: TARJETAS KPI SUPERIORES -->
+            <?php include __DIR__ . '/components/kpiCards.php'; ?>
+
+            <!-- FILA 2: GRÁFICO DE INGRESOS MENSUALES + CURSOS MÁS VENDIDOS -->
+            <div class="row g-3 g-lg-4 mb-4">
+                <div class="col-12 col-xl-8">
+                    <?php include __DIR__ . '/components/graficaIngresos.php'; ?>
+                </div>
+                <div class="col-12 col-xl-4">
+                    <?php include __DIR__ . '/components/cursosMasVendidos.php'; ?>
                 </div>
             </div>
 
-            <!-- Stat 2 -->
-            <div class="stat-card">
-                <div class="stat-title">Ingresos Mensuales</div>
-                <div class="stat-value">
-                    <?= htmlspecialchars($stats['ingresos_mensuales']) ?>
-                    <span class="stat-trend"><i class="fas fa-arrow-up"></i></span>
+            <!-- FILA 3: ESTADO INSCRIPCIONES, CUPOS Y RESUMEN DE PAGOS -->
+            <div class="row g-3 g-lg-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <?php include __DIR__ . '/components/graficaInscripciones.php'; ?>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <?php include __DIR__ . '/components/cuposAlcanzados.php'; ?>
+                </div>
+                <div class="col-12 col-md-12 col-lg-4">
+                    <?php include __DIR__ . '/components/graficaPagos.php'; ?>
                 </div>
             </div>
 
-            <!-- Stat 3 -->
-            <div class="stat-card">
-                <div class="stat-title">Cursos en Curso</div>
-                <div class="stat-value"><?= htmlspecialchars($stats['cursos_en_curso']) ?></div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: <?= $stats['progreso_cursos'] ?>%;"></div>
-                </div>
-            </div>
-
-            <!-- Stat 4 -->
-            <div class="stat-card">
-                <div class="stat-title">Instructores Registrados</div>
-                <div class="stat-value"><?= htmlspecialchars($stats['instructores_registrados']) ?></div>
-            </div>
-        </div>
-
-        <!-- BOTTOM GRID -->
-        <div class="bottom-grid">
-            <!-- MATRICULAS -->
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">Matrículas Recientes</h2>
-                    <button class="btn btn-primary" style="padding: 6px 16px; font-size:13px;">Ver Reportes</button>
-                </div>
-
-                <div class="search-table-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar...">
-                </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Estudiante</th>
-                            <th>Curso</th>
-                            <th>Fecha</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($enrollments as $enroll): ?>
-                            <tr>
-                                <td class="td-user">
-                                    <img src="<?= htmlspecialchars($enroll['avatar']) ?>" alt="Avatar"
-                                        class="td-avatar">
-                                    <span><?= htmlspecialchars($enroll['estudiante']) ?></span>
-                                </td>
-                                <td style="color: var(--text-muted);"><?= htmlspecialchars($enroll['curso']) ?></td>
-                                <td style="color: var(--text-muted);"><?= htmlspecialchars($enroll['fecha']) ?></td>
-                                <td style="color: var(--text-muted);"><?= htmlspecialchars($enroll['estado']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- RIGHT PANELS -->
-            <div class="right-panels">
-                <!-- PROXIMOS PAGOS -->
-                <div class="panel">
-                    <h2 class="panel-title" style="margin-bottom: 20px;">Próximos Pagos</h2>
-
-                    <div class="payment-row" style="border-bottom: none; padding-bottom: 0;">
-                        <div class="payment-col" style="flex: 1;">
-                            <span class="payment-label">Mejor de Pagos</span>
-                        </div>
-                        <div class="payment-col" style="flex: 1; align-items: flex-end;">
-                            <span class="payment-label">Apredora</span>
-                        </div>
-                    </div>
-
-                    <?php foreach ($payments as $index => $pay): ?>
-                        <div class="payment-row">
-                            <div class="payment-col" style="flex: 1;">
-                                <span
-                                    class="payment-val"><?= htmlspecialchars($pay['monto'] ?: ($index > 0 ? 'Mejor de Pagos' : '')) ?></span>
-                            </div>
-                            <div class="payment-col" style="flex: 1; align-items: flex-end;">
-                                <span class="payment-val"><?= htmlspecialchars($pay['monto_tipo']) ?></span>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <!-- CERTIFICACIONES -->
-                <div class="panel">
-                    <h2 class="panel-title" style="margin-bottom: 20px;">Últimas Certificaciones</h2>
-
-                    <?php foreach ($certifications as $cert): ?>
-                        <div class="cert-row">
-                            <div class="cert-user">
-                                <img src="<?= htmlspecialchars($cert['avatar']) ?>" alt="Avatar" class="td-avatar">
-                                <div class="cert-info">
-                                    <span class="cert-name"><?= htmlspecialchars($cert['nombre']) ?></span>
-                                    <span class="cert-role"><?= htmlspecialchars($cert['rol']) ?></span>
-                                </div>
-                            </div>
-                            <div class="cert-date"><?= htmlspecialchars($cert['fecha']) ?></div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
         </div>
     </main>
 
-    <!-- Cierre de main-wrapper -->
+    <!-- Cierre del .main-wrapper abierto en navbar.php -->
     </div>
 
-    <!-- Scripts y librerías globales -->
+    <!-- Scripts y librerías globales (jQuery, Bootstrap 5, DataTables, SweetAlert2) -->
     <?php echo $scripts_links; ?>
+
+    <!-- Inyección de métricas calculadas en el Backend hacia JavaScript -->
+    <script>
+        window.DASHBOARD_METRICS = <?= json_encode($metrics, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?>;
+    </script>
+
+    <!-- Scripts modulares del Dashboard -->
+    <script src="src/assets/js/dashboard/centerTextPlugin.js"></script>
+    <script src="src/assets/js/dashboard/chartIngresos.js"></script>
+    <script src="src/assets/js/dashboard/chartInscripciones.js"></script>
+    <script src="src/assets/js/dashboard/chartPagos.js"></script>
+    <script src="src/assets/js/dashboard/dashboardAnimations.js"></script>
 </body>
 
 </html>

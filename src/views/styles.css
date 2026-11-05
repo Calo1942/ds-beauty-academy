@@ -1171,3 +1171,409 @@ table.dataTable tbody td {
     border-radius: 16px !important;
     box-shadow: 0 10px 30px rgba(232, 51, 130, 0.2) !important;
 }
+
+/* ==========================================================================
+   --- NUEVO DASHBOARD MODERNO (DARK LUXURY & GLOW PINK) ---
+   ========================================================================== */
+
+.dash-card {
+    background-color: #15151c;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-card:hover {
+    border-color: rgba(232, 51, 130, 0.3);
+    box-shadow: 0 10px 28px rgba(232, 51, 130, 0.12), 0 8px 16px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* --- KPI CARDS (FILA SUPERIOR) --- */
+.dash-kpi-card {
+    min-height: 110px;
+    padding: 20px 22px;
+}
+
+.dash-kpi-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+    z-index: 2;
+}
+
+.dash-icon-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 19px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(232, 51, 130, 0.4);
+}
+
+.dash-kpi-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-kpi-title {
+    font-size: 13px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.dash-kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    margin-bottom: 3px;
+}
+
+.dash-kpi-trend {
+    font-size: 13px;
+    font-weight: 600;
+    color: #10b981;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dash-kpi-subtitle {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+/* Sparklines en KPI Cards */
+.dash-sparkline-box {
+    position: absolute;
+    right: 18px;
+    bottom: 12px;
+    height: 44px;
+    width: 90px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dash-sparkline-svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Radial Progress Ring (Cupos alcanzados) */
+.dash-radial-container {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 54px;
+    height: 54px;
+    z-index: 1;
+}
+
+.dash-radial-svg {
+    width: 54px;
+    height: 54px;
+    transform: rotate(-90deg);
+}
+
+.dash-radial-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.08);
+    stroke-width: 5;
+}
+
+.dash-radial-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+/* --- HEADER DE TARJETAS --- */
+.dash-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.dash-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dash-header-icon {
+    color: var(--accent);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dash-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+
+.dash-card-subtitle {
+    font-size: 12px;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* Pill buttons para filtro 6M, 12M, 1A */
+.dash-pill-group {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 3px;
+    display: inline-flex;
+    gap: 2px;
+}
+
+.dash-pill-btn {
+    border: none;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dash-pill-btn:hover {
+    color: #ffffff;
+}
+
+.dash-pill-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(232, 51, 130, 0.4);
+}
+
+/* Contenedor del gráfico de área */
+.dash-chart-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    margin-top: 5px;
+}
+
+/* Pin / Tooltip visual estático */
+.dash-chart-pin {
+    position: absolute;
+    top: 36px;
+    right: 38px;
+    background: #1e1e28;
+    border: 1px solid rgba(232, 51, 130, 0.5);
+    border-radius: 8px;
+    padding: 6px 12px;
+    text-align: center;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dash-chart-pin.dash-pin-hidden {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+}
+
+.dash-chart-pin-month {
+    font-size: 11px;
+    color: #9ca3af;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.dash-chart-pin-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+}
+
+/* --- LISTA DE CURSOS MÁS VENDIDOS --- */
+.dash-courses-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex-grow: 1;
+}
+
+.dash-course-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dash-course-name {
+    font-size: 13px;
+    color: #e4e4e7;
+    font-weight: 500;
+    width: 145px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+}
+
+.dash-progress-track {
+    flex-grow: 1;
+    height: 9px;
+    background: #23232d;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.dash-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dash-course-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    width: 26px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Link Ver todos / Ver detalles */
+.dash-more-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+    align-self: flex-end;
+}
+
+.dash-more-link:hover {
+    color: var(--accent-hover);
+    transform: translateX(3px);
+}
+
+/* --- FILA INFERIOR: DONUT CHARTS & CUPOS --- */
+.dash-donut-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-grow: 1;
+}
+
+.dash-donut-canvas-box {
+    position: relative;
+    width: 135px;
+    height: 135px;
+    flex-shrink: 0;
+}
+
+.dash-legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-grow: 1;
+}
+
+.dash-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.dash-legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dash-legend-label {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.dash-legend-value {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13px;
+    margin-left: auto;
+}
+
+/* Cupos alcanzados (card central de fila inferior) */
+.dash-cupos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.dash-cupos-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dash-cupos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dash-cupos-name {
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.dash-cupos-percent {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.dash-cupos-sub {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+    margin-top: -3px;
+}

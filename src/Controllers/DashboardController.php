@@ -6,11 +6,19 @@ use DsBeautyAcademy\Models\DashboardModel;
 
 $model = new DashboardModel();
 
+// Soporte para peticiones asíncronas AJAX (JSON)
+if (isset($_POST['getMetrics']) || ($_GET['action'] ?? '') === 'getMetrics') {
+    header('Content-Type: application/json');
+    echo json_encode($model->getDashboardMetrics());
+    exit;
+}
+
 // Obtener datos del modelo
 $stats = $model->getStatistics();
 $enrollments = $model->getRecentEnrollments();
 $payments = $model->getUpcomingPayments();
 $certifications = $model->getLatestCertifications();
+$metrics = $model->getDashboardMetrics();
 
 // Incluir vista
 $viewPath = __DIR__ . '/../views/dashboard/dashboard.php';
