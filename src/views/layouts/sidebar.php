@@ -13,7 +13,7 @@ $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'c
 $isStaff = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'entrega' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'comprobantePago' || $actualUrl == 'banco');
-$isConfig = ($actualUrl == 'configuracion');
+$isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario');
 ?>
 
 <!-- SIDEBAR -->
@@ -134,6 +134,8 @@ $isConfig = ($actualUrl == 'configuracion');
                     <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-muted);"></i>
                 </div>
                 <ul class="submenu <?= $isConfig ? 'show' : '' ?>">
+                    <li><a href="?url=usuario" class="<?= ($actualUrl == 'usuario') ? 'active' : '' ?>"><i
+                                class="fas fa-user-cog"></i> Gestión de Usuarios</a></li>
                     <li><a href="?url=configuracion" class="<?= ($actualUrl == 'configuracion') ? 'active' : '' ?>"><i
                                 class="fas fa-sliders-h"></i> Ajustes Generales</a></li>
                 </ul>

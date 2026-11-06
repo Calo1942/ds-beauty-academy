@@ -3,6 +3,9 @@
 namespace DsBeautyAcademy\Models;
 
 use DsBeautyAcademy\config\connect\DBConnect;
+use DsBeautyAcademy\config\interfaces\Crud;
+use DsBeautyAcademy\Helpers\ApiResponse;
+use DsBeautyAcademy\Helpers\Validations;
 use DsBeautyAcademy\Helpers\CorreoTrait;
 use PDO;
 use PDOException;
@@ -18,9 +21,9 @@ use Exception;
  * y de seguridad (métodos puente getX vs métodos privados).
  * ---------------------------------------------------------
  */
-class UsuarioModel extends DBConnect
+class UsuarioModel extends DBConnect implements Crud
 {
-    use CorreoTrait;
+    use ApiResponse, Validations, CorreoTrait;
 
     // Atributos privados para el encapsulamiento
     private $idUsuario;
@@ -364,6 +367,232 @@ class UsuarioModel extends DBConnect
         } catch (PDOException $e) {
             error_log("DS Beauty Academy - Error SQL en restablecerClaveConCodigo: " . $e->getMessage());
             return ['error' => 'Error en el servidor al intentar actualizar la contraseña.'];
+        }
+    }
+
+    // =========================================================
+    // IMPLEMENTACIÓN CRUD PARA GESTIÓN DE USUARIOS
+    // =========================================================
+
+    public function buscarTodos()
+    {
+        try {
+            $sql = "
+                SELECT 
+                    u.id_usuario,
+                    u.email_usuario,
+                    u.id_rol,
+                    r.nombre_rol,
+                    u.id_instructor,
+                    u.id_estudiante,
+                    u.foto_perfil_usuario,
+                    u.estatus_usuario,
+                    u.fecha_creacion,
+                    CASE 
+                        WHEN u.id_instructor IS NOT NULL THEN CONCAT(COALESCE(i.primer_nombre_instructor, ''), ' ', COALESCE(i.primer_apellido_instructor, ''))
+                        WHEN u.id_estudiante IS NOT NULL THEN CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, ''))
+                        ELSE 'Administrador General'
+                    END AS nombre_persona
+                FROM usuarios u
+                INNER JOIN roles r ON u.id_rol = r.id_rol
+                LEFT JOIN instructores i ON u.id_instructor = i.id_instructor
+                LEFT JOIN estudiantes e ON u.id_estudiante = e.id_estudiante
+                ORDER BY u.id_usuario DESC
+            ";
+            $stmt = $this->con->query($sql);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $this->success(200, "Usuarios obtenidos", $result);
+        } catch (Exception $e) {
+            return $this->error(500, "Error al obtener usuarios", $e->getMessage());
+        }
+    }
+
+    public function buscar($id)
+    {
+        try {
+            $stmt = $this->con->prepare("
+                SELECT 
+                    u.id_usuario,
+                    u.email_usuario,
+                    u.id_rol,
+                    r.nombre_rol,
+                    u.id_instructor,
+                    u.id_estudiante,
+                    u.foto_perfil_usuario,
+                    u.estatus_usuario,
+                    u.fecha_creacion,
+                    CASE 
+                        WHEN u.id_instructor IS NOT NULL THEN CONCAT(COALESCE(i.primer_nombre_instructor, ''), ' ', COALESCE(i.primer_apellido_instructor, ''))
+                        WHEN u.id_estudiante IS NOT NULL THEN CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, ''))
+                        ELSE 'Administrador General'
+                    END AS nombre_persona
+                FROM usuarios u
+                INNER JOIN roles r ON u.id_rol = r.id_rol
+                LEFT JOIN instructores i ON u.id_instructor = i.id_instructor
+                LEFT JOIN estudiantes e ON u.id_estudiante = e.id_estudiante
+                WHERE u.id_usuario = :id
+                LIMIT 1
+            ");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($result) {
+                return $this->success(200, "Usuario obtenido", $result);
+            }
+            return $this->error(404, "Usuario no encontrado");
+        } catch (Exception $e) {
+            return $this->error(500, "Error al obtener usuario", $e->getMessage());
+        }
+    }
+
+    public function guardar($data)
+    {
+        try {
+            $email = trim($data['email_usuario'] ?? '');
+            $password = $data['password_usuario'] ?? '';
+            $id_rol = (int)($data['id_rol'] ?? 0);
+            $id_instructor = !empty($data['id_instructor']) ? (int)$data['id_instructor'] : null;
+            $id_estudiante = !empty($data['id_estudiante']) ? (int)$data['id_estudiante'] : null;
+            $estatus = isset($data['estatus_usuario']) ? (int)$data['estatus_usuario'] : 1;
+
+            if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $this->error(400, "Correo electrónico inválido");
+            }
+            if (strlen($password) < 6) {
+                return $this->error(400, "La contraseña debe tener al menos 6 caracteres");
+            }
+            if ($id_rol <= 0) {
+                return $this->error(400, "Debe seleccionar un rol válido");
+            }
+
+            // Verificar si el correo ya existe
+            $stmtCheck = $this->con->prepare("SELECT id_usuario FROM usuarios WHERE LOWER(TRIM(email_usuario)) = LOWER(TRIM(:email))");
+            $stmtCheck->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmtCheck->execute();
+            if ($stmtCheck->fetch()) {
+                return $this->error(400, "El correo electrónico ya está registrado");
+            }
+
+            $hashPassword = password_hash($password, PASSWORD_BCRYPT);
+
+            $stmt = $this->con->prepare("
+                INSERT INTO usuarios (email_usuario, password_usuario, id_rol, id_instructor, id_estudiante, estatus_usuario)
+                VALUES (:email, :password, :id_rol, :id_instructor, :id_estudiante, :estatus)
+            ");
+            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmt->bindValue(':password', $hashPassword, PDO::PARAM_STR);
+            $stmt->bindValue(':id_rol', $id_rol, PDO::PARAM_INT);
+            $stmt->bindValue(':id_instructor', $id_instructor, $id_instructor ? PDO::PARAM_INT : PDO::PARAM_NULL);
+            $stmt->bindValue(':id_estudiante', $id_estudiante, $id_estudiante ? PDO::PARAM_INT : PDO::PARAM_NULL);
+            $stmt->bindValue(':estatus', $estatus, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $this->success(201, "Usuario creado exitosamente");
+        } catch (Exception $e) {
+            return $this->error(500, "Error al crear usuario", $e->getMessage());
+        }
+    }
+
+    public function actualizar($id, $data)
+    {
+        try {
+            $id = (int)$id;
+            $email = trim($data['email_usuario'] ?? '');
+            $password = $data['password_usuario'] ?? '';
+            $id_rol = (int)($data['id_rol'] ?? 0);
+            $id_instructor = !empty($data['id_instructor']) ? (int)$data['id_instructor'] : null;
+            $id_estudiante = !empty($data['id_estudiante']) ? (int)$data['id_estudiante'] : null;
+            $estatus = isset($data['estatus_usuario']) ? (int)$data['estatus_usuario'] : 1;
+
+            if ($id <= 0) {
+                return $this->error(400, "ID inválido");
+            }
+            if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return $this->error(400, "Correo electrónico inválido");
+            }
+            if ($id_rol <= 0) {
+                return $this->error(400, "Debe seleccionar un rol válido");
+            }
+
+            // Verificar si el correo ya le pertenece a otro usuario
+            $stmtCheck = $this->con->prepare("SELECT id_usuario FROM usuarios WHERE LOWER(TRIM(email_usuario)) = LOWER(TRIM(:email)) AND id_usuario != :id");
+            $stmtCheck->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmtCheck->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmtCheck->execute();
+            if ($stmtCheck->fetch()) {
+                return $this->error(400, "El correo electrónico ya está registrado por otro usuario");
+            }
+
+            if (!empty($password)) {
+                if (strlen($password) < 6) {
+                    return $this->error(400, "La nueva contraseña debe tener al menos 6 caracteres");
+                }
+                $hashPassword = password_hash($password, PASSWORD_BCRYPT);
+                $stmt = $this->con->prepare("
+                    UPDATE usuarios 
+                    SET email_usuario = :email,
+                        password_usuario = :password,
+                        id_rol = :id_rol,
+                        id_instructor = :id_instructor,
+                        id_estudiante = :id_estudiante,
+                        estatus_usuario = :estatus
+                    WHERE id_usuario = :id
+                ");
+                $stmt->bindValue(':password', $hashPassword, PDO::PARAM_STR);
+            } else {
+                $stmt = $this->con->prepare("
+                    UPDATE usuarios 
+                    SET email_usuario = :email,
+                        id_rol = :id_rol,
+                        id_instructor = :id_instructor,
+                        id_estudiante = :id_estudiante,
+                        estatus_usuario = :estatus
+                    WHERE id_usuario = :id
+                ");
+            }
+
+            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmt->bindValue(':id_rol', $id_rol, PDO::PARAM_INT);
+            $stmt->bindValue(':id_instructor', $id_instructor, $id_instructor ? PDO::PARAM_INT : PDO::PARAM_NULL);
+            $stmt->bindValue(':id_estudiante', $id_estudiante, $id_estudiante ? PDO::PARAM_INT : PDO::PARAM_NULL);
+            $stmt->bindValue(':estatus', $estatus, PDO::PARAM_INT);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $this->success(200, "Usuario actualizado exitosamente");
+        } catch (Exception $e) {
+            return $this->error(500, "Error al actualizar usuario", $e->getMessage());
+        }
+    }
+
+    public function eliminar($id)
+    {
+        try {
+            $id = (int)$id;
+            if ($id <= 0) {
+                return $this->error(400, "ID inválido");
+            }
+
+            // Desactivación lógica
+            $stmt = $this->con->prepare("UPDATE usuarios SET estatus_usuario = 0 WHERE id_usuario = :id");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $this->success(200, "Usuario desactivado correctamente");
+        } catch (Exception $e) {
+            return $this->error(500, "Error al desactivar usuario", $e->getMessage());
+        }
+    }
+
+    public function obtenerRoles()
+    {
+        try {
+            $stmt = $this->con->query("SELECT id_rol, nombre_rol FROM roles WHERE estatus_rol = 1 ORDER BY id_rol ASC");
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $this->success(200, "Roles obtenidos", $result);
+        } catch (Exception $e) {
+            return $this->error(500, "Error al obtener roles", $e->getMessage());
         }
     }
 }
