@@ -185,7 +185,7 @@ $(document).ready(function () {
         },
         {
             data: 'fecha_pago',
-            render: (data) => `<span class="text-muted small">${data || 'N/A'}</span>`
+            render: (data) => `<span class="text-white fw-medium small">${data || 'N/A'}</span>`
         },
         {
             data: 'url_img_comprobante',

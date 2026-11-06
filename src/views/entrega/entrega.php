@@ -31,8 +31,7 @@
         </div>
     </div>
         <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
-            <a href="?url=evaluacion" class="btn-custom-filter text-decoration-none me-2"><i class="fas fa-clipboard-list me-1"></i> Evaluaciones</a>
-            <button class="btn-custom-primary btn-registrar-entrega" type="button" onclick="abrirModal("modalCrear")">
+            <button class="btn-custom-primary btn-registrar-entrega" type="button" onclick="abrirModal('modalCrear')">
                 <i class="fas fa-plus"></i> Subir Entrega
             </button>
         </div>

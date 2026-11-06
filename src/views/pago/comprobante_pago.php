@@ -32,7 +32,7 @@
     </div>
         <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
             
-            <button class="btn-custom-primary btn-registrar-pago" type="button" onclick="abrirModal("modalCrear")">
+            <button class="btn-custom-primary btn-registrar-pago" type="button" onclick="abrirModal('modalCrear')">
                 <i class="fas fa-plus"></i> Registrar Pago Manual
             </button>
         </div>

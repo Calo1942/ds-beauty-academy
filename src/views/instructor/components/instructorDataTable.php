@@ -26,11 +26,11 @@
         <table id="instructorTable" class="table custom-modern-table w-100">
             <thead>
                 <tr>
-                    <th style="width: 8%;">ID</th>
-                    <th style="width: 25%;">Nombre Completo</th>
-                    <th style="width: 15%;">Cédula</th>
-                    <th style="width: 25%;">Correo</th>
-                    <th style="width: 15%;">Instagram</th>
+                    <th style="width: 7%;">ID</th>
+                    <th style="width: 23%;">Nombre Completo</th>
+                    <th style="width: 14%;">Cédula</th>
+                    <th style="width: 22%;">Correo</th>
+                    <th style="width: 22%;">Instagram</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
                 </tr>
             </thead>

@@ -31,8 +31,7 @@
         </div>
     </div>
         <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
-            <a href="?url=entrega" class="btn-custom-filter text-decoration-none me-2"><i class="fas fa-tasks me-1"></i> Calificar Entregas</a>
-            <button class="btn-custom-primary btn-registrar-evaluacion" type="button" onclick="abrirModal("modalCrear")">
+            <button class="btn-custom-primary btn-registrar-evaluacion" type="button" onclick="abrirModal('modalCrear')">
                 <i class="fas fa-plus"></i> Registrar Evaluación
             </button>
         </div>

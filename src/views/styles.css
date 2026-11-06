@@ -680,8 +680,17 @@ tr:last-child td {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     animation: modalFadeIn 0.3s ease;
+}
+
+.modal-content > form {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(90vh - 75px);
+    overflow: hidden;
+    margin: 0;
 }
 
 @keyframes modalFadeIn {
@@ -725,15 +734,19 @@ tr:last-child td {
 .modal-body {
     padding: 24px;
     overflow-y: auto;
-    max-height: calc(90vh - 140px);
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .modal-footer {
-    padding: 20px 24px;
+    padding: 16px 24px;
     border-top: 1px solid var(--border-color);
+    background-color: var(--bg-card);
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 12px;
+    flex-shrink: 0;
 }
 
 .btn-secondary {
@@ -786,24 +799,63 @@ tr:last-child td {
 }
 
 .btn-action {
-    background: none;
-    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(232, 51, 130, 0.12);
+    border: 1px solid rgba(232, 51, 130, 0.25);
+    color: var(--accent, #e83382);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
     cursor: pointer;
-    font-size: 16px;
-    transition: color 0.2s;
-    padding: 4px;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.btn-action i {
+    color: var(--accent, #e83382);
+    transition: color 0.2s ease;
+}
+
+.btn-action:hover {
+    background-color: var(--accent, #e83382);
+    border-color: var(--accent, #e83382);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(232, 51, 130, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-action:hover i {
+    color: #ffffff !important;
+}
+
+.btn-action.btn-success {
+    background-color: rgba(16, 185, 129, 0.14);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #10b981;
+}
+
+.btn-action.btn-success i {
+    color: #10b981;
+}
+
+.btn-action.btn-success:hover {
+    background-color: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.btn-action.btn-success:hover i {
+    color: #ffffff !important;
 }
 
 .btn-view,
 .btn-edit,
 .btn-delete {
     color: var(--accent);
-}
-
-.btn-view:hover,
-.btn-edit:hover,
-.btn-delete:hover {
-    color: var(--accent-hover);
 }
 
 /* Detail View */
@@ -1888,7 +1940,7 @@ table.custom-modern-table.dataTable {
 .custom-modern-table> :not(caption)>tbody>*>* {
     background-color: transparent !important;
     background: transparent !important;
-    color: #e5e7eb !important;
+    color: #f3f4f6 !important;
     font-size: 13.5px !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
     border-top: none !important;
@@ -1897,6 +1949,17 @@ table.custom-modern-table.dataTable {
     padding: 16px 14px !important;
     vertical-align: middle;
     box-shadow: none !important;
+}
+
+/* En tablas, los elementos muted o fechas no deben ser oscuros */
+.custom-modern-table .text-muted,
+.custom-table-card .text-muted {
+    color: #f3f4f6 !important;
+}
+
+.custom-modern-table small.text-muted,
+.custom-table-card small.text-muted {
+    color: #e5e7eb !important;
 }
 
 .custom-modern-table tbody tr:hover td,
@@ -1927,6 +1990,53 @@ table.custom-modern-table.dataTable {
     background-color: rgba(232, 51, 130, 0.18);
     color: #f472b6;
     border: 1px solid rgba(232, 51, 130, 0.35);
+}
+
+/* Badge Cédula - Más grande y legible */
+.badge-cedula {
+    display: inline-block;
+    background-color: #191b24;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f3f4f6;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    padding: 5px 12px;
+    border-radius: 7px;
+    white-space: nowrap;
+}
+
+/* Enlace de Instagram en Tablas */
+.instagram-table-link {
+    color: var(--accent, #e83382) !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 13.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.instagram-table-link i {
+    font-size: 15px;
+    color: var(--accent, #e83382);
+    transition: transform 0.2s ease;
+}
+
+.instagram-table-link:hover {
+    background-color: rgba(232, 51, 130, 0.15);
+    color: #ffffff !important;
+    text-decoration: underline !important;
+    text-shadow: 0 0 10px rgba(232, 51, 130, 0.5);
+}
+
+.instagram-table-link:hover i {
+    transform: scale(1.18);
+    color: #ffffff !important;
 }
 
 .badge-status-dot {
@@ -2013,7 +2123,7 @@ table.custom-modern-table.dataTable {
     border-radius: 50%;
     background-color: rgba(232, 51, 130, 0.12);
     border: 1px solid rgba(232, 51, 130, 0.25);
-    color: #f472b6;
+    color: var(--accent, #e83382);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2023,12 +2133,21 @@ table.custom-modern-table.dataTable {
     padding: 0;
 }
 
+.btn-circle-action i {
+    color: var(--accent, #e83382);
+    transition: color 0.2s ease;
+}
+
 .btn-circle-action:hover {
-    background-color: #e83382;
-    border-color: #e83382;
+    background-color: var(--accent, #e83382);
+    border-color: var(--accent, #e83382);
     color: #ffffff;
     box-shadow: 0 0 10px rgba(232, 51, 130, 0.5);
     transform: translateY(-1px);
+}
+
+.btn-circle-action:hover i {
+    color: #ffffff !important;
 }
 
 /* 9. Paginación y Footer 100% Personalizado */

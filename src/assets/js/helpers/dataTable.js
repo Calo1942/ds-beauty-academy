@@ -125,11 +125,17 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
     if (!dtApi || !$(tableSelector).length) return;
 
     const $table = $(tableSelector);
+    const tableId = $table.attr('id') || 'table';
     const $card = $table.closest('.custom-table-card, .panel');
     if (!$card.length) return;
 
-    // Si ya existe una barra de filtros previa (por ejemplo cursoFiltros.php), no duplicar
-    if ($card.prev('.custom-filter-card').length || $('#filterSearchInput').length) {
+    // Si ya existe una barra de filtros previa de este módulo o específica, no duplicar
+    if ($card.prev(`.custom-filter-card[data-for="${tableId}"]`).length || $table.data('filter-initialized')) {
+        return;
+    }
+
+    // Si la vista ya tiene su propio componente de filtros (ej: Cursos)
+    if ($('#filterSearchInput').length && tableId === 'cursoTable') {
         return;
     }
 
@@ -137,13 +143,14 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
     let statusColIdx = -1;
     $table.find('thead th').each(function (index) {
         const text = $(this).text().trim().toLowerCase();
-        if (text === 'estado' || text === 'estatus') {
+        if (text === 'estado' || text === 'estatus' || text.includes('estado')) {
             statusColIdx = index;
         }
     });
 
+    // Barra de filtros por estado si aplica
     const statusDropdownHtml = statusColIdx !== -1 ? `
-        <div class="custom-dropdown auto-filter-status" id="autoDropdownStatus_${$table.attr('id')}">
+        <div class="custom-dropdown auto-filter-status" id="autoDropdownStatus_${tableId}">
             <button type="button" class="custom-dropdown-toggle" aria-expanded="false">
                 <span class="dropdown-selected-text">Todos los estados</span>
                 <i class="fas fa-chevron-down dropdown-arrow"></i>
@@ -153,13 +160,16 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
                 <div class="custom-dropdown-item" data-value="Activo">Activo</div>
                 <div class="custom-dropdown-item" data-value="Inactivo">Inactivo</div>
                 <div class="custom-dropdown-item" data-value="Pendiente">Pendiente</div>
-                <div class="custom-dropdown-item" data-value="Completado">Completado</div>
+                <div class="custom-dropdown-item" data-value="Aprobada">Aprobada</div>
+                <div class="custom-dropdown-item" data-value="Repetir">Repetir</div>
+                <div class="custom-dropdown-item" data-value="Verificado">Verificado</div>
+                <div class="custom-dropdown-item" data-value="Rechazado">Rechazado</div>
             </div>
         </div>
     ` : '';
 
     const filterBarHtml = `
-        <div class="custom-filter-card mb-4 auto-generated-filter">
+        <div class="custom-filter-card mb-4 auto-generated-filter" data-for="${tableId}">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                 <div class="filter-search-container flex-grow-1" style="max-width: 420px;">
                     <div class="custom-search-box">
@@ -176,8 +186,9 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
 
     const $filterBar = $(filterBarHtml);
     $card.before($filterBar);
+    $table.data('filter-initialized', true);
 
-    // Evento de búsqueda en vivo
+    // Evento de búsqueda en vivo en la tabla
     $filterBar.find('.auto-filter-search').on('keyup input', function () {
         dtApi.search(this.value).draw();
     });
@@ -241,6 +252,7 @@ export const createActionsColumn = (options = {}) => ({
                    row.id_diploma || 
                    row.id_recurso || 
                    row.id_evaluacion ||
+                   row.id_entrega_evaluacion ||
                    row.id_entrega ||
                    row.id_matricula ||
                    row.id_comprobante_pago ||
@@ -251,7 +263,7 @@ export const createActionsColumn = (options = {}) => ({
 
         if (options.btnVer !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-circle-action btn-action btn-view btn-table-ver" title="Ver Detalle" type="button">
+                <button value="${id}" class="btn-action btn-view btn-table-ver" title="Ver Detalle" type="button">
                     <i class="fas fa-eye"></i>
                 </button>
             `);
@@ -259,7 +271,7 @@ export const createActionsColumn = (options = {}) => ({
 
         if (options.btnEditar !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-circle-action btn-action btn-edit btn-table-editar" title="Editar" type="button">
+                <button value="${id}" class="btn-action btn-edit btn-table-editar" title="Editar" type="button">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
             `);
@@ -267,7 +279,7 @@ export const createActionsColumn = (options = {}) => ({
 
         if (options.btnEliminar !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-circle-action btn-action btn-delete btn-table-eliminar" title="Eliminar" type="button">
+                <button value="${id}" class="btn-action btn-delete btn-table-eliminar" title="Eliminar" type="button">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             `);

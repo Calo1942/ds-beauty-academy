@@ -47,7 +47,7 @@ $(document).ready(function () {
         },
         { 
             data: 'cedula_estudiante',
-            render: (data) => `<span class="badge bg-dark border border-secondary text-light px-2 py-1">${data || 'N/A'}</span>`
+            render: (data) => `<span class="badge-cedula font-monospace">${data || 'N/A'}</span>`
         },
         { 
             data: 'correo_estudiante',
@@ -55,7 +55,11 @@ $(document).ready(function () {
         },
         { 
             data: 'usuario_instagram_estudiante',
-            render: (data) => data ? `<span class="text-accent" style="color: var(--accent);"><i class="fab fa-instagram me-1"></i>${data}</span>` : '<span class="text-muted">N/A</span>'
+            render: (data) => {
+                if (!data) return '<span class="text-muted">N/A</span>';
+                const username = data.replace(/^@/, '').trim();
+                return `<a href="https://www.instagram.com/${username}/" target="_blank" rel="noopener noreferrer" class="instagram-table-link" title="Abrir instagram.com/${username}"><i class="fab fa-instagram"></i><span>${username}</span></a>`;
+            }
         },
         createActionsColumn({
             idField: 'id_estudiante',

@@ -131,7 +131,7 @@ $(document).ready(function () {
         },
         {
             data: 'fecha_entrega',
-            render: (data) => `<span class="text-muted small">${data ? data.substring(0, 16) : 'N/A'}</span>`
+            render: (data) => `<span class="text-white fw-medium small">${data ? data.substring(0, 16) : 'N/A'}</span>`
         },
         {
             data: 'url_archivo_entrega',
