@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel custom-table-card">
     <!-- Skeleton loader mientras carga la información -->
     <div id="recursoSkeleton" class="skeleton-table">
         <div class="skeleton-header">
@@ -17,7 +17,7 @@
 
     <!-- Contenedor de DataTable -->
     <div class="table-responsive" id="recursoTableContainer" style="display: none;">
-        <table id="recursoTable" class="table table-dark table-hover w-100">
+        <table id="recursoTable" class="table custom-modern-table w-100">
             <thead>
                 <tr>
                     <th style="width: 15%;">ID</th>

@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel custom-table-card">
     <!-- Skeleton loader mientras carga la información -->
     <div id="evaluacionSkeleton" class="skeleton-table">
         <div class="skeleton-header">
@@ -23,7 +23,7 @@
 
     <!-- Contenedor de DataTable -->
     <div class="table-responsive" id="evaluacionTableContainer" style="display: none;">
-        <table id="evaluacionTable" class="table table-dark table-hover w-100">
+        <table id="evaluacionTable" class="table custom-modern-table w-100">
             <thead>
                 <tr>
                     <th style="width: 8%;">ID</th>
@@ -31,7 +31,7 @@
                     <th style="width: 15%;">Tipo</th>
                     <th style="width: 10%;">Orden</th>
                     <th style="width: 15%;">Instructor-Curso</th>
-                    <th style="width: 10%;">Estatus</th>
+                    <th style="width: 10%;">Estado</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
                 </tr>
             </thead>

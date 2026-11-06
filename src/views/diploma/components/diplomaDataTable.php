@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel custom-table-card">
     <!-- Skeleton loader mientras carga la información -->
     <div id="diplomaSkeleton" class="skeleton-table">
         <div class="skeleton-header">
@@ -21,7 +21,7 @@
 
     <!-- Contenedor de DataTable -->
     <div class="table-responsive" id="diplomaTableContainer" style="display: none;">
-        <table id="diplomaTable" class="table table-dark table-hover w-100">
+        <table id="diplomaTable" class="table custom-modern-table w-100">
             <thead>
                 <tr>
                     <th style="width: 10%;">ID</th>

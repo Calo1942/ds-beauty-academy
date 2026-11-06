@@ -20,11 +20,18 @@
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
-        <div class="page-header">
-            <h1 class="page-title">Certificados Emitidos</h1>
+        <div class="custom-page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="page-header-icon-badge">
+            <i class="fas fa-award"></i>
         </div>
-
-        <div class="panel">
+        <div>
+            <h1 class="page-header-title">Certificados Emitidos</h1>
+            <p class="page-header-subtitle">Historial de certificaciones generadas y entregadas</p>
+        </div>
+    </div>
+</div>
+        <div class="panel custom-table-card">
             <!-- Skeleton loader mientras carga la información -->
             <div id="certificadoSkeleton" class="skeleton-table">
                 <div class="skeleton-header">
@@ -53,7 +60,7 @@
 
             <!-- Contenedor de DataTable -->
             <div class="table-responsive" id="certificadoTableContainer" style="display: none;">
-                <table id="certificadoTable" class="table table-dark table-hover w-100">
+                <table id="certificadoTable" class="table custom-modern-table w-100">
                     <thead>
                         <tr>
                             <th style="width: 6%;">ID</th>
@@ -62,7 +69,7 @@
                             <th style="width: 17%;">Curso</th>
                             <th style="width: 12%;">Matrícula</th>
                             <th style="width: 10%;">Categoría</th>
-                            <th style="width: 12%;">Estatus</th>
+                            <th style="width: 12%;">Estado</th>
                             <th style="width: 10%; text-align: right;">Acciones</th>
                         </tr>
                     </thead>

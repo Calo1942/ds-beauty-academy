@@ -3,9 +3,9 @@
 <!-- ======================================================== -->
 <div class="row g-3 g-lg-4 mb-4">
     
-    <!-- KPI 1: Estudiantes activos -->
+    <!-- KPI 1: Estudiantes activos (Enlace a ?url=estudiante) -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="dash-card dash-kpi-card">
+        <a href="?url=estudiante" class="dash-card dash-kpi-card" title="Ir a Gestión de Estudiantes">
             <div class="dash-kpi-layout">
                 <div class="dash-icon-badge">
                     <i class="fas fa-users"></i>
@@ -31,12 +31,12 @@
                     <path d="M0 32 Q25 35 45 22 T80 25 T100 8" fill="none" stroke="#E83382" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- KPI 2: Ingresos del mes -->
+    <!-- KPI 2: Ingresos del mes (Enlace a ?url=pago) -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="dash-card dash-kpi-card">
+        <a href="?url=pago" class="dash-card dash-kpi-card" title="Ir a Verificación de Pagos">
             <div class="dash-kpi-layout">
                 <div class="dash-icon-badge">
                     <i class="fas fa-dollar-sign"></i>
@@ -61,12 +61,12 @@
                     <rect x="65" y="2" width="5.5" height="38" rx="2.5" fill="#E83382"/>
                 </svg>
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- KPI 3: Inscripciones confirmadas -->
+    <!-- KPI 3: Inscripciones confirmadas (Enlace a ?url=matricula) -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="dash-card dash-kpi-card">
+        <a href="?url=matricula" class="dash-card dash-kpi-card" title="Ir a Gestión de Matrículas">
             <div class="dash-kpi-layout">
                 <div class="dash-icon-badge">
                     <i class="fas fa-check"></i>
@@ -91,12 +91,12 @@
                     <rect x="65" y="2" width="5.5" height="38" rx="2.5" fill="#E83382"/>
                 </svg>
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- KPI 4: Cupos alcanzados -->
+    <!-- KPI 4: Cupos alcanzados (Enlace a ?url=curso) -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="dash-card dash-kpi-card">
+        <a href="?url=curso" class="dash-card dash-kpi-card" title="Ir a Gestión de Cursos">
             <div class="dash-kpi-layout">
                 <div class="dash-icon-badge">
                     <i class="fas fa-trophy"></i>
@@ -115,8 +115,7 @@
                             data-percent="<?= htmlspecialchars($metrics['kpi']['cupos_alcanzados_pct']) ?>" />
                 </svg>
             </div>
-        </div>
+        </a>
     </div>
 
 </div>
-

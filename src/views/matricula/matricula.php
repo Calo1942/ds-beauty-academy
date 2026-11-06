@@ -20,16 +20,24 @@
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
-        <div class="page-header">
-            <h1 class="page-title">Gestión de Matrículas</h1>
-            <div class="header-actions">
-                <button class="btn btn-primary btn-registrar-matricula" type="button" onclick="abrirModal('modalCrear')">
-                    <i class="fas fa-plus"></i> Nueva Matrícula
-                </button>
-            </div>
+        <div class="custom-page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="page-header-icon-badge">
+            <i class="fas fa-id-card"></i>
         </div>
-
-        <div class="panel">
+        <div>
+            <h1 class="page-header-title">Gestión de Matrículas</h1>
+            <p class="page-header-subtitle">Inscripciones activas y asignación de cupos</p>
+        </div>
+    </div>
+        <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
+            
+            <button class="btn-custom-primary btn-registrar-matricula" type="button" onclick="abrirModal("modalCrear")">
+                <i class="fas fa-plus"></i> Nueva Matrícula
+            </button>
+        </div>
+</div>
+        <div class="panel custom-table-card">
             <!-- Skeleton loader mientras carga la información -->
             <div id="matriculaSkeleton" class="skeleton-table">
                 <div class="skeleton-header">
@@ -60,7 +68,7 @@
 
             <!-- Contenedor de DataTable -->
             <div class="table-responsive" id="matriculaTableContainer" style="display: none;">
-                <table id="matriculaTable" class="table table-dark table-hover w-100">
+                <table id="matriculaTable" class="table custom-modern-table w-100">
                     <thead>
                         <tr>
                             <th style="width: 6%;">ID</th>

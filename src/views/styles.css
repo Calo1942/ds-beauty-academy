@@ -1218,6 +1218,21 @@ table.dataTable tbody td {
     flex-direction: column;
 }
 
+a.dash-card,
+a.dash-kpi-card {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+a.dash-card:hover,
+a.dash-kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 16px rgba(232, 51, 130, 0.25);
+    border-color: rgba(232, 51, 130, 0.4);
+    color: inherit;
+}
+
 .dash-card:hover {
     border-color: rgba(232, 51, 130, 0.3);
     box-shadow: 0 10px 28px rgba(232, 51, 130, 0.12), 0 8px 16px rgba(0, 0, 0, 0.5);
