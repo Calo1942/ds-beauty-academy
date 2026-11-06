@@ -13,11 +13,14 @@ $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'c
 $isStaff = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'entrega' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'comprobantePago' || $actualUrl == 'banco');
-$isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario');
+$isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario' || $actualUrl == 'perfil');
 ?>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="mainSidebar">
+    <button class="btn-sidebar-collapse" id="btnSidebarCollapse" type="button" title="Ocultar / Mostrar menú lateral">
+        <i class="fas fa-chevron-left" id="collapseIcon"></i>
+    </button>
     <div class="brand">
         <div class="brand-logo">DS <span style="font-weight:300;">Beauty<br><strong
                     style="font-weight:600;">Academy</strong></span></div>
@@ -134,6 +137,8 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario');
                     <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--text-muted);"></i>
                 </div>
                 <ul class="submenu <?= $isConfig ? 'show' : '' ?>">
+                    <li><a href="?url=perfil" class="<?= ($actualUrl == 'perfil') ? 'active' : '' ?>"><i
+                                class="fas fa-user-circle"></i> Mi Perfil</a></li>
                     <li><a href="?url=usuario" class="<?= ($actualUrl == 'usuario') ? 'active' : '' ?>"><i
                                 class="fas fa-user-cog"></i> Gestión de Usuarios</a></li>
                     <li><a href="?url=configuracion" class="<?= ($actualUrl == 'configuracion') ? 'active' : '' ?>"><i
@@ -177,6 +182,12 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario');
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="?url=perfil" class="nav-link <?= ($actualUrl == 'perfil') ? 'active' : '' ?>">
+                    <i class="fas fa-user-circle"></i> Mi Perfil
+                </a>
+            </li>
+
         <?php elseif ($isEstudiante): ?>
             <!-- ================= VISTAS PARA ESTUDIANTE ================= -->
             
@@ -210,33 +221,84 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario');
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a href="?url=perfil" class="nav-link <?= ($actualUrl == 'perfil') ? 'active' : '' ?>">
+                    <i class="fas fa-user-circle"></i> Mi Perfil
+                </a>
+            </li>
+
         <?php endif; ?>
+
+        <!-- Opción de Cerrar Sesión dentro de la lista de navegación -->
+        <li class="nav-item nav-item-logout">
+            <a href="?url=logout" class="nav-link logout-link">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </li>
     </ul>
 </aside>
 
 <script>
-    document.querySelectorAll('.nav-item.has-children .nav-link').forEach(link => {
-        link.addEventListener('click', function (e) {
-            const parent = this.closest('.nav-item');
-            const submenu = parent.querySelector('.submenu');
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Acordeón clásico vertical original para los submenús
+        document.querySelectorAll('.nav-item.has-children .nav-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const parent = this.closest('.nav-item');
+                const submenu = parent.querySelector('.submenu');
 
-            // Toggle class 'open' on parent for chevron rotation
-            parent.classList.toggle('open');
+                parent.classList.toggle('open');
 
-            // Toggle class 'show' on submenu
-            if (submenu) {
-                if (submenu.style.display === 'block' || submenu.classList.contains('show')) {
-                    submenu.style.display = 'none';
-                    submenu.classList.remove('show');
-                    const leftPart = this.querySelector('.left-part');
-                    if (leftPart) leftPart.setAttribute('aria-expanded', 'false');
-                } else {
-                    submenu.style.display = 'block';
-                    submenu.classList.add('show');
-                    const leftPart = this.querySelector('.left-part');
-                    if (leftPart) leftPart.setAttribute('aria-expanded', 'true');
+                if (submenu) {
+                    if (submenu.style.display === 'block' || submenu.classList.contains('show')) {
+                        submenu.style.display = 'none';
+                        submenu.classList.remove('show');
+                        const leftPart = this.querySelector('.left-part');
+                        if (leftPart) leftPart.setAttribute('aria-expanded', 'false');
+                    } else {
+                        submenu.style.display = 'block';
+                        submenu.classList.add('show');
+                        const leftPart = this.querySelector('.left-part');
+                        if (leftPart) leftPart.setAttribute('aria-expanded', 'true');
+                    }
                 }
-            }
+            });
         });
+
+        // 2. Colapso / Plegado del componente sidebar completo hacia el lado con la flechita
+        const sidebar = document.getElementById('mainSidebar');
+        const btnCollapse = document.getElementById('btnSidebarCollapse');
+        const collapseIcon = document.getElementById('collapseIcon');
+        const mainWrapper = document.querySelector('.main-wrapper');
+
+        // Recordar preferencia del usuario en localStorage
+        const isCollapsed = localStorage.getItem('ds_sidebar_collapsed') === 'true';
+        if (isCollapsed && sidebar && mainWrapper) {
+            sidebar.classList.add('sidebar-collapsed');
+            mainWrapper.classList.add('sidebar-collapsed');
+            if (collapseIcon) {
+                collapseIcon.classList.remove('fa-chevron-left');
+                collapseIcon.classList.add('fa-chevron-right');
+            }
+        }
+
+        if (btnCollapse && sidebar) {
+            btnCollapse.addEventListener('click', () => {
+                sidebar.classList.toggle('sidebar-collapsed');
+                if (mainWrapper) mainWrapper.classList.toggle('sidebar-collapsed');
+
+                const collapsed = sidebar.classList.contains('sidebar-collapsed');
+                localStorage.setItem('ds_sidebar_collapsed', collapsed ? 'true' : 'false');
+
+                if (collapseIcon) {
+                    if (collapsed) {
+                        collapseIcon.classList.remove('fa-chevron-left');
+                        collapseIcon.classList.add('fa-chevron-right');
+                    } else {
+                        collapseIcon.classList.remove('fa-chevron-right');
+                        collapseIcon.classList.add('fa-chevron-left');
+                    }
+                }
+            });
+        }
     });
 </script>

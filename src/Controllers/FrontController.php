@@ -16,15 +16,15 @@ class FrontController
             'dashboard', 'curso', 'recurso', 'clase', 'estudiante',
             'instructor', 'diploma', 'especialidad', 'matricula',
             'evaluacion', 'certificado', 'pago', 'comprobante_pago', 'comprobantepago',
-            'banco', 'reporte', 'configuracion', 'usuario', 'instructor_curso', 'instructorcurso',
+            'banco', 'reporte', 'configuracion', 'usuario', 'perfil', 'instructor_curso', 'instructorcurso',
             'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ],
         'Instructor' => [
-            'dashboard', 'curso', 'clase', 'evaluacion', 'diploma', 'instructor_curso', 'instructorcurso',
+            'dashboard', 'curso', 'clase', 'evaluacion', 'diploma', 'perfil', 'instructor_curso', 'instructorcurso',
             'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ],
         'Estudiante' => [
-            'dashboard', 'curso', 'clase', 'evaluacion', 'certificado', 'instructor_curso', 'instructorcurso',
+            'dashboard', 'curso', 'clase', 'evaluacion', 'certificado', 'perfil', 'instructor_curso', 'instructorcurso',
             'entrega', 'entrega_evaluacion', 'entregaevaluacion'
         ]
     ];

@@ -54,7 +54,7 @@
                     <span class="custom-per-page-label">Mostrar:</span>
                     <div class="custom-dropdown dropdown-per-page" id="dropdownPerPage">
                         <button type="button" class="custom-dropdown-toggle toggle-sm" aria-expanded="false">
-                            <span class="dropdown-selected-text">5</span>
+                            <span class="dropdown-selected-text"></span>
                             <i class="fas fa-chevron-down dropdown-arrow"></i>
                         </button>
                         <div class="custom-dropdown-menu menu-sm">
