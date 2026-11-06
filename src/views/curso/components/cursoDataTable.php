@@ -31,7 +31,7 @@
                     <th style="width: 6%;">ID</th>
                     <th style="width: 31%;">Nombre del Curso</th>
                     <th style="width: 15%;">Tipo</th>
-                    <th style="width: 12%;">Precio</th>
+                    <th style="width: 12%;">Pre-Venta/Precio</th>
                     <th style="width: 12%;">Estado</th>
                     <th style="width: 12%;">Fecha de Inicio</th>
                     <th style="width: 12%; text-align: right;">Acciones</th>
