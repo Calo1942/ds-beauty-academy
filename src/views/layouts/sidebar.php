@@ -13,7 +13,7 @@ $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'c
 $isStaff = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'entrega' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'comprobantePago' || $actualUrl == 'banco');
-$isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario' || $actualUrl == 'perfil');
+$isConfig = ($actualUrl == 'usuario' || $actualUrl == 'perfil');
 ?>
 
 <!-- SIDEBAR -->
@@ -130,7 +130,7 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario' || $actual
             <!-- Configuración -->
             <li class="nav-item has-children <?= $isConfig ? 'open' : '' ?>">
                 <div class="nav-link">
-                    <a href="?url=configuracion" aria-expanded="<?= $isConfig ? 'true' : 'false' ?>"
+                    <a aria-expanded="<?= $isConfig ? 'true' : 'false' ?>"
                         class="left-part <?= $isConfig ? 'active' : '' ?>">
                         <i class="fas fa-cog"></i> Configuración
                     </a>
@@ -141,8 +141,6 @@ $isConfig = ($actualUrl == 'configuracion' || $actualUrl == 'usuario' || $actual
                                 class="fas fa-user-circle"></i> Mi Perfil</a></li>
                     <li><a href="?url=usuario" class="<?= ($actualUrl == 'usuario') ? 'active' : '' ?>"><i
                                 class="fas fa-user-cog"></i> Gestión de Usuarios</a></li>
-                    <li><a href="?url=configuracion" class="<?= ($actualUrl == 'configuracion') ? 'active' : '' ?>"><i
-                                class="fas fa-sliders-h"></i> Ajustes Generales</a></li>
                 </ul>
             </li>
 

@@ -92,6 +92,13 @@ class EspecialidadModel extends DBConnect implements Crud
             if ($especialidadExistente) {
                 if ($especialidadExistente['estatus_especialidad'] == 1) {
                     throw new Exception("Ya existe una especialidad registrada con ese nombre.");
+                } else {
+                    $sqlUpdate = "UPDATE especialidades SET nombre_especialidad = :nombre, estatus_especialidad = 1 WHERE id_especialidad = :id";
+                    $stmtUpdate = $this->con->prepare($sqlUpdate);
+                    $stmtUpdate->bindValue(':nombre', trim($this->nombre_especialidad));
+                    $stmtUpdate->bindValue(':id', $especialidadExistente['id_especialidad']);
+                    $stmtUpdate->execute();
+                    return;
                 }
             }
 

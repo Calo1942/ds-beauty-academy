@@ -233,7 +233,7 @@ $(document).ready(function () {
             showLoading('Cancelando...', 'Actualizando estado de la matrícula');
             
             const formData = new FormData();
-            formData.append('eliminar', 'true');
+            formData.append('eliminar', id);
             formData.append('id_matricula', id);
 
             const success = await executeAjax(

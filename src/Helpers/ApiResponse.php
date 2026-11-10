@@ -4,7 +4,7 @@ namespace DsBeautyAcademy\Helpers;
 
 trait ApiResponse
 {
-    public static function success($code = 200, $message, $data = null)
+    public static function success($code = 200, $message = '', $data = null)
     {
         return [
             'status' => 'success',
@@ -13,7 +13,7 @@ trait ApiResponse
             'data' => $data
         ];
     }
-    public static function error($code = 400, $message, $error = null)
+    public static function error($code = 400, $message = '', $error = null)
     {
         return [
             'status' => 'error',

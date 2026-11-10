@@ -66,7 +66,9 @@ if ($action) {
             exit;
 
         case 'eliminar':
-            $id = $_POST['eliminar'] ?? null;
+            $id = (!empty($_POST[$module_config['primary_key']]) && is_numeric($_POST[$module_config['primary_key']])) 
+                ? $_POST[$module_config['primary_key']] 
+                : ((isset($_POST['eliminar']) && is_numeric($_POST['eliminar'])) ? $_POST['eliminar'] : null);
             if ($id) {
                 $result = $model->eliminar($id);
                 if ($result) {
