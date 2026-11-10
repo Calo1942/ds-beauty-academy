@@ -36,8 +36,10 @@ function asociarValidaciones($form, objetoErrores) {
 
     // Verificación final previa al submit
     $form.on('submit', function (e) {
-        if (hayErrores(objetoErrores)) {
+        $form.find('[name="nombre_banco"]').trigger('change');
+        if (hayErrores(objetoErrores) || !$form.find('[name="nombre_banco"]').val().trim()) {
             e.preventDefault();
+            e.stopImmediatePropagation();
             showWarning('Formulario Incompleto', 'Por favor, corrija el nombre del banco antes de enviar.');
             return false;
         }

@@ -150,6 +150,17 @@ class EntregaEvaluacionModel extends DBConnect implements Crud
                 throw new Exception('No hay datos válidos para registrar la entrega.');
             }
 
+            // Validar coherencia académica: la evaluación debe pertenecer al curso de la matrícula
+            $checkSql = "SELECT m.id_instructor_curso AS matricula_ic, ev.id_instructor_curso AS evaluacion_ic
+                         FROM matriculas m, evaluaciones ev
+                         WHERE m.id_matricula = ? AND ev.id_evaluacion = ?";
+            $checkStmt = $this->con->prepare($checkSql);
+            $checkStmt->execute([$this->id_matricula, $this->id_evaluacion]);
+            $checkRow = $checkStmt->fetch(PDO::FETCH_ASSOC);
+            if (!$checkRow || $checkRow['matricula_ic'] != $checkRow['evaluacion_ic']) {
+                throw new Exception("La evaluación seleccionada no pertenece al curso en el que el estudiante está matriculado.");
+            }
+
             $this->con->beginTransaction();
 
             $columns = array_keys($validatedData);

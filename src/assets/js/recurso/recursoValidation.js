@@ -49,9 +49,13 @@ function asociarValidaciones($form, objetoErrores) {
 
     // Verificación final previa al submit
     $form.on('submit', function (e) {
-        if (hayErrores(objetoErrores)) {
+        $form.find('[name="nombre_recurso"]').trigger('change');
+        $form.find('[name="url_archivo_recurso"]').trigger('change');
+
+        if (hayErrores(objetoErrores) || !$form.find('[name="nombre_recurso"]').val().trim() || !$form.find('[name="url_archivo_recurso"]').val().trim()) {
             e.preventDefault();
-            showWarning('Formulario Incompleto', 'Por favor, corrija los campos marcados en rojo antes de enviar.');
+            e.stopImmediatePropagation();
+            showWarning('Formulario Incompleto', 'Por favor, complete todos los campos obligatorios antes de enviar.');
             return false;
         }
         return true;

@@ -157,6 +157,12 @@ class CursoModel extends DBConnect implements Crud
             }
         }
 
+        if (!empty($validatedData['fecha_fin_curso']) && isset($validatedData['fecha_inicio_curso'])) {
+            if (strtotime($validatedData['fecha_fin_curso']) < strtotime($validatedData['fecha_inicio_curso'])) {
+                throw new Exception("La fecha de finalización del curso debe ser posterior o igual a la de inicio.");
+            }
+        }
+
         return $validatedData;
     }
 

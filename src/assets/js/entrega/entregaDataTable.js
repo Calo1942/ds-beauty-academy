@@ -44,8 +44,9 @@ async function cargarMatriculas(selectSelector, valorSeleccionado = null) {
                     const nombre = m.nombre_estudiante || 'Sin nombre';
                     const cedula = m.cedula_estudiante ? `(C.I: ${m.cedula_estudiante})` : '';
                     const curso = m.nombre_curso || 'Curso';
+                    const ic = m.id_instructor_curso || '';
                     const selected = (valorSeleccionado && valorSeleccionado == id) ? 'selected' : '';
-                    options += `<option value="${id}" ${selected}>#${id} - ${nombre} ${cedula} | ${curso}</option>`;
+                    options += `<option value="${id}" data-instructor-curso="${ic}" ${selected}>#${id} - ${nombre} ${cedula} | ${curso}</option>`;
                 });
             $select.html(options);
             if (valorSeleccionado) $select.val(valorSeleccionado);
@@ -55,8 +56,8 @@ async function cargarMatriculas(selectSelector, valorSeleccionado = null) {
     }
 }
 
-// Cargar evaluaciones activas para el modal de nueva entrega
-async function cargarEvaluaciones(selectSelector, valorSeleccionado = null) {
+// Cargar evaluaciones activas para el modal de nueva entrega (filtrando por curso)
+async function cargarEvaluaciones(selectSelector, valorSeleccionado = null, idInstructorCurso = null) {
     const $select = $(selectSelector);
     if (!$select.length) return;
 
@@ -70,15 +71,26 @@ async function cargarEvaluaciones(selectSelector, valorSeleccionado = null) {
 
         if (response && response.status === 'success' && Array.isArray(response.data)) {
             let options = '<option value="">-- Seleccione una evaluación --</option>';
-            response.data
-                .filter(ev => ev.estatus_evaluacion == 1 || ev.estatus_evaluacion === '1' || ev.estatus_evaluacion === true)
-                .forEach(ev => {
+            const filtradas = response.data.filter(ev => {
+                const activo = ev.estatus_evaluacion == 1 || ev.estatus_evaluacion === '1' || ev.estatus_evaluacion === true;
+                if (!activo) return false;
+                if (idInstructorCurso) {
+                    return ev.id_instructor_curso == idInstructorCurso;
+                }
+                return true;
+            });
+
+            if (filtradas.length === 0) {
+                options = '<option value="">-- No hay evaluaciones para este curso --</option>';
+            } else {
+                filtradas.forEach(ev => {
                     const id = ev.id_evaluacion;
                     const titulo = ev.titulo_evaluacion || 'Evaluación';
                     const tipo = ev.tipo_evaluacion ? `[${ev.tipo_evaluacion.toUpperCase()}]` : '';
                     const selected = (valorSeleccionado && valorSeleccionado == id) ? 'selected' : '';
                     options += `<option value="${id}" ${selected}>#${id} - ${titulo} ${tipo}</option>`;
                 });
+            }
             $select.html(options);
             if (valorSeleccionado) $select.val(valorSeleccionado);
         }
@@ -206,8 +218,18 @@ $(document).ready(function () {
             limpiarValidaciones(form);
         }
         cargarMatriculas('#select_matricula_entrega');
-        cargarEvaluaciones('#select_evaluacion_entrega');
+        $('#select_evaluacion_entrega').html('<option value="">-- Primero seleccione una matrícula --</option>');
         abrirModal('modalCrear');
+    });
+
+    // Filtro dinámico: al cambiar matrícula, cargar solo evaluaciones del curso correspondiente
+    $(document).on('change', '#select_matricula_entrega', function () {
+        const idInstructorCurso = $(this).find('option:selected').data('instructor-curso');
+        if (idInstructorCurso) {
+            cargarEvaluaciones('#select_evaluacion_entrega', null, idInstructorCurso);
+        } else {
+            $('#select_evaluacion_entrega').html('<option value="">-- Primero seleccione una matrícula --</option>');
+        }
     });
 
     // 4. Submit Formulario Crear Entrega

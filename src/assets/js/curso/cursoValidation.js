@@ -92,9 +92,14 @@ function asociarValidaciones($form, objetoErrores) {
 
     // Verificación final previa al submit
     $form.on('submit', function (e) {
-        if (hayErrores(objetoErrores)) {
+        $form.find('[name="nombre_curso"]').trigger('change');
+        $form.find('[name="precio_normal"]').trigger('change');
+        $form.find('[name="limite_cupos"]').trigger('change');
+
+        if (hayErrores(objetoErrores) || !$form.find('[name="nombre_curso"]').val().trim() || !$form.find('[name="precio_normal"]').val() || !$form.find('[name="limite_cupos"]').val()) {
             e.preventDefault();
-            showWarning('Formulario Incompleto', 'Por favor, corrija los campos marcados en rojo antes de enviar.');
+            e.stopImmediatePropagation();
+            showWarning('Formulario Incompleto', 'Por favor, complete todos los campos obligatorios antes de enviar.');
             return false;
         }
 
@@ -103,14 +108,23 @@ function asociarValidaciones($form, objetoErrores) {
         const fFinPrev = $form.find('[name="fecha_fin_preventa"]').val();
         const fFinCurso = $form.find('[name="fecha_fin_curso"]').val();
 
+        if (!fInicio) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            showWarning('Campo Requerido', 'Por favor, indique la fecha de inicio del curso.');
+            return false;
+        }
+
         if (fFinPrev && fInicio && new Date(fFinPrev) > new Date(fInicio)) {
             e.preventDefault();
+            e.stopImmediatePropagation();
             showWarning('Fechas Inválidas', 'La fecha de fin de preventa no puede ser posterior al inicio del curso.');
             return false;
         }
 
         if (fFinCurso && fInicio && new Date(fFinCurso) < new Date(fInicio)) {
             e.preventDefault();
+            e.stopImmediatePropagation();
             showWarning('Fechas Inválidas', 'La fecha de finalización del curso debe ser posterior o igual a la de inicio.');
             return false;
         }

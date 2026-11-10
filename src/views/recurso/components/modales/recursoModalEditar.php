@@ -8,16 +8,16 @@
             <input type="hidden" id="edit_id_recurso" name="id_recurso">
             <div class="modal-body">
                 <div class="form-group mb-3">
-                    <label class="form-label">Nombre del Recurso</label>
-                    <input type="text" name="nombre_recurso" id="nombre_recurso" class="form-control" placeholder="Ingrese el nombre" maxlength="150" required>
+                    <label for="nombre_recurso_editar" class="form-label">Nombre del Recurso</label>
+                    <input type="text" name="nombre_recurso" id="nombre_recurso_editar" class="form-control" placeholder="Ingrese el nombre" maxlength="150" required>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label">Descripción</label>
-                    <textarea name="descripcion_recurso" class="form-control" placeholder="Descripción (opcional)"></textarea>
+                    <label for="descripcion_recurso_editar" class="form-label">Descripción</label>
+                    <textarea name="descripcion_recurso" id="descripcion_recurso_editar" class="form-control" placeholder="Descripción (opcional)"></textarea>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label">URL del Archivo</label>
-                    <input type="text" name="url_archivo_recurso" class="form-control" placeholder="Ingrese la URL del archivo" maxlength="512" required>
+                    <label for="url_archivo_recurso_editar" class="form-label">URL del Archivo</label>
+                    <input type="text" name="url_archivo_recurso" id="url_archivo_recurso_editar" class="form-control" placeholder="Ingrese la URL del archivo" maxlength="512" required>
                 </div>
             </div>
             <div class="modal-footer">
