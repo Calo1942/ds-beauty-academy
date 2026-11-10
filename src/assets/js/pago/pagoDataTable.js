@@ -1,7 +1,7 @@
 // pagoDataTable.js - Gestión interactiva de Comprobantes de Pago con DataTables y SweetAlert2
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { getById, create, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showWarning } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
 import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
@@ -274,6 +274,18 @@ $(document).ready(function () {
         const precio = $(this).find('option:selected').data('precio');
         if (precio !== undefined && precio !== '') {
             $('#monto_pago').val(precio);
+        }
+    });
+
+    // Validación de tamaño máximo de archivo de comprobante (5 MB)
+    $(document).on('change', '#comprobante_archivo', function () {
+        const file = this.files ? this.files[0] : null;
+        if (file) {
+            const maxBytes = 5 * 1024 * 1024; // 5 MB
+            if (file.size > maxBytes) {
+                showWarning('Archivo muy pesado', 'El comprobante supera el tamaño máximo permitido de 5 MB. Por favor seleccione un archivo más ligero.');
+                this.value = '';
+            }
         }
     });
 

@@ -186,7 +186,7 @@ class EstudianteModel extends DBConnect implements Crud
             $stmtInsert->execute($this->obtenerParametros());
 
         } catch (\PDOException $e) {
-            throw new Exception("Error en la base de datos: " . $e->getMessage());
+            throw $this->manejarErrorDuplicado($e, 'guardar');
         }
     }
 
@@ -267,8 +267,24 @@ class EstudianteModel extends DBConnect implements Crud
             $parametros[':id'] = $this->id_estudiante;
             $stmt->execute($parametros);
         } catch (\PDOException $e) {
-            throw new Exception("Error al actualizar: " . $e->getMessage());
+            throw $this->manejarErrorDuplicado($e, 'actualizar');
         }
+    }
+
+    private function manejarErrorDuplicado(\PDOException $e, $contexto = 'guardar')
+    {
+        if ($e->getCode() == 23000 || strpos($e->getMessage(), '1062') !== false) {
+            if (stripos($e->getMessage(), 'correo') !== false) {
+                return new Exception("Ya existe un estudiante registrado con ese correo electrónico.");
+            }
+            if (stripos($e->getMessage(), 'instagram') !== false) {
+                return new Exception("Ya existe un estudiante registrado con ese usuario de Instagram.");
+            }
+            if (stripos($e->getMessage(), 'cedula') !== false) {
+                return new Exception("Ya existe un estudiante registrado con esa cédula de identidad.");
+            }
+        }
+        return new Exception("Error al {$contexto}: " . $e->getMessage());
     }
 
     public function eliminar($id)

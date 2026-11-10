@@ -113,7 +113,7 @@ $(document).ready(function () {
             {
                 data: 'id_curso',
                 className: 'fw-bold text-muted',
-                render: (data, type, row, meta) => `<span>${meta.row + 1}</span>`
+                render: (data, type, row, meta) => `<span>${meta.settings._iDisplayStart + meta.row + 1}</span>`
             },
             // 1: Nombre del Curso
             {
@@ -389,7 +389,7 @@ $(document).ready(function () {
 
         const confirmado = await showConfirm(
             '¿Eliminar curso?',
-            'Esta acción cambiará el estatus del curso a inactivo.',
+            'Esta acción eliminará el curso permanentemente del sistema. No se podrá eliminar si posee matrículas registradas.',
             'Sí, eliminar',
             'Cancelar'
         );

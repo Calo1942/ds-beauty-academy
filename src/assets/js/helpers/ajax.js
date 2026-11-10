@@ -66,15 +66,26 @@ const handleAjaxError = async (error) => {
     }
 
     if (error.responseJSON) {
-        const errorMsg = error.responseJSON.message || error.responseJSON.error || 'Error en el servidor';
+        let errorMsg = error.responseJSON.message || error.responseJSON.error || 'Error en el servidor';
+        if (error.responseJSON.message && error.responseJSON.error && error.responseJSON.message !== error.responseJSON.error) {
+            errorMsg = typeof error.responseJSON.error === 'string' 
+                ? `${error.responseJSON.message}: ${error.responseJSON.error}`
+                : error.responseJSON.message;
+        }
         await showErrorMessage(errorMsg);
         return;
     }
 
     if (error.responseText) {
         const parsedResponse = parseResponse(error.responseText);
-        if (parsedResponse.message) {
-            await showErrorMessage(parsedResponse.message);
+        let errorMsg = parsedResponse.message || parsedResponse.error;
+        if (parsedResponse.message && parsedResponse.error && parsedResponse.message !== parsedResponse.error) {
+            errorMsg = typeof parsedResponse.error === 'string'
+                ? `${parsedResponse.message}: ${parsedResponse.error}`
+                : parsedResponse.message;
+        }
+        if (errorMsg) {
+            await showErrorMessage(errorMsg);
             return;
         }
     }
@@ -106,7 +117,12 @@ export const executeAjax = async (ajaxPromise, successMessage = null, onSuccess 
             return true;
         }
 
-        const errorMsg = response.message || response.error || 'Ha ocurrido un error inesperado';
+        let errorMsg = response.message || response.error || 'Ha ocurrido un error inesperado';
+        if (response.message && response.error && response.message !== response.error) {
+            errorMsg = typeof response.error === 'string'
+                ? `${response.message}: ${response.error}`
+                : response.message;
+        }
         await showErrorMessage(errorMsg);
         return false;
     } catch (error) {

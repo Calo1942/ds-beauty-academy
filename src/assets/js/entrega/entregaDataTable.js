@@ -1,7 +1,7 @@
 // entregaDataTable.js - Gestión de Entregas y Calificaciones Pedagógicas
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { getById, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showWarning } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
 import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
@@ -229,6 +229,18 @@ $(document).ready(function () {
             cargarEvaluaciones('#select_evaluacion_entrega', null, idInstructorCurso);
         } else {
             $('#select_evaluacion_entrega').html('<option value="">-- Primero seleccione una matrícula --</option>');
+        }
+    });
+
+    // Validación de tamaño máximo de archivo para entrega (10 MB)
+    $(document).on('change', '#archivo_entrega', function () {
+        const file = this.files ? this.files[0] : null;
+        if (file) {
+            const maxBytes = 10 * 1024 * 1024; // 10 MB
+            if (file.size > maxBytes) {
+                showWarning('Archivo muy pesado', 'El archivo de la entrega supera el tamaño máximo permitido de 10 MB. Por favor seleccione un archivo más ligero.');
+                this.value = '';
+            }
         }
     });
 
