@@ -7,7 +7,7 @@
     <title>Diplomas | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
 </head>
@@ -53,8 +53,8 @@
     <?php echo $scripts_links; ?>
 
     <!-- Módulos ES6 específicos de Diploma -->
-    <script type="module" src="src/assets/js/diploma/diplomaValidation.js"></script>
-    <script type="module" src="src/assets/js/diploma/diplomaDataTable.js"></script>
+    <script type="module" src="assets/js/diploma/diplomaValidation.js"></script>
+    <script type="module" src="assets/js/diploma/diplomaDataTable.js"></script>
 </body>
 
 </html>

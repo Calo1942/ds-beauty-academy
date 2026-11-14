@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------
  * DS Beauty Academy - Animaciones de Barras y Radial Ring
- * Archivo: src/assets/js/dashboard/dashboardAnimations.js
+ * Archivo: assets/js/dashboard/dashboardAnimations.js
  * Descripción: Micro-animaciones para barras de progreso y anillo radial.
  * ------------------------------------------------------------------
  */

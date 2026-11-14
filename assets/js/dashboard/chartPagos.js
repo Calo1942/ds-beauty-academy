@@ -1,34 +1,38 @@
 /**
  * ------------------------------------------------------------------
- * DS Beauty Academy - Gráfico Donut de Estado de las Inscripciones
- * Archivo: src/assets/js/dashboard/chartInscripciones.js
+ * DS Beauty Academy - Gráfico Donut de Resumen de Pagos
+ * Archivo: assets/js/dashboard/chartPagos.js
  * Descripción: Configuración del Donut con total central y tooltips
- * sobrepuestos de alta legibilidad. Conectado con la BD real.
+ * sobrepuestos de alta legibilidad para montos y porcentajes.
+ * Conectado con la BD real mediante window.DASHBOARD_METRICS.
  * ------------------------------------------------------------------
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('chartEstadoInscripciones');
+    const canvas = document.getElementById('chartResumenPagos');
     if (!canvas || typeof Chart === 'undefined') return;
 
-    const backendData = window.DASHBOARD_METRICS?.estado_inscripciones || {
-        total: 186,
-        confirmadas_pct: 68,
-        reservadas_pct: 20,
-        canceladas_pct: 12
+    const backendData = window.DASHBOARD_METRICS?.resumen_pagos || {
+        total: '$12,450',
+        verificados_monto: '$9,750',
+        verificados_pct: 78,
+        pendientes_monto: '$1,850',
+        pendientes_pct: 15,
+        rechazados_monto: '$850',
+        rechazados_pct: 7
     };
 
     new Chart(canvas.getContext('2d'), {
         type: 'doughnut',
         data: {
-            labels: ['Confirmadas', 'Reservadas', 'Canceladas'],
+            labels: ['Pagos verificados', 'Pagos pendientes', 'Pagos rechazados'],
             datasets: [{
                 data: [
-                    backendData.confirmadas_pct,
-                    backendData.reservadas_pct,
-                    backendData.canceladas_pct
+                    backendData.verificados_pct,
+                    backendData.pendientes_pct,
+                    backendData.rechazados_pct
                 ],
-                backgroundColor: ['#E83382', '#8b5cf6', '#f472b6'],
+                backgroundColor: ['#E83382', '#8b5cf6', '#fda4af'],
                 borderWidth: 0,
                 hoverOffset: 4
             }]
@@ -60,12 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     usePointStyle: false,
                     callbacks: {
                         label(context) {
-                            return ` ${context.label}: ${context.parsed}%`;
+                            const montos = [
+                                backendData.verificados_monto,
+                                backendData.pendientes_monto,
+                                backendData.rechazados_monto
+                            ];
+                            return ` ${context.label}: ${montos[context.dataIndex]} (${context.parsed}%)`;
                         }
                     }
                 },
                 centerText: {
-                    mainText: backendData.total.toString(),
+                    mainText: backendData.total,
                     subText: 'Total'
                 }
             }

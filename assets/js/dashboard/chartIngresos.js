@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------
  * DS Beauty Academy - Gráfico de Ingresos (Días / Mes)
- * Archivo: src/assets/js/dashboard/chartIngresos.js
+ * Archivo: assets/js/dashboard/chartIngresos.js
  * Descripción: Gráfico de área con curvatura suave, gradiente Glow Pink,
  * filtros dinámicos por Días (mes actual) y Mes (año actual).
  * Escala del eje Y auto-ajustable al monto MÁXIMO real de los datos

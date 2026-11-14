@@ -45,7 +45,7 @@ if (!isset($metrics)) {
     <title>Dashboard | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
     <!-- Chart.js 4.4 UMD para gráficos interactivos -->
@@ -105,11 +105,11 @@ if (!isset($metrics)) {
     </script>
 
     <!-- Scripts modulares del Dashboard -->
-    <script src="src/assets/js/dashboard/centerTextPlugin.js"></script>
-    <script src="src/assets/js/dashboard/chartIngresos.js"></script>
-    <script src="src/assets/js/dashboard/chartInscripciones.js"></script>
-    <script src="src/assets/js/dashboard/chartPagos.js"></script>
-    <script src="src/assets/js/dashboard/dashboardAnimations.js"></script>
+    <script src="assets/js/dashboard/centerTextPlugin.js"></script>
+    <script src="assets/js/dashboard/chartIngresos.js"></script>
+    <script src="assets/js/dashboard/chartInscripciones.js"></script>
+    <script src="assets/js/dashboard/chartPagos.js"></script>
+    <script src="assets/js/dashboard/dashboardAnimations.js"></script>
 </body>
 
 </html>

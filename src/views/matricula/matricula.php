@@ -7,7 +7,7 @@
     <title>Matrículas | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
 </head>
@@ -100,7 +100,7 @@
     <?php echo $scripts_links; ?>
 
     <!-- Módulo ES6 específico de Matrícula -->
-    <script type="module" src="src/assets/js/matricula/matriculaDataTable.js"></script>
+    <script type="module" src="assets/js/matricula/matriculaDataTable.js"></script>
 </body>
 
 </html>

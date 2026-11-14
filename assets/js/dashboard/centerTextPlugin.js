@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------
  * DS Beauty Academy - Plugin de Texto Centrado para Donut Charts
- * Archivo: src/assets/js/dashboard/centerTextPlugin.js
+ * Archivo: assets/js/dashboard/centerTextPlugin.js
  * Descripción: Dibuja el total y subtítulo en el centro del Donut.
  * Utiliza 'beforeTooltipDraw' para garantizar que el Tooltip de Chart.js
  * se renderice SIEMPRE SOBREPUESTO al texto y nunca detrás de él.

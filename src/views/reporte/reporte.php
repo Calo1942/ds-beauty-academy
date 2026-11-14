@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro de Reportes | DS Beauty Academy</title>
     <?php
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
     <style>

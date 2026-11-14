@@ -7,7 +7,7 @@
     <title>Estudiantes | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
 </head>
@@ -53,8 +53,8 @@
     <?php echo $scripts_links; ?>
 
     <!-- Módulos ES6 específicos de Estudiante -->
-    <script type="module" src="src/assets/js/estudiante/estudianteValidation.js"></script>
-    <script type="module" src="src/assets/js/estudiante/estudianteDataTable.js"></script>
+    <script type="module" src="assets/js/estudiante/estudianteValidation.js"></script>
+    <script type="module" src="assets/js/estudiante/estudianteDataTable.js"></script>
 </body>
 
 </html>

@@ -7,7 +7,7 @@
     <title>Usuarios | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
 </head>
@@ -39,7 +39,7 @@
     <?php echo $scripts_links; ?>
 
     <!-- Módulo ES6 específico de Usuarios -->
-    <script type="module" src="src/assets/js/usuario/usuarioDataTable.js"></script>
+    <script type="module" src="assets/js/usuario/usuarioDataTable.js"></script>
 </body>
 
 </html>

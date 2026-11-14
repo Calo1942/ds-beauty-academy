@@ -7,7 +7,7 @@
     <title>Recursos | DS Beauty Academy</title>
     <?php
     // Inclusión centralizada de dependencias CSS y fuentes
-    include_once __DIR__ . '/../../assets/linksFront.php';
+    include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
 </head>
@@ -53,8 +53,8 @@
     <?php echo $scripts_links; ?>
 
     <!-- Módulos ES6 específicos de Recurso -->
-    <script type="module" src="src/assets/js/recurso/recursoValidation.js"></script>
-    <script type="module" src="src/assets/js/recurso/recursoDataTable.js"></script>
+    <script type="module" src="assets/js/recurso/recursoValidation.js"></script>
+    <script type="module" src="assets/js/recurso/recursoDataTable.js"></script>
 </body>
 
 </html>
