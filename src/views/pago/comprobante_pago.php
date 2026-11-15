@@ -20,23 +20,7 @@
     <?php require_once __DIR__ . '/../layouts/navbar.php'; ?>
 
     <main class="content">
-        <div class="custom-page-header d-flex flex-wrap align-items-center justify-content-between mb-4">
-    <div class="d-flex align-items-center gap-3">
-        <div class="page-header-icon-badge">
-            <i class="fas fa-receipt"></i>
-        </div>
-        <div>
-            <h1 class="page-header-title">Verificación de Pagos</h1>
-            <p class="page-header-subtitle">Auditoría, comprobantes y conciliación bancaria</p>
-        </div>
-    </div>
-        <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
-            
-            <button class="btn-custom-primary btn-registrar-pago" type="button" onclick="abrirModal('modalCrear')">
-                <i class="fas fa-plus"></i> Registrar Pago Manual
-            </button>
-        </div>
-</div>
+        <?php include __DIR__ . '/components/pagoHeader.php'; ?>
         <div class="panel custom-table-card">
             <!-- Skeleton loader mientras carga la información -->
             <div id="pagoSkeleton" class="skeleton-table">

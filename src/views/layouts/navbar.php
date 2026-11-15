@@ -21,6 +21,11 @@ if ($isFirstLogin) {
             </div>
         </div>
         <div class="topbar-right">
+            <!-- Botón Conmutador de Modo Oscuro / Claro -->
+            <button type="button" class="btn-theme-toggle" id="btnThemeToggle" title="Cambiar a modo claro / oscuro" aria-label="Cambiar tema">
+                <i class="fas fa-sun" id="themeToggleIcon"></i>
+            </button>
+
             <div class="notification">
                 <i class="far fa-bell"></i>
             </div>
@@ -142,6 +147,36 @@ if ($isFirstLogin) {
                 overlay.addEventListener('click', () => {
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
+                });
+            }
+
+            // Lógica del Conmutador de Modo Oscuro / Claro con persistencia en localStorage
+            const btnThemeToggle = document.getElementById('btnThemeToggle');
+            const themeToggleIcon = document.getElementById('themeToggleIcon');
+
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('ds_theme', theme);
+                if (themeToggleIcon) {
+                    if (theme === 'light') {
+                        themeToggleIcon.className = 'fas fa-moon';
+                        btnThemeToggle.setAttribute('title', 'Cambiar a modo oscuro');
+                    } else {
+                        themeToggleIcon.className = 'fas fa-sun';
+                        btnThemeToggle.setAttribute('title', 'Cambiar a modo claro');
+                    }
+                }
+            }
+
+            // Inicializar tema guardado o por defecto oscuro
+            const savedTheme = localStorage.getItem('ds_theme') || 'dark';
+            applyTheme(savedTheme);
+
+            if (btnThemeToggle) {
+                btnThemeToggle.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    applyTheme(newTheme);
                 });
             }
         });

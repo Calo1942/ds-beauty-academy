@@ -1,15 +1,27 @@
 :root {
+    /* 1. Fondos y Superficies */
     --bg-dark: #0f0f11;
     --bg-panel: #161618;
     --bg-card: #1c1c1e;
-    --text-main: #ffffff;
-    --text-muted: #a1a1aa;
-    --text-light: #e4e4e7;
-    --accent: #E83382;
-    --accent-hover: #D81B60;
-    --success: #10b981;
+
+    /* 2. Jerarquía Tipográfica de Color */
+    --text-main: #ffffff;      /* Máximo contraste: Títulos h1-h4, KPIs, badges, botones primarios */
+    --text-light: #e4e4e7;     /* Texto de contenido: Celdas de tablas, labels, inputs */
+    --text-muted: #9ca3af;     /* Soporte y subtítulos: Descripciones, filtros, placeholders */
+
+    /* 3. Colores de Identidad y Estados */
+    --accent: #E83382;         /* Glow Pink: Identidad, botones de acción, selecciones activas */
+    --accent-hover: #D81B60;   /* Hover activo de botones */
+    --success: #10b981;        /* Estados activos, verificados, aprobados */
+    --warning: #f59e0b;        /* Estados de preventa, pendientes */
+    --danger: #ef4444;         /* Estados inactivos, rechazados, eliminación */
+
+    /* 4. Estructura y Bordes */
     --border-color: rgba(255, 255, 255, 0.05);
     --sidebar-width: 280px;
+
+    /* Sobrescritura de Bootstrap para sincronizar con nuestro tema oscuro */
+    --bs-secondary-color: #9ca3af;
 }
 
 * {
@@ -25,6 +37,25 @@ body {
     display: flex;
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+/* Tipografía y Jerarquía Visual Modular */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: var(--text-main) !important;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+/* Subtítulos y textos de soporte en tono suave legible */
+.text-muted,
+p.text-muted,
+span.text-muted,
+.page-header-subtitle,
+.report-desc,
+.dash-card-subtitle,
+.filter-label {
+    color: var(--text-muted) !important;
 }
 
 /* --- SIDEBAR --- */
@@ -1210,6 +1241,11 @@ tr:last-child td {
 
 /* --- Breakpoint 1: Tablets y Laptops Pequeñas (<= 992px) --- */
 @media (max-width: 992px) {
+    /* Ocultar el botón de colapso de escritorio para evitar colisiones con el toggle móvil */
+    .btn-sidebar-collapse {
+        display: none !important;
+    }
+
     .sidebar {
         transform: translateX(-100%);
         box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
@@ -3622,21 +3658,27 @@ table.custom-modern-table.dataTable {
     }
 }
 
-/* 3. Encabezados de Páginas en Móviles (<= 768px) */
+/* 3. Encabezados de Páginas en Móviles y Tablets (<= 768px) */
 @media (max-width: 768px) {
     .custom-page-header {
         flex-direction: column !important;
-        align-items: flex-start !important;
+        align-items: stretch !important;
         gap: 16px !important;
     }
 
     .page-header-actions {
         width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
     }
 
-    .page-header-actions .btn-custom-primary {
+    .page-header-actions .btn-custom-primary,
+    .page-header-actions .btn-custom-secondary,
+    .page-header-actions .btn-reporte-modulo {
         width: 100% !important;
         justify-content: center !important;
+        margin-right: 0 !important;
     }
 }
 
@@ -3684,4 +3726,545 @@ table.custom-modern-table.dataTable {
 
 .table-responsive::-webkit-scrollbar-thumb:hover {
     background: var(--accent, #e83382);
+}
+
+/* ==========================================================================
+   --- TEMA CLARO (LIGHT LUXURY) ---
+   ========================================================================== */
+[data-theme="light"] {
+    /* 1. Fondos y Superficies */
+    --bg-dark: #f4f5f8;
+    --bg-panel: #ffffff;
+    --bg-card: #ffffff;
+
+    /* 2. Jerarquía Tipográfica de Color */
+    --text-main: #111827;      /* Máximo contraste: Títulos h1-h4, KPIs, badges */
+    --text-light: #374151;     /* Contenido: Celdas de tablas, labels, inputs */
+    --text-muted: #6b7280;     /* Subtítulos, descripciones, placeholders */
+
+    /* 3. Estructura y Bordes */
+    --border-color: rgba(0, 0, 0, 0.08);
+    --bs-secondary-color: #6b7280;
+}
+
+/* Modificaciones específicas para Modo Claro */
+[data-theme="light"] body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+}
+
+[data-theme="light"] .main-wrapper {
+    background-color: #f0f2f5;
+}
+
+[data-theme="light"] .sidebar {
+    background-color: #ffffff;
+    border-right: 1px solid var(--border-color);
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .topbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .custom-table-card,
+[data-theme="light"] .dash-card,
+[data-theme="light"] .report-card,
+[data-theme="light"] .modal-content,
+[data-theme="light"] .panel {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .brand-logo {
+    color: var(--accent) !important;
+}
+
+[data-theme="light"] .brand-logo span,
+[data-theme="light"] .brand-logo span strong {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .navbar-brand-collapsed .brand-ds {
+    color: var(--accent) !important;
+}
+
+[data-theme="light"] .navbar-brand-collapsed .brand-text span,
+[data-theme="light"] .navbar-brand-collapsed .brand-text strong {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .nav-link {
+    color: #4b5563;
+}
+
+[data-theme="light"] .nav-link:hover {
+    color: var(--accent);
+    background-color: rgba(232, 51, 130, 0.06);
+}
+
+[data-theme="light"] .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #e83382 0%, #d81b60 100%);
+}
+
+[data-theme="light"] .form-control {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #111827;
+}
+
+[data-theme="light"] .form-control:focus {
+    background-color: #ffffff;
+    border-color: var(--accent);
+    color: #111827;
+    box-shadow: 0 0 0 3px rgba(232, 51, 130, 0.15);
+}
+
+[data-theme="light"] .form-control::placeholder {
+    color: #9ca3af;
+}
+
+[data-theme="light"] .custom-dropdown-toggle {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+[data-theme="light"] .custom-dropdown-menu {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .custom-dropdown-item {
+    color: #374151;
+}
+
+[data-theme="light"] .custom-dropdown-item:hover,
+[data-theme="light"] .custom-dropdown-item.active {
+    background-color: rgba(232, 51, 130, 0.08);
+    color: var(--accent);
+}
+
+[data-theme="light"] .custom-modern-table tbody tr:hover td,
+[data-theme="light"] .custom-modern-table tbody tr:hover>* {
+    background-color: rgba(232, 51, 130, 0.04) !important;
+}
+
+[data-theme="light"] .custom-modern-table .text-muted,
+[data-theme="light"] .custom-table-card .text-muted {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .custom-modern-table td span.text-white {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .btn-circle-action {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #4b5563;
+}
+
+[data-theme="light"] .btn-circle-action:hover {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+
+[data-theme="light"] .btn-custom-secondary {
+    background-color: rgba(232, 51, 130, 0.08);
+    border: 1px solid rgba(232, 51, 130, 0.25);
+    color: var(--accent);
+}
+
+[data-theme="light"] .btn-custom-secondary:hover {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+
+[data-theme="light"] .modal {
+    background-color: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+[data-theme="light"] .modal-header,
+[data-theme="light"] .modal-footer {
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .close-modal {
+    color: #6b7280;
+}
+
+[data-theme="light"] .close-modal:hover {
+    color: var(--accent);
+}
+
+/* Botón Conmutador de Modo Oscuro / Claro en Topbar */
+.btn-theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-theme-toggle:hover {
+    background-color: rgba(232, 51, 130, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.08);
+}
+
+[data-theme="light"] .btn-theme-toggle {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #4b5563;
+}
+
+[data-theme="light"] .btn-theme-toggle:hover {
+    background-color: rgba(232, 51, 130, 0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+
+/* ==========================================================================
+   --- PERSONALIZACIÓN MODULAR DE BARRAS DE DESPLAZAMIENTO (SCROLLBARS) ---
+   ========================================================================== */
+
+/* 1. Estándar W3C moderno para Firefox y navegadores compatibles */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232, 51, 130, 0.4) #111116;
+}
+
+[data-theme="light"] html {
+    scrollbar-color: rgba(232, 51, 130, 0.4) #f1f2f6;
+}
+
+/* 2. WebKit (Chrome, Edge, Safari, Opera) - Modo Oscuro por defecto */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111116;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a2a36;
+    border-radius: 999px;
+    border: 2px solid #111116;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent, #e83382);
+}
+
+::-webkit-scrollbar-corner {
+    background: #111116;
+}
+
+/* 3. WebKit en Modo Claro */
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #f1f2f6;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border: 2px solid #f1f2f6;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent, #e83382);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-corner {
+    background: #f1f2f6;
+}
+
+
+/* SweetAlert2 en Modo Claro */
+[data-theme="light"] .swal2-popup.border-luxury {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid rgba(232, 51, 130, 0.35) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .swal2-title {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .swal2-html-container {
+    color: #4b5563 !important;
+}
+
+[data-theme="light"] .swal2-cancel {
+    background-color: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+[data-theme="light"] .swal2-cancel:hover {
+    background-color: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+
+/* -------------------------------------------------------------
+   MODO CLARO: Filtros, Buscador, Botones y Tablas (Contraste Alto)
+   ------------------------------------------------------------- */
+
+/* 1. Input del Buscador en Modo Claro */
+[data-theme="light"] .custom-filter-input,
+[data-theme="light"] .filter-search-container .form-control {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .custom-filter-input::placeholder {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .custom-search-box i {
+    color: #9ca3af !important;
+}
+
+[data-theme="light"] .custom-filter-input:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(232, 51, 130, 0.15) !important;
+}
+
+/* 2. Botón de Limpiar Filtros en Modo Claro */
+[data-theme="light"] .btn-clear-filters {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .btn-clear-filters:hover {
+    background-color: #e5e7eb !important;
+    color: #111827 !important;
+    border-color: #9ca3af !important;
+}
+
+/* 3. Encabezados y Celdas de DataTables en Modo Claro (Textos Oscuros Nítidos) */
+[data-theme="light"] .custom-modern-table thead th,
+[data-theme="light"] .custom-modern-table>thead>tr>th,
+[data-theme="light"] .custom-modern-table> :not(caption)>thead>*>* {
+    color: #374151 !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #e5e7eb !important;
+}
+
+[data-theme="light"] .custom-modern-table tbody td {
+    color: #1f2937 !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+}
+
+[data-theme="light"] .custom-modern-table td span.text-muted,
+[data-theme="light"] .custom-modern-table td .text-muted,
+[data-theme="light"] .custom-modern-table td span[style*="line-through"],
+[data-theme="light"] .custom-modern-table .price-original {
+    color: #6b7280 !important;
+}
+
+[data-theme="light"] .custom-modern-table td span.fw-semibold,
+[data-theme="light"] .custom-modern-table td span.text-white,
+[data-theme="light"] .custom-modern-table td .fw-bold {
+    color: #111827 !important;
+}
+
+/* 4. Menú de Navegación Lateral y Scrollbar */
+.nav-menu {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232, 51, 130, 0.3) transparent;
+}
+
+.nav-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.nav-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.nav-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+[data-theme="light"] .nav-menu::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .nav-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* 5. Submenús colapsables en Modo Claro */
+[data-theme="light"] .submenu {
+    background-color: #f9fafb !important;
+    border-left: 2px solid rgba(232, 51, 130, 0.2) !important;
+}
+
+[data-theme="light"] .submenu-link {
+    color: #4b5563 !important;
+}
+
+[data-theme="light"] .submenu-link:hover {
+    color: var(--accent) !important;
+    background-color: rgba(232, 51, 130, 0.08) !important;
+}
+
+[data-theme="light"] .submenu-link.active {
+    color: var(--accent) !important;
+    font-weight: 600 !important;
+    background-color: rgba(232, 51, 130, 0.12) !important;
+}
+
+/* 6. Footer de Paginación en Modo Claro */
+[data-theme="light"] .custom-table-footer {
+    border-top: 1px solid #e5e7eb !important;
+}
+
+[data-theme="light"] .custom-info-text,
+[data-theme="light"] .custom-per-page-label {
+    color: #4b5563 !important;
+}
+
+[data-theme="light"] .dt-custom-pagination .page-btn {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #e5e7eb !important;
+    color: #374151 !important;
+}
+
+[data-theme="light"] .dt-custom-pagination .page-btn:hover:not(.disabled) {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .dt-custom-pagination .page-btn.active {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    border-color: var(--accent) !important;
+}
+
+/* 7. Dropdowns de Filtro en Modo Claro */
+[data-theme="light"] .custom-dropdown .custom-dropdown-toggle {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+}
+
+[data-theme="light"] .custom-dropdown .dropdown-selected-text {
+    color: #111827 !important;
+}
+
+[data-theme="light"] .custom-dropdown .dropdown-arrow {
+    color: #6b7280 !important;
+}
+
+
+/* ==========================================================================
+   MODO CLARO - ALTO CONTRASTE Y LEGIBILIDAD EN TABLAS, CÉDULAS Y PAGINACIÓN
+   ========================================================================== */
+
+/* 1. Nombres, Correos y Textos de datos en tablas */
+[data-theme="light"] .custom-modern-table tbody td,
+[data-theme="light"] .custom-modern-table tbody td div,
+[data-theme="light"] .custom-modern-table tbody td span,
+[data-theme="light"] .custom-modern-table .text-white,
+[data-theme="light"] .custom-modern-table .text-light,
+[data-theme="light"] .custom-modern-table td.text-muted,
+[data-theme="light"] .custom-modern-table td div.text-white {
+    color: #111827 !important; /* Negro azabache nítido */
+}
+
+/* Correos y campos de soporte con tono carbón legible */
+[data-theme="light"] .custom-modern-table td span.text-light,
+[data-theme="light"] .custom-modern-table td span.text-muted {
+    color: #374151 !important;
+}
+
+/* 2. Badge de Cédula en Modo Claro (Fondo gris suave con texto oscuro) */
+[data-theme="light"] .badge-cedula {
+    background-color: #f1f3f7 !important;
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 3. Botones de Paginación en Modo Claro (Anterior, 1, 2..., Siguiente) */
+[data-theme="light"] .custom-page-btn {
+    background-color: #ffffff !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .custom-page-btn:hover:not(:disabled) {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+    border-color: #9ca3af !important;
+}
+
+[data-theme="light"] .custom-page-btn:disabled {
+    background-color: #f9fafb !important;
+    color: #9ca3af !important;
+    border-color: #e5e7eb !important;
+    opacity: 0.6;
+}
+
+[data-theme="light"] .custom-page-btn.active {
+    background-color: var(--accent, #e83382) !important;
+    color: #ffffff !important;
+    border-color: var(--accent, #e83382) !important;
+    box-shadow: 0 4px 12px rgba(232, 51, 130, 0.3) !important;
+}
+
+/* 4. Badges de Tipo de Curso en Modo Claro (Morado y Rosado Nítidos) */
+[data-theme="light"] .badge-tipo-curso.tipo-completo {
+    background-color: rgba(139, 92, 246, 0.12) !important;
+    color: #6d28d9 !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+[data-theme="light"] .badge-tipo-curso.tipo-masterclass {
+    background-color: rgba(232, 51, 130, 0.1) !important;
+    color: #be185d !important;
+    border: 1px solid rgba(232, 51, 130, 0.25) !important;
+}
+
+/* 5. Iconos de Acción en Tablas (Ver, Editar, Eliminar) en Modo Claro */
+[data-theme="light"] .btn-circle-action {
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    color: #4b5563 !important;
+}
+
+[data-theme="light"] .btn-circle-action:hover {
+    background-color: var(--accent, #e83382) !important;
+    color: #ffffff !important;
+    border-color: var(--accent, #e83382) !important;
 }

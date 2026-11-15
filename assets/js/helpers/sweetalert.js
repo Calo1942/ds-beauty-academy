@@ -1,38 +1,46 @@
 // sweetalert.js - Helper centralizado de alertas con tema Dark Luxury / Glow Pink
-const colors = {
-    accent: '#E83382',
-    success: '#22c55e',
-    danger: '#ef4444',
-    warning: '#f59e0b',
-    info: '#3b82f6',
-    secondary: '#333339',
-    background: '#18181c',
-    text: '#f3f3f5'
+const isLightTheme = () => document.documentElement.getAttribute('data-theme') === 'light';
+
+const getColors = () => {
+    const light = isLightTheme();
+    return {
+        accent: '#E83382',
+        success: '#10b981',
+        danger: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6',
+        secondary: light ? '#e5e7eb' : '#272730',
+        background: light ? '#ffffff' : '#18181c',
+        text: light ? '#111827' : '#f3f3f5'
+    };
 };
 
-const commonConfig = {
-    background: colors.background,
-    color: colors.text,
-    allowOutsideClick: false,
-    allowEscapeKey: true,
-    showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
-    hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' },
-    buttonsStyling: true,
-    customClass: {
-        popup: 'border-luxury shadow-lg',
-        confirmButton: 'btn-luxury-confirm',
-        cancelButton: 'btn-luxury-cancel'
-    }
+const getCommonConfig = () => {
+    const c = getColors();
+    return {
+        background: c.background,
+        color: c.text,
+        allowOutsideClick: false,
+        allowEscapeKey: true,
+        showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
+        hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' },
+        buttonsStyling: true,
+        customClass: {
+            popup: 'border-luxury shadow-lg',
+            confirmButton: 'btn-luxury-confirm',
+            cancelButton: 'btn-luxury-cancel'
+        }
+    };
 };
 
-function createAlert(icon, title, text, confirmButtonText = 'Aceptar', color = colors.accent, options = {}) {
+function createAlert(icon, title, text, confirmButtonText = 'Aceptar', color = getColors().accent, options = {}) {
     if (typeof Swal === 'undefined') {
         alert(`${title}: ${text}`);
         return Promise.resolve();
     }
 
     return Swal.fire({
-        ...commonConfig,
+        ...getCommonConfig(),
         title,
         text,
         icon,
@@ -45,20 +53,20 @@ function createAlert(icon, title, text, confirmButtonText = 'Aceptar', color = c
 
 // Alertas individuales
 export const showSuccess = (title = '¡Éxito!', text = 'Operación realizada correctamente', confirmButtonText = 'Aceptar', options = {}) =>
-    createAlert('success', title, text, confirmButtonText, colors.success, {
+    createAlert('success', title, text, confirmButtonText, getColors().success, {
         timer: 4500,
         timerProgressBar: true,
         ...options
     });
 
 export const showError = (title = '¡Error!', text = 'Ha ocurrido un error', confirmButtonText = 'Aceptar', options = {}) =>
-    createAlert('error', title, text, confirmButtonText, colors.danger, options);
+    createAlert('error', title, text, confirmButtonText, getColors().danger, options);
 
 export const showWarning = (title = '¡Atención!', text = 'Verifique la información ingresada', confirmButtonText = 'Entendido', options = {}) =>
-    createAlert('warning', title, text, confirmButtonText, colors.warning, options);
+    createAlert('warning', title, text, confirmButtonText, getColors().warning, options);
 
 export const showInfo = (title = 'Información', text = '', confirmButtonText = 'Aceptar', options = {}) =>
-    createAlert('info', title, text, confirmButtonText, colors.info, options);
+    createAlert('info', title, text, confirmButtonText, getColors().info, options);
 
 // Diálogo de confirmación asíncrono (retorna booleano)
 export const showConfirm = (title = '¿Está seguro(a)?', text = 'Esta acción no se puede deshacer', confirmButtonText = 'Sí, continuar', cancelButtonText = 'Cancelar') => {
@@ -67,14 +75,14 @@ export const showConfirm = (title = '¿Está seguro(a)?', text = 'Esta acción n
     }
 
     return Swal.fire({
-        ...commonConfig,
+        ...getCommonConfig(),
         title,
         text,
         icon: 'warning',
-        iconColor: colors.warning,
+        iconColor: getColors().warning,
         showCancelButton: true,
-        confirmButtonColor: colors.accent,
-        cancelButtonColor: colors.secondary,
+        confirmButtonColor: getColors().accent,
+        cancelButtonColor: getColors().secondary,
         confirmButtonText,
         cancelButtonText,
         reverseButtons: true
@@ -106,14 +114,14 @@ export const showDeleteConfirm = async (
     }
 
     const segundoPaso = await Swal.fire({
-        ...commonConfig,
+        ...getCommonConfig(),
         title: title2,
         text: text2,
         icon: 'warning',
-        iconColor: colors.danger,
+        iconColor: getColors().danger,
         showCancelButton: true,
-        confirmButtonColor: colors.danger,
-        cancelButtonColor: colors.secondary,
+        confirmButtonColor: getColors().danger,
+        cancelButtonColor: getColors().secondary,
         confirmButtonText: 'Sí, seguro',
         cancelButtonText: 'Cancelar',
         reverseButtons: true
@@ -154,7 +162,7 @@ export const showLoading = (title = 'Cargando...', text = 'Por favor espere un m
     if (typeof Swal === 'undefined') return;
 
     Swal.fire({
-        ...commonConfig,
+        ...getCommonConfig(),
         title,
         text,
         allowOutsideClick: false,
