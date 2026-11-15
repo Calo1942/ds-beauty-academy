@@ -5,16 +5,6 @@ namespace DsBeautyAcademy\Helpers;
 use PHPMailer\PHPMailer\PHPMailer;
 use Throwable;
 
-/**
- * ---------------------------------------------------------
- * Proyecto: DS Beauty Academy
- * Archivo: src/Helpers/CorreoTrait.php
- * Descripción:
- * Trait para inyectar capacidades de envío de correo electrónico
- * mediante PHPMailer en los modelos (UsuarioModel) sin crear
- * clases auxiliares independientes, respetando el diagrama de clases.
- * ---------------------------------------------------------
- */
 trait CorreoTrait
 {
     /**
@@ -80,24 +70,25 @@ trait CorreoTrait
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host       = $c['host'];
-            $mail->SMTPAuth   = true;
-            $mail->Username   = $c['usuario'];
-            $mail->Password   = $c['clave'];
+            $mail->Host = $c['host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $c['usuario'];
+            $mail->Password = $c['clave'];
             $mail->SMTPSecure = ($c['seguro'] === 'ssl')
                 ? PHPMailer::ENCRYPTION_SMTPS
                 : PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = (int) ($c['puerto'] ?? 587);
-            $mail->CharSet    = 'UTF-8';
+            $mail->Port = (int) ($c['puerto'] ?? 587);
+            $mail->CharSet = 'UTF-8';
 
-            $mail->setFrom($c['remitente'], $c['nombre'] ?? 'DS Beauty Academy');
+            $remitente = !empty($c['remitente']) ? $c['remitente'] : $c['usuario'];
+            $mail->setFrom($remitente, $c['nombre'] ?? 'DS Beauty Academy');
             $mail->addAddress($email, $nombre !== '' ? $nombre : $email);
 
             $urlRestablecer = rtrim((string) ($c['urlBase'] ?? ''), '/') . '/?url=restablecer';
 
             $mail->isHTML(true);
             $mail->Subject = 'Código de Recuperación - DS Beauty Academy';
-            $mail->Body    = $this->generarPlantillaCorreoRecuperacion($nombre, $codigo, $vigencia, $urlRestablecer);
+            $mail->Body = $this->generarPlantillaCorreoRecuperacion($nombre, $codigo, $vigencia, $urlRestablecer);
             $mail->AltBody = "Hola " . ($nombre ?: 'Usuario') . ",\n\n"
                 . "Tu código de recuperación es: " . $codigo . "\n\n"
                 . "Vence en " . (int) $vigencia . " minutos y solo puede usarse una vez.\n"
@@ -114,7 +105,7 @@ trait CorreoTrait
             }
             error_log("DS Beauty Academy - Error PHPMailer: " . $msg);
 
-            return ['error' => 'No se pudo enviar el correo de recuperación.'];
+            return ['error' => 'No se pudo enviar el correo de recuperación: ' . $msg];
         }
     }
 
@@ -125,7 +116,7 @@ trait CorreoTrait
     {
         $nombreSeguro = htmlspecialchars($nombre ?: 'Estimada/o usuaria/o', ENT_QUOTES, 'UTF-8');
         $codigoSeguro = htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8');
-        $urlSegura    = htmlspecialchars($urlRestablecer, ENT_QUOTES, 'UTF-8');
+        $urlSegura = htmlspecialchars($urlRestablecer, ENT_QUOTES, 'UTF-8');
 
         return '
         <!DOCTYPE html>

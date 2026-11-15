@@ -5,29 +5,28 @@
  * Proyecto: DS Beauty Academy
  * Archivo: src/config/correo.php
  * Descripción:
- * Parámetros de configuración para el envío de correos
- * electrónicos mediante PHPMailer (recuperación de contraseña,
- * alertas del sistema, notificaciones).
+ * Parámetros de configuración para el envío de correos electrónicos
+ * mediante PHPMailer (recuperación de contraseña, notificaciones).
+ *
+ * NOTA: Las credenciales reales se cargan desde el archivo '.env'
+ * en la raíz del proyecto para no exponerlas en repositorios públicos.
  * ---------------------------------------------------------
  */
 
 return [
-    // Poner activo en true y completar host/usuario/clave/remitente.
-    // Gmail exige una App Password de 16 caracteres si la cuenta tiene
-    // verificación en 2 pasos activa (https://myaccount.google.com/apppasswords).
-    'activo'    => true,
-    'host'      => 'smtp.gmail.com',
-    'puerto'    => 587,
-    'usuario'   => 'dsbeautyacademy.soporte@gmail.com',
-    'clave'     => 'TU_APP_PASSWORD_DE_16',
-    'seguro'    => 'tls',
-    'remitente' => 'dsbeautyacademy.soporte@gmail.com',
-    'nombre'    => 'DS Beauty Academy',
-    
+    'activo' => (bool) env('MAIL_ACTIVO', true),
+    'host' => (string) env('MAIL_HOST', 'smtp.gmail.com'),
+    'puerto' => (int) env('MAIL_PUERTO', 587),
+    'usuario' => (string) env('MAIL_USUARIO', ''),
+    'clave' => (string) env('MAIL_CLAVE', ''),
+    'seguro' => (string) env('MAIL_SEGURO', 'tls'),
+    'remitente' => (string) env('MAIL_REMITENTE', env('MAIL_USUARIO', '')),
+    'nombre' => (string) env('MAIL_NOMBRE', 'DS Beauty Academy'),
+
     // Ruta base pública para enlaces en los correos
-    'urlBase'   => 'http://localhost/proyectos/ds-beauty-academy',
-    
+    'urlBase' => (string) env('MAIL_URL_BASE', 'http://localhost/proyectos/ds-beauty-academy'),
+
     // Tiempos de seguridad (en minutos y segundos)
-    'vigencia'  => 10, // Vigencia del código de 6 dígitos (10 min)
-    'cooldown'  => 60, // Espera mínima entre reenvíos (60 seg)
+    'vigencia' => (int) env('MAIL_VIGENCIA', 10), // Vigencia del código de 6 dígitos (10 min)
+    'cooldown' => (int) env('MAIL_COOLDOWN', 60), // Espera mínima entre reenvíos (60 seg)
 ];

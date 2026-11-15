@@ -4,17 +4,6 @@ namespace DsBeautyAcademy\Helpers;
 
 use FPDF;
 
-/**
- * ---------------------------------------------------------
- * Proyecto: DS Beauty Academy
- * Archivo: src/Helpers/FpdfTrait.php
- * Descripción:
- * Trait para inyectar capacidades de generación de reportes
- * y diplomas PDF (FPDF) en los modelos del sistema (ReporteModel),
- * garantizando la ausencia de clases independientes no permitidas
- * por la normativa académica universitaria.
- * ---------------------------------------------------------
- */
 trait FpdfTrait
 {
     /**
@@ -31,7 +20,7 @@ trait FpdfTrait
      */
     public function crearReportePdf(string $orientacion = 'P', string $titulo = 'Reporte Oficial', string $subtitulo = '', string $filtros = '')
     {
-        return new class($orientacion, 'mm', 'Letter', $titulo, $subtitulo, $filtros) extends FPDF {
+        return new class ($orientacion, 'mm', 'Letter', $titulo, $subtitulo, $filtros) extends FPDF {
             private $tituloReporte;
             private $subtituloReporte;
             private $filtrosTexto;
@@ -39,9 +28,9 @@ trait FpdfTrait
             public function __construct($orientacion, $unidad, $tamano, $titulo, $subtitulo, $filtros)
             {
                 parent::__construct($orientacion, $unidad, $tamano);
-                $this->tituloReporte    = $titulo;
+                $this->tituloReporte = $titulo;
                 $this->subtituloReporte = $subtitulo;
-                $this->filtrosTexto     = $filtros;
+                $this->filtrosTexto = $filtros;
                 $this->AliasNbPages();
                 $this->SetAutoPageBreak(true, 20);
             }
@@ -139,7 +128,7 @@ trait FpdfTrait
                 foreach ($row as $i => $val) {
                     $w = $widths[$i];
                     $a = $aligns[$i] ?? 'L';
-                    $this->Cell($w, 6, $this->utf((string)$val), 1, 0, $a, true);
+                    $this->Cell($w, 6, $this->utf((string) $val), 1, 0, $a, true);
                 }
                 $this->Ln();
             }
@@ -250,7 +239,7 @@ trait FpdfTrait
         $pdf->SetFont('Arial', '', 9.5);
         $pdf->SetTextColor(80, 80, 95);
         $meses = [1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
-        $mesTxt = $meses[(int)date('n')] ?? 'enero';
+        $mesTxt = $meses[(int) date('n')] ?? 'enero';
         $fechaTxt = 'Emitido formalmente a los ' . date('d') . ' días del mes de ' . $mesTxt . ' de ' . date('Y') . '.';
         $pdf->Cell(0, 5, $this->utfPdf($fechaTxt), 0, 1, 'C');
 

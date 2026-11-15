@@ -1,1 +1,21 @@
+# =========================================================
+# Variables de entorno y secretos locales
+# =========================================================
+.env
+.env.backup
+.env.*.local
+*.local.php
+
+# =========================================================
+# Archivos multimedia subidos por usuarios en pruebas
+# =========================================================
+assets/uploads/perfiles/*
+!assets/uploads/perfiles/.gitkeep
+
+# =========================================================
+# Logs y archivos temporales del sistema
+# =========================================================
+*.log
 01_temp
+.DS_Store
+Thumbs.db
