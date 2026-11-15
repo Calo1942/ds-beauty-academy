@@ -1,9 +1,9 @@
 // entregaDataTable.js - Gestión de Entregas y Calificaciones Pedagógicas
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { getById, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast, showWarning } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showWarning, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.entregaApiUrl || '?url=entrega';
@@ -281,7 +281,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando entrega...', 'Obteniendo datos de la asignación');
+        showModalSkeleton('#modalCalificar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -353,7 +353,7 @@ $(document).ready(function () {
                 }
                 $('#calificar_feedback').val(entrega.feedback_instructora_entrega || '');
 
-                abrirModal('modalCalificar');
+                hideModalSkeleton('#modalCalificar');
             }
         );
     });
@@ -408,7 +408,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información de la entrega');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -497,7 +497,7 @@ $(document).ready(function () {
                     </button>
                 `);
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -560,7 +560,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar entrega de evaluación?',
             'Esta acción eliminará el registro de la entrega y cualquier calificación asociada. La estudiante podrá volver a enviar su asignación.',
             'Sí, eliminar entrega',

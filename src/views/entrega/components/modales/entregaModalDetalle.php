@@ -4,8 +4,33 @@
             <h2 class="modal-title">Detalle de la Entrega</h2>
             <span class="close-modal" onclick="cerrarModal('modalDetalle')">&times;</span>
         </div>
+        
         <div class="modal-body">
-            <div class="row g-3">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
+                <div class="row g-3">
                 <div class="col-md-6">
                     <h5 class="text-accent mb-3 border-bottom pb-2" style="color: var(--accent); font-size: 1rem;">
                         <i class="fas fa-user-graduate me-2"></i>Información Académica
@@ -84,4 +109,5 @@
             <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalDetalle')">Cerrar</button>
         </div>
     </div>
-</div>
+            </div>
+        </div>

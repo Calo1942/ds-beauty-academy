@@ -1,7 +1,7 @@
 // certificadoDataTable.js - Gestión interactiva de Certificados Emitidos con DataTables y SweetAlert2
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
 import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
 
@@ -93,7 +93,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Anular certificado?',
             'Esta acción marcará el certificado como Anulado y se ocultará del listado activo.',
             'Sí, anular certificado',

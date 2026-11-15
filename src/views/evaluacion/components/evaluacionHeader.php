@@ -9,6 +9,10 @@
         </div>
     </div>
     <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
+        <a href="?url=reporte&action=pdf&tipo=evaluaciones" target="_blank" class="btn-custom-secondary btn-reporte-modulo me-2" title="Generar Reporte PDF Oficial">
+            <i class="fas fa-file-pdf"></i> Generar Reporte
+        </a>
+
         <a href="?url=entrega" class="btn-custom-secondary me-2"><i class="fas fa-tasks me-1"></i>Calificar Entregas</a>
         <button class="btn-custom-primary btn-registrar-evaluacion" type="button" onclick="abrirModal('modalCrear')">
             <i class="fas fa-plus"></i> Registrar Evaluación

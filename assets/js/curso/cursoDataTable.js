@@ -1,9 +1,9 @@
 // cursoDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Cursos
 import { reloadDataTable } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.cursoApiUrl || '?url=curso';
@@ -254,6 +254,25 @@ $(document).ready(function () {
         tblCurso.column(1).search(this.value).draw();
     });
 
+    // 4.1. Limpiar y restablecer filtros de cursos
+    $('#btnLimpiarFiltrosCurso').on('click', function () {
+        $('#filterSearchInput').val('');
+
+        const $ddTipo = $('#dropdownTipoCurso');
+        $ddTipo.find('.custom-dropdown-item').removeClass('active');
+        $ddTipo.find('.custom-dropdown-item[data-value=""]').addClass('active');
+        $ddTipo.find('.dropdown-selected-text').text('Todos los tipos');
+        $('#filterTipoCurso').val('');
+
+        const $ddEstado = $('#dropdownEstadoCurso');
+        $ddEstado.find('.custom-dropdown-item').removeClass('active');
+        $ddEstado.find('.custom-dropdown-item[data-value=""]').addClass('active');
+        $ddEstado.find('.dropdown-selected-text').text('Todos los estados');
+        $('#filterEstadoCurso').val('');
+
+        tblCurso.search('').columns().search('').draw();
+    });
+
     // 5. Abrir modal Crear
     $(document).on('click', '.btn-registrar-curso, [data-modal="modalCrear"]', function () {
         const form = document.getElementById('formCrearCurso');
@@ -269,7 +288,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del curso');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -291,7 +310,7 @@ $(document).ready(function () {
                 $('#detail_limite_cupos').text(c.limite_cupos || 'Ilimitado');
                 $('#detail_estatus_curso').text(c.estatus_curso || 'N/A');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -325,7 +344,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -353,7 +372,7 @@ $(document).ready(function () {
                     $(`#formEditarCurso [name="${field}"]`).val(c[field] || '');
                 });
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -387,7 +406,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar curso?',
             'Esta acción eliminará el curso permanentemente del sistema. No se podrá eliminar si posee matrículas registradas.',
             'Sí, eliminar',

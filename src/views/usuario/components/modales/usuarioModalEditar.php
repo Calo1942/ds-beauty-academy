@@ -7,7 +7,32 @@
         </div>
         <form id="formEditarUsuario">
             <input type="hidden" name="id_usuario" id="edit_id_usuario">
-            <div class="modal-body">
+            
+        <div class="modal-body">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
                 <div class="form-group mb-3">
                     <label class="form-label">Correo Electrónico <span class="text-danger">*</span></label>
                     <input type="email" name="email_usuario" id="edit_email_usuario" class="form-control" required maxlength="150" autocomplete="off">
@@ -48,6 +73,7 @@
                     </select>
                 </div>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalEditar')">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>

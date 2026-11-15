@@ -1,7 +1,7 @@
 // matriculaDataTable.js - Lógica de tabla DataTables y acciones para Matrículas
 import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { create, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
 import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
@@ -222,7 +222,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Cancelar matrícula?',
             'Esta acción cancelará la matrícula del estudiante y liberará el cupo en el curso.',
             'Sí, cancelar matrícula',

@@ -1,9 +1,9 @@
 // especialidadDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Especialidades
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.especialidadApiUrl || '?url=especialidad';
@@ -66,7 +66,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información de la especialidad');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -79,7 +79,7 @@ $(document).ready(function () {
                 $('#detail_id_especialidad').text(esp.id_especialidad);
                 $('#detail_nombre_especialidad').text(esp.nombre_especialidad || 'N/A');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -113,7 +113,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -132,7 +132,7 @@ $(document).ready(function () {
                 $('#edit_id_especialidad').val(esp.id_especialidad);
                 $('#formEditarEspecialidad [name="nombre_especialidad"]').val(esp.nombre_especialidad || '');
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -166,7 +166,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar especialidad?',
             'Esta acción cambiará el estatus de la especialidad a inactivo.',
             'Sí, eliminar',

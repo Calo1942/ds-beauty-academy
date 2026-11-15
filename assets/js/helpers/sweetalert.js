@@ -45,7 +45,11 @@ function createAlert(icon, title, text, confirmButtonText = 'Aceptar', color = c
 
 // Alertas individuales
 export const showSuccess = (title = '¡Éxito!', text = 'Operación realizada correctamente', confirmButtonText = 'Aceptar', options = {}) =>
-    createAlert('success', title, text, confirmButtonText, colors.success, options);
+    createAlert('success', title, text, confirmButtonText, colors.success, {
+        timer: 4500,
+        timerProgressBar: true,
+        ...options
+    });
 
 export const showError = (title = '¡Error!', text = 'Ha ocurrido un error', confirmButtonText = 'Aceptar', options = {}) =>
     createAlert('error', title, text, confirmButtonText, colors.danger, options);
@@ -75,6 +79,47 @@ export const showConfirm = (title = '¿Está seguro(a)?', text = 'Esta acción n
         cancelButtonText,
         reverseButtons: true
     }).then(result => result.isConfirmed);
+};
+
+/**
+ * Diálogo de doble confirmación exclusivo para eliminar registros
+ * Paso 1: Pregunta si desea eliminar el registro (ej: "¿Eliminar estudiante?").
+ * Paso 2: Si el usuario presiona "Sí, eliminar", se despliega la SEGUNDA confirmación de seguridad:
+ *         "¿Seguro que deseas eliminar?" con botón "Sí, seguro".
+ * Retorna true ÚNICAMENTE si el usuario confirma ambos pasos.
+ */
+export const showDeleteConfirm = async (
+    title1 = '¿Deseas eliminar este registro?',
+    text1 = 'Esta acción afectará los registros del sistema.',
+    confirmButtonText1 = 'Sí, eliminar',
+    cancelButtonText1 = 'Cancelar',
+    title2 = '¿Seguro que deseas eliminar?',
+    text2 = 'Esta acción no se puede deshacer. Por favor confirma si deseas proceder.'
+) => {
+    // 1. Primer diálogo de confirmación
+    const primerPaso = await showConfirm(title1, text1, confirmButtonText1, cancelButtonText1);
+    if (!primerPaso) return false;
+
+    // 2. Segundo diálogo de confirmación (Doble confirmación de seguridad para eliminar)
+    if (typeof Swal === 'undefined') {
+        return confirm(`${title2}\n${text2}`);
+    }
+
+    const segundoPaso = await Swal.fire({
+        ...commonConfig,
+        title: title2,
+        text: text2,
+        icon: 'warning',
+        iconColor: colors.danger,
+        showCancelButton: true,
+        confirmButtonColor: colors.danger,
+        cancelButtonColor: colors.secondary,
+        confirmButtonText: 'Sí, seguro',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+    });
+
+    return segundoPaso.isConfirmed;
 };
 
 // Mensajes directos simples

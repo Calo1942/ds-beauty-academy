@@ -6,7 +6,32 @@
         </div>
         <form id="formEditarRecurso">
             <input type="hidden" id="edit_id_recurso" name="id_recurso">
-            <div class="modal-body">
+            
+        <div class="modal-body">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
                 <div class="form-group mb-3">
                     <label for="nombre_recurso_editar" class="form-label">Nombre del Recurso</label>
                     <input type="text" name="nombre_recurso" id="nombre_recurso_editar" class="form-control" placeholder="Ingrese el nombre" maxlength="150" required>
@@ -20,6 +45,7 @@
                     <input type="text" name="url_archivo_recurso" id="url_archivo_recurso_editar" class="form-control" placeholder="Ingrese la URL del archivo" maxlength="512" required>
                 </div>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalEditar')">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Actualizar</button>

@@ -6,7 +6,32 @@
         </div>
         <form id="formCalificarEntrega">
             <input type="hidden" name="id_entrega_evaluacion" id="calificar_id_entrega">
-            <div class="modal-body">
+            
+        <div class="modal-body">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
                 <!-- Resumen de la entrega de la alumna -->
                 <div class="p-3 mb-3 rounded bg-dark border border-secondary">
                     <div class="row g-2">
@@ -68,6 +93,7 @@
                     </div>
                 </div>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalCalificar')">Cancelar</button>
                 <button type="submit" class="btn btn-primary">
