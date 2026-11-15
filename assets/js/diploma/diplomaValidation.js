@@ -2,18 +2,21 @@
 import {
     validarTexto,
     validarTextoMuyLargo,
+    validarDescripcion,
     validarCampo
 } from '../helpers/validation.js';
 import { showWarning } from '../helpers/sweetalert.js';
 
 let erroresCrear = {
     nombre: false,
+    descripcion: false,
     categoria: false,
     instructor: false
 };
 
 let erroresEditar = {
     nombre: false,
+    descripcion: false,
     categoria: false,
     instructor: false
 };
@@ -41,6 +44,13 @@ function asociarValidaciones($form, objetoErrores) {
         actualizarBotonEnvio($form, objetoErrores);
     });
 
+    // Descripción (opcional, formato libre con soporte multilinea)
+    $form.find('[name="descripcion_diploma"]').on('input change', function () {
+        const valido = validarDescripcion(this, 'La descripción contiene caracteres no permitidos.');
+        objetoErrores.descripcion = !valido;
+        actualizarBotonEnvio($form, objetoErrores);
+    });
+
     // Categoría (VARCHAR(100))
     $form.find('[name="categoria_diploma"]').on('input change', function () {
         const valido = validarTexto(this, 'La categoría debe tener entre 2 y 100 caracteres.');
@@ -55,6 +65,15 @@ function asociarValidaciones($form, objetoErrores) {
         validarCampo(this, esValido, 'Debe seleccionar un instructor responsable.');
         objetoErrores.instructor = !esValido;
         actualizarBotonEnvio($form, objetoErrores);
+    });
+
+    // Al reiniciar el formulario: resetear errores y habilitar el botón
+    $form.on('reset', function () {
+        for (const key in objetoErrores) {
+            objetoErrores[key] = false;
+        }
+        const $btn = $form.find('button[type="submit"]');
+        $btn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
     });
 
     // Verificación final previa al submit

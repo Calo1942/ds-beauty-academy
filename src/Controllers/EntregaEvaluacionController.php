@@ -62,14 +62,14 @@ if ($action) {
                 finfo_close($finfo);
 
                 if (in_array($mime, $allowedMimes, true)) {
-                    $uploadDir = __DIR__ . '/../../uploads/entregas/';
+                    $uploadDir = __DIR__ . '/../../assets/uploads/entregas/';
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
                     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                     $filename = 'tarea_' . uniqid('', true) . '.' . $ext;
                     if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-                        $data['url_archivo_entrega'] = 'uploads/entregas/' . $filename;
+                        $data['url_archivo_entrega'] = 'assets/uploads/entregas/' . $filename;
                     }
                 }
             }
@@ -118,14 +118,14 @@ if ($action) {
                 $fileInputKey = isset($_FILES['archivo_entrega']) ? 'archivo_entrega' : (isset($_FILES['url_archivo_entrega']) ? 'url_archivo_entrega' : null);
                 if ($fileInputKey && $_FILES[$fileInputKey]['error'] === UPLOAD_ERR_OK) {
                     $file = $_FILES[$fileInputKey];
-                    $uploadDir = __DIR__ . '/../../uploads/entregas/';
+                    $uploadDir = __DIR__ . '/../../assets/uploads/entregas/';
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
                     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                     $filename = 'tarea_' . uniqid('', true) . '.' . $ext;
                     if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-                        $data['url_archivo_entrega'] = 'uploads/entregas/' . $filename;
+                        $data['url_archivo_entrega'] = 'assets/uploads/entregas/' . $filename;
                     }
                 }
 

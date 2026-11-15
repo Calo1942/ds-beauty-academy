@@ -11,23 +11,27 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">Título:</span>
-                <span id="detail_titulo" class="detail-value"></span>
+                <span id="detail_nombre_diploma" class="detail-value fw-bold"></span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Descripción:</span>
-                <span id="detail_descripcion" class="detail-value"></span>
+                <span id="detail_descripcion_diploma" class="detail-value"></span>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Categoría:</span>
-                <span id="detail_categoria" class="detail-value"></span>
+                <span id="detail_categoria_diploma" class="detail-value"></span>
             </div>
             <div class="detail-item">
-                <span class="detail-label">Instructor:</span>
+                <span class="detail-label">Instructor Responsable:</span>
                 <span id="detail_instructor" class="detail-value"></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Documento Adjunto:</span>
+                <span id="detail_url_pdf_diploma" class="detail-value"></span>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="cerrarModal('modalDetalle')">Cerrar</button>
+            <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalDetalle')">Cerrar</button>
         </div>
     </div>
 </div>

@@ -503,8 +503,9 @@ $(document).ready(function () {
     });
 
     // 8. Previsualización rápida de archivo adjunto
-    $(document).on('click', '.btn-ver-adjunto', function () {
-        const fileUrl = $(this).data-url || $(this).attr('data-url');
+    $(document).on('click', '.btn-ver-adjunto', function (e) {
+        e.preventDefault();
+        const fileUrl = $(this).data('url') || $(this).attr('data-url');
         if (!fileUrl) return;
 
         const isImg = fileUrl.toLowerCase().match(/\.(jpg|jpeg|png|webp)$/);

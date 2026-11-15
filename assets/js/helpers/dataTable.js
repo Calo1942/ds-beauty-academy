@@ -242,28 +242,32 @@ const defaultConfig = {
 export const createActionsColumn = (options = {}) => ({
     data: null,
     render: (data, type, row) => {
-        // Soporta claves primarias comunes del sistema
-        const id = row.id_estudiante || 
-                   row.id_instructor || 
-                   row.id_curso || 
-                   row.id_banco || 
-                   row.id_especialidad || 
-                   row.id_clase || 
-                   row.id_diploma || 
-                   row.id_recurso || 
-                   row.id_evaluacion ||
-                   row.id_entrega_evaluacion ||
-                   row.id_entrega ||
-                   row.id_matricula ||
-                   row.id_comprobante_pago ||
-                   row.id || 
-                   '';
+        // Priorizar idField configurado explícitamente o claves primarias comunes
+        const idField = options.idField;
+        const id = (idField && row && row[idField] !== undefined && row[idField] !== null)
+            ? row[idField]
+            : (row.id_diploma || 
+               row.id_usuario || 
+               row.id_estudiante || 
+               row.id_curso || 
+               row.id_instructor || 
+               row.id_banco || 
+               row.id_especialidad || 
+               row.id_clase || 
+               row.id_recurso || 
+               row.id_evaluacion ||
+               row.id_entrega_evaluacion ||
+               row.id_entrega ||
+               row.id_matricula ||
+               row.id_comprobante_pago ||
+               row.id || 
+               '');
 
         const buttons = [];
 
         if (options.btnVer !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-action btn-view btn-table-ver" title="Ver Detalle" type="button">
+                <button value="${id}" data-id="${id}" class="btn-action btn-view btn-table-ver" title="Ver Detalle" type="button">
                     <i class="fas fa-eye"></i>
                 </button>
             `);
@@ -271,7 +275,7 @@ export const createActionsColumn = (options = {}) => ({
 
         if (options.btnEditar !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-action btn-edit btn-table-editar" title="Editar" type="button">
+                <button value="${id}" data-id="${id}" class="btn-action btn-edit btn-table-editar" title="Editar" type="button">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
             `);
@@ -279,7 +283,7 @@ export const createActionsColumn = (options = {}) => ({
 
         if (options.btnEliminar !== false) {
             buttons.push(`
-                <button value="${id}" class="btn-action btn-delete btn-table-eliminar" title="Eliminar" type="button">
+                <button value="${id}" data-id="${id}" class="btn-action btn-delete btn-table-eliminar" title="Eliminar" type="button">
                     <i class="fas fa-trash-alt"></i>
                 </button>
             `);

@@ -45,12 +45,17 @@ class DiplomaModel extends DBConnect implements Crud
             throw new Exception("La descripción es inválida.");
         }
 
-        if (self::validator($categoria, $this->validate_text_long) !== true) {
-            throw new Exception("La categoría es inválida.");
+        if (self::validator($categoria, $this->validate_text) !== true) {
+            throw new Exception("La categoría debe tener entre 2 y 100 caracteres.");
         }
 
-        if (!empty($url_pdf) && strlen($url_pdf) > 512) {
-            throw new Exception("La URL del PDF es muy larga.");
+        if (!empty($url_pdf)) {
+            if (strlen($url_pdf) > 512) {
+                throw new Exception("La URL del PDF no puede exceder 512 caracteres.");
+            }
+            if (self::validator($url_pdf, $this->validate_url) !== true) {
+                throw new Exception("El formato de la URL o ruta del documento es inválido.");
+            }
         }
 
         if (self::validator($id_instructor, $this->validate_id) !== true) {
@@ -151,7 +156,7 @@ class DiplomaModel extends DBConnect implements Crud
             if ($result) {
                 return $this->success(200, "Diploma obtenido", $result);
             }
-            return $this->error(404, "Diploma");
+            return $this->error(404, "Diploma no encontrado.");
         } catch (\PDOException $e) {
             return $this->error(400, "Error de base de datos", $e->getMessage());
         } catch (Exception $e) {
