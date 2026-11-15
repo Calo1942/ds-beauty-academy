@@ -121,7 +121,8 @@ if ($isFirstLogin) {
             // Al hacer clic en enlaces de módulos del sidebar, mostrar animación solo en el área de módulos
             document.addEventListener('click', function (e) {
                 const link = e.target.closest('a[href^="?url="]');
-                if (link && !link.getAttribute('target') && !link.classList.contains('btn-logout') && !e.ctrlKey && !e.metaKey) {
+                const isLogout = link && (link.classList.contains('btn-logout') || link.classList.contains('logout-link') || link.getAttribute('href') === '?url=logout');
+                if (link && !link.getAttribute('target') && !isLogout && !e.ctrlKey && !e.metaKey) {
                     window.showPageLoader('Cargando módulo...', false);
                 }
             });

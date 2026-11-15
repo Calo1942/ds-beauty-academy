@@ -178,340 +178,340 @@ if (isset($_GET['action']) && in_array($_GET['action'], ['pdf', 'generar'])) {
             $pdf->Output('I', 'Reporte_Certificados_' . date('Ymd_His') . '.pdf');
             exit;
         case 'estudiantes':
-             = ->obtenerReporteEstudiantes();
-             = ->crearReportePdf('L', 'Reporte General de Estudiantes Registrados', 'Padrón académico oficial de alumnas matriculadas', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteEstudiantes();
+            $pdf = $model->crearReportePdf('L', 'Reporte General de Estudiantes Registrados', 'Padrón académico oficial de alumnas matriculadas', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Estudiante', 'Cédula', 'Teléfono', 'Correo Electrónico', 'Dirección', 'Estado'];
-              = [14, 52, 28, 30, 60, 56, 20];
-              = ['C', 'L', 'C', 'C', 'L', 'L', 'C'];
+            $headers = ['ID', 'Estudiante', 'Cédula', 'Teléfono', 'Correo Electrónico', 'Dirección', 'Estado'];
+            $widths  = [14, 52, 28, 30, 60, 56, 20];
+            $aligns  = ['C', 'L', 'C', 'C', 'L', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron estudiantes registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron estudiantes registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_estudiante'],
-                        ['nombre_completo'],
-                        ['cedula_estudiante'] ?: 'N/A',
-                        ['telefono_estudiante'] ?: 'N/A',
-                        ['correo_estudiante'] ?: 'N/A',
-                        ['direccion_estudiante'] ?: 'N/A',
-                        (['estatus_estudiante'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_estudiante'],
+                        $f['nombre_completo'],
+                        $f['cedula_estudiante'] ?: 'N/A',
+                        $f['telefono_estudiante'] ?: 'N/A',
+                        $f['correo_estudiante'] ?: 'N/A',
+                        $f['direccion_estudiante'] ?: 'N/A',
+                        ($f['estatus_estudiante'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Estudiantes_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Estudiantes_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'cursos':
-             = ->obtenerReporteCursos();
-             = ->crearReportePdf('L', 'Catálogo Oficial de Cursos y Programas', 'Oferta académica y aranceles institucionales', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteCursos();
+            $pdf = $model->crearReportePdf('L', 'Catálogo Oficial de Cursos y Programas', 'Oferta académica y aranceles institucionales', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Nombre del Curso', 'Modalidad', 'Precio Reg.', 'Precio Prev.', 'Fecha Inicio', 'Fecha Fin', 'Cupos', 'Estado'];
-              = [12, 65, 30, 26, 26, 28, 28, 20, 25];
-              = ['C', 'L', 'C', 'R', 'R', 'C', 'C', 'C', 'C'];
+            $headers = ['ID', 'Nombre del Curso', 'Modalidad', 'Precio Reg.', 'Precio Prev.', 'Fecha Inicio', 'Fecha Fin', 'Cupos', 'Estado'];
+            $widths  = [12, 65, 30, 26, 26, 28, 28, 20, 25];
+            $aligns  = ['C', 'L', 'C', 'R', 'R', 'C', 'C', 'C', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron cursos registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron cursos registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_curso'],
-                        ['nombre_curso'],
-                        ['tipo_curso'] ?: 'Presencial',
-                        '$' . number_format(['precio_normal'], 2),
-                        ['precio_preventa'] ? '$' . number_format(['precio_preventa'], 2) : 'N/A',
-                        ['fecha_inicio_curso'] ? date('d/m/Y', strtotime(['fecha_inicio_curso'])) : 'N/A',
-                        ['fecha_fin_curso'] ? date('d/m/Y', strtotime(['fecha_fin_curso'])) : 'N/A',
-                        ['limite_cupos'] ?: 'Ilimitado',
-                        ['estatus_curso']
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_curso'],
+                        $f['nombre_curso'],
+                        $f['tipo_curso'] ?: 'Presencial',
+                        '$' . number_format($f['precio_normal'], 2),
+                        $f['precio_preventa'] ? '$' . number_format($f['precio_preventa'], 2) : 'N/A',
+                        $f['fecha_inicio_curso'] ? date('d/m/Y', strtotime($f['fecha_inicio_curso'])) : 'N/A',
+                        $f['fecha_fin_curso'] ? date('d/m/Y', strtotime($f['fecha_fin_curso'])) : 'N/A',
+                        $f['limite_cupos'] ?: 'Ilimitado',
+                        $f['estatus_curso']
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Cursos_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Cursos_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'instructores':
-             = ->obtenerReporteInstructores();
-             = ->crearReportePdf('P', 'Nómina Oficial de Instructores y Facilitadores', 'Cuerpo docente y áreas de especialidad', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteInstructores();
+            $pdf = $model->crearReportePdf('P', 'Nómina Oficial de Instructores y Facilitadores', 'Cuerpo docente y áreas de especialidad', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Instructor', 'Cédula', 'Teléfono', 'Especialidad', 'Estado'];
-              = [12, 52, 26, 30, 48, 22];
-              = ['C', 'L', 'C', 'C', 'L', 'C'];
+            $headers = ['ID', 'Instructor', 'Cédula', 'Teléfono', 'Especialidad', 'Estado'];
+            $widths  = [12, 52, 26, 30, 48, 22];
+            $aligns  = ['C', 'L', 'C', 'C', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron instructores registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron instructores registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_instructor'],
-                        ['nombre_completo'],
-                        ['cedula_instructor'] ?: 'N/A',
-                        ['telefono_instructor'] ?: 'N/A',
-                        ['nombre_especialidad'] ?: 'General',
-                        (['estatus_instructor'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_instructor'],
+                        $f['nombre_completo'],
+                        $f['cedula_instructor'] ?: 'N/A',
+                        $f['telefono_instructor'] ?: 'N/A',
+                        $f['nombre_especialidad'] ?: 'General',
+                        ($f['estatus_instructor'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Instructores_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Instructores_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'bancos':
-             = ->obtenerReporteBancos();
-             = ->crearReportePdf('P', 'Reporte de Instituciones Bancarias', 'Cuentas y bancos autorizados para recaudación', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteBancos();
+            $pdf = $model->crearReportePdf('P', 'Reporte de Instituciones Bancarias', 'Cuentas y bancos autorizados para recaudación', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Nombre de la Entidad Bancaria', 'Estado Operativo'];
-              = [25, 125, 40];
-              = ['C', 'L', 'C'];
+            $headers = ['ID', 'Nombre de la Entidad Bancaria', 'Estado Operativo'];
+            $widths  = [25, 125, 40];
+            $aligns  = ['C', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron bancos registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron bancos registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_banco'],
-                        ['nombre_banco'],
-                        (['estatus_banco'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_banco'],
+                        $f['nombre_banco'],
+                        ($f['estatus_banco'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Bancos_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Bancos_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'especialidades':
-             = ->obtenerReporteEspecialidades();
-             = ->crearReportePdf('P', 'Catálogo de Especialidades y Áreas Técnicas', 'Líneas formativas impartidas en la academia', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteEspecialidades();
+            $pdf = $model->crearReportePdf('P', 'Catálogo de Especialidades y Áreas Técnicas', 'Líneas formativas impartidas en la academia', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Especialidad', 'Descripción', 'Estado'];
-              = [18, 55, 87, 30];
-              = ['C', 'L', 'L', 'C'];
+            $headers = ['ID', 'Especialidad', 'Descripción', 'Estado'];
+            $widths  = [18, 55, 87, 30];
+            $aligns  = ['C', 'L', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron especialidades registradas.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron especialidades registradas.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_especialidad'],
-                        ['nombre_especialidad'],
-                        ['descripcion_especialidad'] ?: 'Sin descripción',
-                        (['estatus_especialidad'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_especialidad'],
+                        $f['nombre_especialidad'],
+                        $f['descripcion_especialidad'] ?: 'Sin descripción',
+                        ($f['estatus_especialidad'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Especialidades_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Especialidades_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'clases':
-             = ->obtenerReporteClases();
-             = ->crearReportePdf('P', 'Malla y Programa de Clases', 'Listado estructurado de sesiones y lecciones por curso', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteClases();
+            $pdf = $model->crearReportePdf('P', 'Malla y Programa de Clases', 'Listado estructurado de sesiones y lecciones por curso', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Título de la Lección', 'Curso', 'Instructor', 'Orden', 'Estado'];
-              = [14, 55, 48, 43, 14, 16];
-              = ['C', 'L', 'L', 'L', 'C', 'C'];
+            $headers = ['ID', 'Título de la Lección', 'Curso', 'Instructor', 'Orden', 'Estado'];
+            $widths  = [14, 55, 48, 43, 14, 16];
+            $aligns  = ['C', 'L', 'L', 'L', 'C', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron clases registradas.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron clases registradas.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_clase'],
-                        ['titulo_clase'],
-                        ['nombre_curso'] ?: 'N/A',
-                        ['nombre_instructor'] ?: 'N/A',
-                        ['orden_clase'] ?: '1',
-                        (['estatus_clase'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_clase'],
+                        $f['titulo_clase'],
+                        $f['nombre_curso'] ?: 'N/A',
+                        $f['nombre_instructor'] ?: 'N/A',
+                        $f['orden_clase'] ?: '1',
+                        ($f['estatus_clase'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Clases_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Clases_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'recursos':
-             = ->obtenerReporteRecursos();
-             = ->crearReportePdf('P', 'Inventario de Material Didáctico y Recursos', 'Guías, materiales y recursos de apoyo educativo', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteRecursos();
+            $pdf = $model->crearReportePdf('P', 'Inventario de Material Didáctico y Recursos', 'Guías, materiales y recursos de apoyo educativo', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Nombre del Recurso', 'Descripción', 'Archivo / Enlace'];
-              = [15, 60, 65, 50];
-              = ['C', 'L', 'L', 'L'];
+            $headers = ['ID', 'Nombre del Recurso', 'Descripción', 'Archivo / Enlace'];
+            $widths  = [15, 60, 65, 50];
+            $aligns  = ['C', 'L', 'L', 'L'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron recursos registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron recursos registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_recurso'],
-                        ['nombre_recurso'],
-                        ['descripcion_recurso'] ?: 'Sin descripción',
-                        ['url_archivo_recurso'] ?: 'Sin adjunto'
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_recurso'],
+                        $f['nombre_recurso'],
+                        $f['descripcion_recurso'] ?: 'Sin descripción',
+                        $f['url_archivo_recurso'] ?: 'Sin adjunto'
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Recursos_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Recursos_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'evaluaciones':
-             = ->obtenerReporteEvaluaciones();
-             = ->crearReportePdf('P', 'Cronograma de Evaluaciones Académicas', 'Pruebas teóricas, prácticas y asignaciones', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteEvaluaciones();
+            $pdf = $model->crearReportePdf('P', 'Cronograma de Evaluaciones Académicas', 'Pruebas teóricas, prácticas y asignaciones', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Título de Evaluación', 'Curso', 'Tipo', 'Orden', 'Estado'];
-              = [14, 60, 52, 32, 14, 18];
-              = ['C', 'L', 'L', 'C', 'C', 'C'];
+            $headers = ['ID', 'Título de Evaluación', 'Curso', 'Tipo', 'Orden', 'Estado'];
+            $widths  = [14, 60, 52, 32, 14, 18];
+            $aligns  = ['C', 'L', 'L', 'C', 'C', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron evaluaciones registradas.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron evaluaciones registradas.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_evaluacion'],
-                        ['titulo_evaluacion'],
-                        ['nombre_curso'] ?: 'N/A',
-                        ['tipo_evaluacion'] ?: 'Práctica',
-                        ['orden_evaluacion'] ?: '1',
-                        (['estatus_evaluacion'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_evaluacion'],
+                        $f['titulo_evaluacion'],
+                        $f['nombre_curso'] ?: 'N/A',
+                        $f['tipo_evaluacion'] ?: 'Práctica',
+                        $f['orden_evaluacion'] ?: '1',
+                        ($f['estatus_evaluacion'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Evaluaciones_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Evaluaciones_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'entregas':
-             = ->obtenerReporteEntregas();
-             = ->crearReportePdf('L', 'Reporte de Calificaciones y Entregas', 'Control de tareas y calificaciones por estudiante', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteEntregas();
+            $pdf = $model->crearReportePdf('L', 'Reporte de Calificaciones y Entregas', 'Control de tareas y calificaciones por estudiante', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Estudiante', 'Evaluación', 'Curso', 'Nota', 'Estatus', 'Fecha'];
-              = [14, 55, 60, 55, 24, 28, 24];
-              = ['C', 'L', 'L', 'L', 'C', 'C', 'C'];
+            $headers = ['ID', 'Estudiante', 'Evaluación', 'Curso', 'Nota', 'Estatus', 'Fecha'];
+            $widths  = [14, 55, 60, 55, 24, 28, 24];
+            $aligns  = ['C', 'L', 'L', 'L', 'C', 'C', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron entregas registradas.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron entregas registradas.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_entrega_evaluacion'],
-                        ['nombre_estudiante'] ?: 'N/A',
-                        ['titulo_evaluacion'] ?: 'N/A',
-                        ['nombre_curso'] ?: 'N/A',
-                        ['calificacion_entrega'] !== null ? number_format(['calificacion_entrega'], 1) . ' pts' : 'Sin calificar',
-                        ['estatus_entrega'] ?: 'Pendiente',
-                        ['fecha_entrega'] ? date('d/m/Y', strtotime(['fecha_entrega'])) : 'N/A'
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_entrega_evaluacion'],
+                        $f['nombre_estudiante'] ?: 'N/A',
+                        $f['titulo_evaluacion'] ?: 'N/A',
+                        $f['nombre_curso'] ?: 'N/A',
+                        $f['calificacion_entrega'] !== null ? number_format($f['calificacion_entrega'], 1) . ' pts' : 'Sin calificar',
+                        $f['estatus_entrega'] ?: 'Pendiente',
+                        $f['fecha_entrega'] ? date('d/m/Y', strtotime($f['fecha_entrega'])) : 'N/A'
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Entregas_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Entregas_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'diplomas':
-             = ->obtenerReporteDiplomas();
-             = ->crearReportePdf('P', 'Catálogo de Plantillas y Diplomas', 'Títulos y credenciales emitidas por la institución', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteDiplomas();
+            $pdf = $model->crearReportePdf('P', 'Catálogo de Plantillas y Diplomas', 'Títulos y credenciales emitidas por la institución', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Nombre del Diploma', 'Categoría', 'Instructor Titular', 'Estado'];
-              = [15, 65, 40, 48, 22];
-              = ['C', 'L', 'L', 'L', 'C'];
+            $headers = ['ID', 'Nombre del Diploma', 'Categoría', 'Instructor Titular', 'Estado'];
+            $widths  = [15, 65, 40, 48, 22];
+            $aligns  = ['C', 'L', 'L', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron diplomas registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron diplomas registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_diploma'],
-                        ['nombre_diploma'],
-                        ['categoria_diploma'] ?: 'General',
-                        ['nombre_instructor'] ?: 'N/A',
-                        (['estatus_diploma'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_diploma'],
+                        $f['nombre_diploma'],
+                        $f['categoria_diploma'] ?: 'General',
+                        $f['nombre_instructor'] ?: 'N/A',
+                        ($f['estatus_diploma'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Diplomas_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Diplomas_' . date('Ymd_His') . '.pdf');
             exit;
 
         case 'usuarios':
-             = ->obtenerReporteUsuarios();
-             = ->crearReportePdf('P', 'Auditoría de Cuentas y Accesos de Usuario', 'Registro de cuentas activas y perfiles asignados', '');
-            ->AddPage();
+            $datos = $model->obtenerReporteUsuarios();
+            $pdf = $model->crearReportePdf('P', 'Auditoría de Cuentas y Accesos de Usuario', 'Registro de cuentas activas y perfiles asignados', '');
+            $pdf->AddPage();
 
-             = ['ID', 'Correo Institucional / Login', 'Rol / Privilegio', 'Usuario Asociado', 'Estado'];
-              = [15, 65, 38, 48, 24];
-              = ['C', 'L', 'C', 'L', 'C'];
+            $headers = ['ID', 'Correo Institucional / Login', 'Rol / Privilegio', 'Usuario Asociado', 'Estado'];
+            $widths  = [15, 65, 38, 48, 24];
+            $aligns  = ['C', 'L', 'C', 'L', 'C'];
 
-            ->renderTableHeader(, , );
+            $pdf->renderTableHeader($headers, $widths, $aligns);
 
-            if (empty()) {
-                ->SetFont('Arial', 'I', 9);
-                ->SetTextColor(120, 120, 130);
-                ->Cell(array_sum(), 10, ->utf('No se encontraron usuarios registrados.'), 1, 1, 'C');
+            if (empty($datos)) {
+                $pdf->SetFont('Arial', 'I', 9);
+                $pdf->SetTextColor(120, 120, 130);
+                $pdf->Cell(array_sum($widths), 10, $pdf->utf('No se encontraron usuarios registrados.'), 1, 1, 'C');
             } else {
-                foreach ( as  => ) {
-                     = [
-                        '#' . ['id_usuario'],
-                        ['email_usuario'],
-                        ['nombre_rol'] ?: 'Sin rol',
-                        ['nombre_asociado'] ?: 'Sistema',
-                        (['estatus_usuario'] == 1 ? 'Activo' : 'Inactivo')
+                foreach ($datos as $idx => $f) {
+                    $row = [
+                        '#' . $f['id_usuario'],
+                        $f['email_usuario'],
+                        $f['nombre_rol'] ?: 'Sin rol',
+                        $f['nombre_asociado'] ?: 'Sistema',
+                        ($f['estatus_usuario'] == 1 ? 'Activo' : 'Inactivo')
                     ];
-                    ->renderTableRow(, , , ( % 2 === 0));
+                    $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
                 }
             }
-            ->Output('I', 'Reporte_Usuarios_' . date('Ymd_His') . '.pdf');
+            $pdf->Output('I', 'Reporte_Usuarios_' . date('Ymd_His') . '.pdf');
             exit;
 
     }

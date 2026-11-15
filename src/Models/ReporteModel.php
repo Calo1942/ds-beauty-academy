@@ -321,7 +321,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteEstudiantes(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT id_estudiante,
                        CONCAT(primer_nombre_estudiante, ' ', COALESCE(primer_apellido_estudiante, '')) AS nombre_completo,
                        cedula_estudiante, telefono_estudiante, correo_estudiante, direccion_estudiante,
@@ -329,9 +329,9 @@ class ReporteModel extends DBConnect
                 FROM estudiantes
                 ORDER BY id_estudiante DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteEstudiantes: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteEstudiantes: ' . $e->getMessage());
             return [];
         }
     }
@@ -342,15 +342,15 @@ class ReporteModel extends DBConnect
     public function obtenerReporteCursos(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT id_curso, nombre_curso, tipo_curso, precio_normal, precio_preventa,
                        fecha_inicio_curso, fecha_fin_curso, limite_cupos, estatus_curso
                 FROM cursos
                 ORDER BY id_curso DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteCursos: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteCursos: ' . $e->getMessage());
             return [];
         }
     }
@@ -361,7 +361,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteInstructores(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT i.id_instructor,
                        CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_completo,
                        i.cedula_instructor, i.telefono_instructor, i.correo_instructor,
@@ -370,9 +370,9 @@ class ReporteModel extends DBConnect
                 LEFT JOIN especialidades e ON i.id_especialidad = e.id_especialidad
                 ORDER BY i.id_instructor DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteInstructores: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteInstructores: ' . $e->getMessage());
             return [];
         }
     }
@@ -383,14 +383,14 @@ class ReporteModel extends DBConnect
     public function obtenerReporteEspecialidades(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT id_especialidad, nombre_especialidad, descripcion_especialidad, estatus_especialidad
                 FROM especialidades
                 ORDER BY id_especialidad DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteEspecialidades: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteEspecialidades: ' . $e->getMessage());
             return [];
         }
     }
@@ -401,14 +401,14 @@ class ReporteModel extends DBConnect
     public function obtenerReporteBancos(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT id_banco, nombre_banco, estatus_banco
                 FROM banco
                 ORDER BY id_banco DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteBancos: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteBancos: ' . $e->getMessage());
             return [];
         }
     }
@@ -419,7 +419,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteClases(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT cl.id_clase, cl.titulo_clase, cl.orden_clase, cl.estatus_clase,
                        c.nombre_curso,
                        CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
@@ -429,9 +429,9 @@ class ReporteModel extends DBConnect
                 LEFT JOIN instructores i ON ic.id_instructor = i.id_instructor
                 ORDER BY cl.id_clase DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteClases: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteClases: ' . $e->getMessage());
             return [];
         }
     }
@@ -442,14 +442,14 @@ class ReporteModel extends DBConnect
     public function obtenerReporteRecursos(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT id_recurso, nombre_recurso, descripcion_recurso, url_archivo_recurso
                 FROM recursos
                 ORDER BY id_recurso DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteRecursos: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteRecursos: ' . $e->getMessage());
             return [];
         }
     }
@@ -460,7 +460,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteEvaluaciones(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT ev.id_evaluacion, ev.titulo_evaluacion, ev.tipo_evaluacion, ev.orden_evaluacion, ev.estatus_evaluacion,
                        c.nombre_curso
                 FROM evaluaciones ev
@@ -468,9 +468,9 @@ class ReporteModel extends DBConnect
                 LEFT JOIN cursos c ON ic.id_curso = c.id_curso
                 ORDER BY ev.id_evaluacion DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteEvaluaciones: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteEvaluaciones: ' . $e->getMessage());
             return [];
         }
     }
@@ -481,7 +481,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteEntregas(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT ee.id_entrega_evaluacion,
                        CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
                        ev.titulo_evaluacion,
@@ -497,9 +497,9 @@ class ReporteModel extends DBConnect
                 LEFT JOIN cursos c ON ic.id_curso = c.id_curso
                 ORDER BY ee.id_entrega_evaluacion DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteEntregas: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteEntregas: ' . $e->getMessage());
             return [];
         }
     }
@@ -510,16 +510,16 @@ class ReporteModel extends DBConnect
     public function obtenerReporteDiplomas(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT d.id_diploma, d.nombre_diploma, d.categoria_diploma, d.estatus_diploma,
                        CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
                 FROM diplomas d
                 LEFT JOIN instructores i ON d.id_instructor = i.id_instructor
                 ORDER BY d.id_diploma DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteDiplomas: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteDiplomas: ' . $e->getMessage());
             return [];
         }
     }
@@ -530,7 +530,7 @@ class ReporteModel extends DBConnect
     public function obtenerReporteUsuarios(): array
     {
         try {
-             = ->con->query("
+            $stmt = $this->con->query("
                 SELECT u.id_usuario, u.email_usuario, r.nombre_rol, u.estatus_usuario,
                        CASE 
                            WHEN u.id_instructor IS NOT NULL THEN CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, ''))
@@ -543,9 +543,9 @@ class ReporteModel extends DBConnect
                 LEFT JOIN estudiantes e ON u.id_estudiante = e.id_estudiante
                 ORDER BY u.id_usuario DESC
             ");
-            return ->fetchAll(PDO::FETCH_ASSOC);
-        } catch (Exception ) {
-            error_log('Error en obtenerReporteUsuarios: ' . ->getMessage());
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log('Error en obtenerReporteUsuarios: ' . $e->getMessage());
             return [];
         }
     }
