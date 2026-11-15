@@ -3,7 +3,7 @@ import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
 import { getById, create, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast, showWarning } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.pagoApiUrl || '?url=pago';
@@ -326,7 +326,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del comprobante');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -421,7 +421,7 @@ $(document).ready(function () {
                     `);
                 }
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });

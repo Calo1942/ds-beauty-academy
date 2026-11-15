@@ -1,9 +1,9 @@
 // instructorDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Instructores
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.instructorApiUrl || '?url=instructor';
@@ -90,7 +90,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del instructor');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -115,7 +115,7 @@ $(document).ready(function () {
                 $('#detail_telefono').text(inst.telefono_principal_instructor || 'N/A');
                 $('#detail_instagram').text(inst.usuario_instagram_instructor || 'N/A');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -149,7 +149,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -179,7 +179,7 @@ $(document).ready(function () {
                     $(`#formEditarInstructor [name="${field}"]`).val(inst[field] || '');
                 });
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -213,7 +213,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar instructor?',
             'Esta acción cambiará el estatus del instructor a inactivo.',
             'Sí, eliminar',

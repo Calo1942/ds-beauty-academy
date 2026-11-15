@@ -314,4 +314,240 @@ class ReporteModel extends DBConnect
             return null;
         }
     }
+
+    /**
+     * Reporte General de Estudiantes
+     */
+    public function obtenerReporteEstudiantes(): array
+    {
+        try {
+             = ->con->query("
+                SELECT id_estudiante,
+                       CONCAT(primer_nombre_estudiante, ' ', COALESCE(primer_apellido_estudiante, '')) AS nombre_completo,
+                       cedula_estudiante, telefono_estudiante, correo_estudiante, direccion_estudiante,
+                       estatus_estudiante
+                FROM estudiantes
+                ORDER BY id_estudiante DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteEstudiantes: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Cursos
+     */
+    public function obtenerReporteCursos(): array
+    {
+        try {
+             = ->con->query("
+                SELECT id_curso, nombre_curso, tipo_curso, precio_normal, precio_preventa,
+                       fecha_inicio_curso, fecha_fin_curso, limite_cupos, estatus_curso
+                FROM cursos
+                ORDER BY id_curso DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteCursos: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Instructores
+     */
+    public function obtenerReporteInstructores(): array
+    {
+        try {
+             = ->con->query("
+                SELECT i.id_instructor,
+                       CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_completo,
+                       i.cedula_instructor, i.telefono_instructor, i.correo_instructor,
+                       e.nombre_especialidad, i.estatus_instructor
+                FROM instructores i
+                LEFT JOIN especialidades e ON i.id_especialidad = e.id_especialidad
+                ORDER BY i.id_instructor DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteInstructores: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Especialidades
+     */
+    public function obtenerReporteEspecialidades(): array
+    {
+        try {
+             = ->con->query("
+                SELECT id_especialidad, nombre_especialidad, descripcion_especialidad, estatus_especialidad
+                FROM especialidades
+                ORDER BY id_especialidad DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteEspecialidades: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Bancos
+     */
+    public function obtenerReporteBancos(): array
+    {
+        try {
+             = ->con->query("
+                SELECT id_banco, nombre_banco, estatus_banco
+                FROM banco
+                ORDER BY id_banco DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteBancos: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Clases
+     */
+    public function obtenerReporteClases(): array
+    {
+        try {
+             = ->con->query("
+                SELECT cl.id_clase, cl.titulo_clase, cl.orden_clase, cl.estatus_clase,
+                       c.nombre_curso,
+                       CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
+                FROM clases cl
+                LEFT JOIN instructor_curso ic ON cl.id_instructor_curso = ic.id_instructor_curso
+                LEFT JOIN cursos c ON ic.id_curso = c.id_curso
+                LEFT JOIN instructores i ON ic.id_instructor = i.id_instructor
+                ORDER BY cl.id_clase DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteClases: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Recursos
+     */
+    public function obtenerReporteRecursos(): array
+    {
+        try {
+             = ->con->query("
+                SELECT id_recurso, nombre_recurso, descripcion_recurso, url_archivo_recurso
+                FROM recursos
+                ORDER BY id_recurso DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteRecursos: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Evaluaciones
+     */
+    public function obtenerReporteEvaluaciones(): array
+    {
+        try {
+             = ->con->query("
+                SELECT ev.id_evaluacion, ev.titulo_evaluacion, ev.tipo_evaluacion, ev.orden_evaluacion, ev.estatus_evaluacion,
+                       c.nombre_curso
+                FROM evaluaciones ev
+                LEFT JOIN instructor_curso ic ON ev.id_instructor_curso = ic.id_instructor_curso
+                LEFT JOIN cursos c ON ic.id_curso = c.id_curso
+                ORDER BY ev.id_evaluacion DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteEvaluaciones: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Entregas de Evaluación
+     */
+    public function obtenerReporteEntregas(): array
+    {
+        try {
+             = ->con->query("
+                SELECT ee.id_entrega_evaluacion,
+                       CONCAT(COALESCE(e.primer_nombre_estudiante, ''), ' ', COALESCE(e.primer_apellido_estudiante, '')) AS nombre_estudiante,
+                       ev.titulo_evaluacion,
+                       c.nombre_curso,
+                       ee.calificacion_entrega,
+                       ee.estatus_entrega,
+                       ee.fecha_entrega
+                FROM entregas_evaluaciones ee
+                LEFT JOIN evaluaciones ev ON ee.id_evaluacion = ev.id_evaluacion
+                LEFT JOIN matriculas m ON ee.id_matricula = m.id_matricula
+                LEFT JOIN estudiantes e ON m.id_estudiante = e.id_estudiante
+                LEFT JOIN instructor_curso ic ON m.id_instructor_curso = ic.id_instructor_curso
+                LEFT JOIN cursos c ON ic.id_curso = c.id_curso
+                ORDER BY ee.id_entrega_evaluacion DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteEntregas: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Diplomas
+     */
+    public function obtenerReporteDiplomas(): array
+    {
+        try {
+             = ->con->query("
+                SELECT d.id_diploma, d.nombre_diploma, d.categoria_diploma, d.estatus_diploma,
+                       CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_instructor
+                FROM diplomas d
+                LEFT JOIN instructores i ON d.id_instructor = i.id_instructor
+                ORDER BY d.id_diploma DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteDiplomas: ' . ->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Reporte General de Usuarios
+     */
+    public function obtenerReporteUsuarios(): array
+    {
+        try {
+             = ->con->query("
+                SELECT u.id_usuario, u.email_usuario, r.nombre_rol, u.estatus_usuario,
+                       CASE 
+                           WHEN u.id_instructor IS NOT NULL THEN CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, ''))
+                           WHEN u.id_estudiante IS NOT NULL THEN CONCAT(e.primer_nombre_estudiante, ' ', COALESCE(e.primer_apellido_estudiante, ''))
+                           ELSE 'Administrador'
+                       END AS nombre_asociado
+                FROM usuarios u
+                LEFT JOIN roles r ON u.id_rol = r.id_rol
+                LEFT JOIN instructores i ON u.id_instructor = i.id_instructor
+                LEFT JOIN estudiantes e ON u.id_estudiante = e.id_estudiante
+                ORDER BY u.id_usuario DESC
+            ");
+            return ->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception ) {
+            error_log('Error en obtenerReporteUsuarios: ' . ->getMessage());
+            return [];
+        }
+    }
+
 }

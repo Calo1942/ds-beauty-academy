@@ -40,6 +40,11 @@
                 </div>
                 <input type="hidden" id="filterEstadoCurso" value="">
             </div>
+
+            <!-- Botón Limpiar Filtros -->
+            <button type="button" id="btnLimpiarFiltrosCurso" class="btn-clear-filters custom-btn-clear" title="Restablecer filtros">
+                <i class="fas fa-undo-alt"></i> <span>Limpiar filtros</span>
+            </button>
         </div>
     </div>
 </div>

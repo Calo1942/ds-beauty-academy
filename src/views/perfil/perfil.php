@@ -26,8 +26,42 @@
             <p class="perfil-sub-heading">Gestiona tu información personal y preferencias</p>
         </div>
 
-        <!-- Fila Superior: Perfil Hero Card + Mis Especialidades -->
-        <div class="perfil-top-grid">
+        <!-- SKELETON LOADER PARA MI PERFIL -->
+        <div id="perfilSkeleton" class="skeleton-perfil mb-4">
+            <div class="perfil-top-grid mb-4">
+                <div class="skeleton-card" style="min-height: 220px; padding: 24px;">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="skeleton-cell" style="width: 100px; height: 100px; border-radius: 50%; flex: none;"></div>
+                        <div class="d-flex flex-column gap-2 flex-grow-1">
+                            <div class="skeleton-cell" style="height: 18px; width: 140px; border-radius: 20px;"></div>
+                            <div class="skeleton-cell" style="height: 28px; width: 60%;"></div>
+                            <div class="skeleton-cell" style="height: 16px; width: 45%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card" style="min-height: 220px; padding: 24px;">
+                    <div class="skeleton-cell mb-4" style="height: 20px; width: 160px;"></div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="skeleton-cell" style="height: 36px; width: 120px; border-radius: 8px;"></div>
+                        <div class="skeleton-cell" style="height: 36px; width: 140px; border-radius: 8px;"></div>
+                        <div class="skeleton-cell" style="height: 36px; width: 110px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="skeleton-card mb-4" style="min-height: 200px; padding: 24px;">
+                <div class="skeleton-cell mb-4" style="height: 20px; width: 200px;"></div>
+                <div class="d-flex gap-3">
+                    <div class="skeleton-cell" style="height: 120px; flex: 1; border-radius: 12px;"></div>
+                    <div class="skeleton-cell" style="height: 120px; flex: 1; border-radius: 12px;"></div>
+                    <div class="skeleton-cell" style="height: 120px; flex: 1; border-radius: 12px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENIDO REAL DE MI PERFIL -->
+        <div id="perfilRealContent" style="display: none;">
+            <!-- Fila Superior: Perfil Hero Card + Mis Especialidades -->
+            <div class="perfil-top-grid">
             <!-- 1. Tarjeta de Información Principal del Perfil -->
             <div class="perfil-card perfil-hero-card">
                 <div class="perfil-hero-content">
@@ -173,6 +207,7 @@
                     <span>Gracias por ser parte de <strong>DS Beauty Academy</strong> ❤️</span>
                 </div>
             </div>
+        </div>
         </div>
     </main>
 

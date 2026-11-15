@@ -1,9 +1,9 @@
 // evaluacionDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Evaluaciones
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.evaluacionApiUrl || '?url=evaluacion';
@@ -121,7 +121,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información de la evaluación');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -138,7 +138,7 @@ $(document).ready(function () {
                 $('#detail_descripcion_evaluacion').text(ev.descripcion_evaluacion || 'Sin descripción');
                 $('#detail_id_instructor_curso').text(ev.id_instructor_curso || 'N/A');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -172,7 +172,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -201,7 +201,7 @@ $(document).ready(function () {
 
                 cargarAsignacionesAcademicas('#edit_select_instructor_curso_eval', ev.id_instructor_curso);
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -235,7 +235,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar evaluación?',
             'Esta acción cambiará el estatus de la evaluación a inactivo.',
             'Sí, eliminar',

@@ -64,29 +64,35 @@ if (!isset($metrics)) {
         <div class="container-fluid px-0">
             <h1 class="page-title mb-3">Dashboard</h1>
 
-            <!-- FILA 1: TARJETAS KPI SUPERIORES -->
-            <?php include __DIR__ . '/components/kpiCards.php'; ?>
+            <!-- SKELETON LOADER MIENTRAS RENDERIZAN LOS COMPONENTES -->
+            <?php include __DIR__ . '/components/dashboardSkeleton.php'; ?>
 
-            <!-- FILA 2: GRÁFICO DE INGRESOS MENSUALES + CURSOS MÁS VENDIDOS -->
-            <div class="row g-3 g-lg-4 mb-4">
-                <div class="col-12 col-xl-8">
-                    <?php include __DIR__ . '/components/graficaIngresos.php'; ?>
-                </div>
-                <div class="col-12 col-xl-4">
-                    <?php include __DIR__ . '/components/cursosMasVendidos.php'; ?>
-                </div>
-            </div>
+            <!-- CONTENIDO REAL DEL DASHBOARD -->
+            <div id="dashboardRealContent" style="display: none;">
+                <!-- FILA 1: TARJETAS KPI SUPERIORES -->
+                <?php include __DIR__ . '/components/kpiCards.php'; ?>
 
-            <!-- FILA 3: ESTADO INSCRIPCIONES, CUPOS Y RESUMEN DE PAGOS -->
-            <div class="row g-3 g-lg-4">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <?php include __DIR__ . '/components/graficaInscripciones.php'; ?>
+                <!-- FILA 2: GRÁFICO DE INGRESOS MENSUALES + CURSOS MÁS VENDIDOS -->
+                <div class="row g-3 g-lg-4 mb-4">
+                    <div class="col-12 col-xl-8">
+                        <?php include __DIR__ . '/components/graficaIngresos.php'; ?>
+                    </div>
+                    <div class="col-12 col-xl-4">
+                        <?php include __DIR__ . '/components/cursosMasVendidos.php'; ?>
+                    </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <?php include __DIR__ . '/components/cuposAlcanzados.php'; ?>
-                </div>
-                <div class="col-12 col-md-12 col-lg-4">
-                    <?php include __DIR__ . '/components/graficaPagos.php'; ?>
+
+                <!-- FILA 3: ESTADO INSCRIPCIONES, CUPOS Y RESUMEN DE PAGOS -->
+                <div class="row g-3 g-lg-4">
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <?php include __DIR__ . '/components/graficaInscripciones.php'; ?>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <?php include __DIR__ . '/components/cuposAlcanzados.php'; ?>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-4">
+                        <?php include __DIR__ . '/components/graficaPagos.php'; ?>
+                    </div>
                 </div>
             </div>
 

@@ -82,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['nombre']        = $model->obtenerNombrePersona($usuario);
         $_SESSION['id_instructor'] = $usuario['id_instructor'] ?? null;
         $_SESSION['id_estudiante'] = $usuario['id_estudiante'] ?? null;
+        $_SESSION['login_welcome_fullscreen'] = true;
 
         echo json_encode([
             'status' => 'success',

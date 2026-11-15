@@ -5,8 +5,33 @@
             <h2 class="modal-title">Detalles del Usuario</h2>
             <span class="close-modal" onclick="cerrarModal('modalDetalle')">&times;</span>
         </div>
+        
         <div class="modal-body">
-            <div class="detail-item">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
+                <div class="detail-item">
                 <span class="detail-label">ID de Usuario:</span>
                 <span class="detail-value" id="detail_id_usuario">-</span>
             </div>
@@ -29,6 +54,7 @@
             <div class="detail-item">
                 <span class="detail-label">Fecha de Creación:</span>
                 <span class="detail-value" id="detail_fecha_creacion">-</span>
+            </div>
             </div>
         </div>
         <div class="modal-footer">

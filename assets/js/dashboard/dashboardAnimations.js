@@ -6,7 +6,22 @@
  * ------------------------------------------------------------------
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+function revealDashboardContent() {
+    const skeleton = document.getElementById('dashboardSkeleton');
+    const realContent = document.getElementById('dashboardRealContent');
+
+    if (skeleton && realContent) {
+        // Garantizar que se oculte el skeleton y se muestre el contenido
+        skeleton.style.display = 'none';
+        realContent.style.display = 'block';
+        realContent.style.opacity = '1';
+
+        // Disparar resize para que Chart.js dibuje los gráficos perfectamente ajustados
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 100);
+    }
+
     // 1. Animar barras de progreso horizontales
     const progressBars = document.querySelectorAll('.dash-progress-fill');
     progressBars.forEach(bar => {
@@ -29,5 +44,18 @@ document.addEventListener('DOMContentLoaded', () => {
             radialFill.style.strokeDashoffset = `${offset}`;
         }, 200);
     }
-});
+}
 
+// Ejecutar cuando el DOM esté listo o inmediatamente si ya cargó
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(revealDashboardContent, 350);
+    });
+} else {
+    setTimeout(revealDashboardContent, 350);
+}
+
+// Respaldo de seguridad por si la ventana tarda en cargar recursos
+window.addEventListener('load', () => {
+    revealDashboardContent();
+});

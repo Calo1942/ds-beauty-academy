@@ -168,6 +168,12 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
         </div>
     ` : '';
 
+    const clearButtonHtml = `
+        <button type="button" class="btn-clear-filters custom-btn-clear" title="Restablecer filtros">
+            <i class="fas fa-undo-alt"></i> <span>Limpiar filtros</span>
+        </button>
+    `;
+
     const filterBarHtml = `
         <div class="custom-filter-card mb-4 auto-generated-filter" data-for="${tableId}">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
@@ -179,6 +185,7 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
                 </div>
                 <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
                     ${statusDropdownHtml}
+                    ${clearButtonHtml}
                 </div>
             </div>
         </div>
@@ -191,6 +198,19 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
     // Evento de búsqueda en vivo en la tabla
     $filterBar.find('.auto-filter-search').on('keyup input', function () {
         dtApi.search(this.value).draw();
+    });
+
+    // Evento para limpiar y restablecer filtros
+    $filterBar.find('.btn-clear-filters').on('click', function () {
+        $filterBar.find('.auto-filter-search').val('');
+        if (statusColIdx !== -1) {
+            const $dd = $filterBar.find('.auto-filter-status');
+            $dd.find('.custom-dropdown-item').removeClass('active');
+            $dd.find('.custom-dropdown-item[data-value=""]').addClass('active');
+            $dd.find('.dropdown-selected-text').text('Todos los estados');
+            $dd.removeClass('active');
+        }
+        dtApi.search('').columns().search('').draw();
     });
 
     // Evento de dropdown de estado si aplica
@@ -232,9 +252,21 @@ const defaultConfig = {
     autoWidth: false,
     responsive: true,
     pageLength: 5,
+    order: [[0, 'desc']], // Ordenar por ID descendente por defecto (más recientes primero)
+    processing: true,     // Activa loader y estado de procesamiento
     language: {
         emptyTable: "No hay registros disponibles",
-        zeroRecords: "No se encontraron coincidencias"
+        zeroRecords: "No se encontraron coincidencias",
+        processing: `
+            <div class="table-luxury-loader">
+                <div class="luxury-spinner">
+                    <div class="spinner-ring"></div>
+                    <div class="spinner-ring ring-glow"></div>
+                    <i class="fas fa-gem spinner-icon"></i>
+                </div>
+                <span class="loader-text">Actualizando datos...</span>
+            </div>
+        `
     },
     dom: 'rt' // Oculta controles nativos para usar el diseño moderno custom
 };
@@ -328,8 +360,53 @@ export const createDataTable = (tableId, url, columns, customConfig = {}) => {
     return $(tableId).DataTable(config);
 };
 
-export const reloadDataTable = (dataTable) => {
+export const showTableLoader = (container, message = 'Actualizando registros...') => {
+    const $container = $(container);
+    let $overlay = $container.find('> .table-loading-overlay');
+    if (!$overlay.length) {
+        $overlay = $(`
+            <div class="table-loading-overlay">
+                <div class="table-luxury-loader">
+                    <div class="luxury-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ring ring-glow"></div>
+                        <i class="fas fa-gem spinner-icon"></i>
+                    </div>
+                    <span class="loader-text">${message}</span>
+                </div>
+            </div>
+        `);
+        $container.append($overlay);
+    } else {
+        $overlay.find('.loader-text').text(message);
+    }
+    $overlay.stop(true, true).fadeIn(180);
+};
+
+export const hideTableLoader = (container) => {
+    const $container = $(container);
+    const $overlay = $container.find('> .table-loading-overlay');
+    if ($overlay.length) {
+        $overlay.stop(true, true).fadeOut(250);
+    }
+};
+
+export const reloadDataTable = (dataTable, message = 'Actualizando registros...') => {
     if (dataTable && typeof dataTable.ajax !== 'undefined') {
-        dataTable.ajax.reload(null, false);
+        const $table = $(dataTable.table().node());
+        const $container = $table.closest('.custom-table-card, .table-responsive, .panel');
+
+        // Mostrar animación de carga en la tabla con diseño Luxury
+        showTableLoader($container, message);
+
+        const startTime = Date.now();
+        dataTable.ajax.reload(() => {
+            // Asegurar que la animación se aprecie de forma fluida (mínimo 550ms)
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, 550 - elapsed);
+            setTimeout(() => {
+                hideTableLoader($container);
+            }, remaining);
+        }, false);
     }
 };

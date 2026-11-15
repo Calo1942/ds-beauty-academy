@@ -6,7 +6,32 @@
         </div>
         <form id="formEditarEvaluacion">
             <input type="hidden" id="edit_id_evaluacion" name="id_evaluacion">
-            <div class="modal-body">
+            
+        <div class="modal-body">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
                 <div class="form-group mb-3">
                     <label class="form-label">Curso e Instructor Asignado</label>
                     <select name="id_instructor_curso" id="edit_select_instructor_curso_eval" class="form-control" required>
@@ -40,6 +65,7 @@
                     </select>
                 </div>
             </div>
+        </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalEditar')">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Actualizar</button>

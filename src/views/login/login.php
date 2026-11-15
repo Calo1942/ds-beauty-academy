@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión — DS Beauty Academy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         :root {
@@ -260,6 +260,8 @@
                     alertBox.className = 'alert-box success';
                     alertBox.innerHTML = '<i class="fas fa-check-circle"></i> ' + data.message;
                     alertBox.style.display = 'block';
+
+                    sessionStorage.setItem('ds_fullscreen_login', 'true');
 
                     setTimeout(() => {
                         window.location.href = data.redirect;

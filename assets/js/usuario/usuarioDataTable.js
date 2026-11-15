@@ -1,9 +1,9 @@
 // usuarioDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Gestión de Usuarios
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = '?url=usuario';
@@ -221,7 +221,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del usuario');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -242,7 +242,7 @@ $(document).ready(function () {
                 );
                 $('#detail_fecha_creacion').text(u.fecha_creacion || 'N/A');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -276,7 +276,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -303,7 +303,7 @@ $(document).ready(function () {
 
                 toggleCamposRol('Editar', u.nombre_rol);
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -337,7 +337,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Desactivar usuario?',
             'Esta acción suspenderá el acceso del usuario al sistema.',
             'Sí, desactivar',

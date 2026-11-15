@@ -1,9 +1,9 @@
 // bancoDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Bancos
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.bancoApiUrl || '?url=banco';
@@ -66,7 +66,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del banco');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -80,7 +80,7 @@ $(document).ready(function () {
                 $('#detail_nombre_banco').text(b.nombre_banco || 'N/A');
                 $('#detail_estatus_banco').text(b.estatus_banco == 1 ? 'Activo' : 'Inactivo');
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -114,7 +114,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -133,7 +133,7 @@ $(document).ready(function () {
                 $('#edit_id_banco').val(b.id_banco);
                 $('#formEditarBanco [name="nombre_banco"]').val(b.nombre_banco || '');
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -167,7 +167,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar banco?',
             'Esta acción cambiará el estatus del banco a inactivo.',
             'Sí, eliminar',

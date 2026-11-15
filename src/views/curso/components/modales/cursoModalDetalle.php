@@ -4,8 +4,33 @@
             <h2 class="modal-title">Detalle del Curso</h2>
             <span class="close-modal" onclick="cerrarModal('modalDetalle')">&times;</span>
         </div>
+        
         <div class="modal-body">
-            <div class="detail-item">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
+                <div class="detail-item">
                 <span class="detail-label">ID:</span>
                 <span id="detail_id_curso" class="detail-value"></span>
             </div>
@@ -48,6 +73,7 @@
             <div class="detail-item">
                 <span class="detail-label">Estatus:</span>
                 <span id="detail_estatus_curso" class="detail-value"></span>
+            </div>
             </div>
         </div>
         <div class="modal-footer">

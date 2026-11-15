@@ -4,8 +4,33 @@
             <h2 class="modal-title">Detalle del Instructor</h2>
             <span class="close-modal" onclick="cerrarModal('modalDetalle')">&times;</span>
         </div>
+        
         <div class="modal-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- Skeleton Loader tipo tabla para el modal -->
+            <div class="skeleton-modal-table skeleton-table" style="display: none;">
+                <div class="skeleton-header">
+                    <div class="skeleton-header-cell" style="flex: 1;"></div>
+                    <div class="skeleton-header-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+                <div class="skeleton-row">
+                    <div class="skeleton-cell" style="flex: 1;"></div>
+                    <div class="skeleton-cell" style="flex: 2;"></div>
+                </div>
+            </div>
+            <div class="modal-body-content">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="detail-avatar-container">
                     <div class="detail-avatar">
                         <i class="fas fa-user"></i>
@@ -35,6 +60,7 @@
                     <span class="detail-label">Instagram:</span>
                     <span id="detail_instagram" class="detail-value"></span>
                 </div>
+            </div>
             </div>
         </div>
         <div class="modal-footer">

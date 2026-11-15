@@ -9,6 +9,10 @@
         </div>
     </div>
     <div class="page-header-actions mt-3 mt-md-0">
+        <a href="?url=reporte&action=pdf&tipo=cursos" target="_blank" class="btn-custom-secondary btn-reporte-modulo me-2" title="Generar Reporte PDF Oficial">
+            <i class="fas fa-file-pdf"></i> Generar Reporte
+        </a>
+
         <button class="btn-custom-primary btn-registrar-curso" type="button" onclick="abrirModal('modalCrear')">
             <i class="fas fa-plus"></i> Registrar Curso
         </button>

@@ -22,6 +22,13 @@ async function cargarDatosPerfil() {
         const res = await response.json();
         if (res.status === 'success' && res.data) {
             renderizarPerfil(res.data);
+            const skeleton = document.getElementById('perfilSkeleton');
+            const realContent = document.getElementById('perfilRealContent');
+            if (skeleton && realContent) {
+                $(skeleton).fadeOut(200, () => {
+                    $(realContent).fadeIn(250);
+                });
+            }
         } else {
             console.error('Error al cargar datos del perfil:', res.message);
         }

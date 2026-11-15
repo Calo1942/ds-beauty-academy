@@ -1,9 +1,9 @@
 // recursoDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Recursos
 import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
-import { showConfirm, showLoading, closeLoading, showToast } from '../helpers/sweetalert.js';
+import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
-import { showSkeleton, hideSkeleton } from '../helpers/skeleton.js';
+import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from '../helpers/skeleton.js';
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.recursoApiUrl || '?url=recurso';
@@ -66,7 +66,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando detalle...', 'Obteniendo información del recurso');
+        showModalSkeleton('#modalDetalle');
 
         await executeAjax(
             getById(API_URL, id),
@@ -86,7 +86,7 @@ $(document).ready(function () {
                     $('#detail_url_archivo_recurso').text('No especificada');
                 }
 
-                abrirModal('modalDetalle');
+                hideModalSkeleton('#modalDetalle');
             }
         );
     });
@@ -120,7 +120,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        showLoading('Cargando datos...', 'Obteniendo información para edición');
+        showModalSkeleton('#modalEditar');
 
         await executeAjax(
             getById(API_URL, id),
@@ -141,7 +141,7 @@ $(document).ready(function () {
                 $('#formEditarRecurso [name="descripcion_recurso"]').val(r.descripcion_recurso || '');
                 $('#formEditarRecurso [name="url_archivo_recurso"]').val(r.url_archivo_recurso || '');
 
-                abrirModal('modalEditar');
+                hideModalSkeleton('#modalEditar');
             }
         );
     });
@@ -175,7 +175,7 @@ $(document).ready(function () {
         const id = this.value;
         if (!id) return;
 
-        const confirmado = await showConfirm(
+        const confirmado = await showDeleteConfirm(
             '¿Eliminar recurso?',
             'Esta acción eliminará el recurso seleccionado.',
             'Sí, eliminar',

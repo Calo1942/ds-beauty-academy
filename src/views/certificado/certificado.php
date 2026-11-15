@@ -30,6 +30,11 @@
             <p class="page-header-subtitle">Historial de certificaciones generadas y entregadas</p>
         </div>
     </div>
+    <div class="page-header-actions mt-3 mt-md-0 d-flex align-items-center">
+        <a href="?url=reporte&action=pdf&tipo=certificados" target="_blank" class="btn-custom-secondary btn-reporte-modulo" title="Generar Reporte PDF Oficial">
+            <i class="fas fa-file-pdf"></i> Generar Reporte
+        </a>
+    </div>
 </div>
         <div class="panel custom-table-card">
             <!-- Skeleton loader mientras carga la información -->
