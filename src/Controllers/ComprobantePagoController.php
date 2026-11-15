@@ -54,14 +54,14 @@ if ($action) {
                 finfo_close($finfo);
 
                 if (in_array($mime, $allowedMimes, true)) {
-                    $uploadDir = __DIR__ . '/../../uploads/comprobantes/';
+                    $uploadDir = __DIR__ . '/../../assets/uploads/comprobantes/';
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
                     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
                     $filename = 'comprobante_' . uniqid('', true) . '.' . $ext;
                     if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-                        $data['url_img_comprobante'] = 'uploads/comprobantes/' . $filename;
+                        $data['url_img_comprobante'] = 'assets/uploads/comprobantes/' . $filename;
                     }
                 }
             }

@@ -23,18 +23,22 @@ export function cerrarModal(id) {
 window.abrirModal = abrirModal;
 window.cerrarModal = cerrarModal;
 
-async function cargarInstructores(selectSelector) {
+async function cargarInstructores(selectSelector, valorSeleccionado = null) {
     const $select = $(selectSelector);
     $select.html('<option value="">Cargando instructores...</option>');
 
     try {
         const res = await getAll(INSTRUCTOR_API_URL);
-        $select.html('<option value="">Seleccione un instructor</option>');
+        $select.html('<option value="">-- Seleccione un instructor --</option>');
         if (res && res.data && Array.isArray(res.data)) {
             res.data.forEach(inst => {
                 const nombre = `${inst.primer_nombre_instructor || ''} ${inst.primer_apellido_instructor || ''}`.trim();
-                $select.append(`<option value="${inst.id_instructor}">${nombre} (ID: ${inst.id_instructor})</option>`);
+                const selected = (valorSeleccionado && valorSeleccionado == inst.id_instructor) ? 'selected' : '';
+                $select.append(`<option value="${inst.id_instructor}" ${selected}>${nombre} (ID: ${inst.id_instructor})</option>`);
             });
+            if (valorSeleccionado) {
+                $select.val(valorSeleccionado);
+            }
         }
     } catch (e) {
         $select.html('<option value="">Error al cargar instructores</option>');
@@ -91,7 +95,7 @@ $(document).ready(function () {
 
     // 4. Ver Detalle de Diploma
     $(document).on('click', '.btn-table-ver', async function () {
-        const id = this.value;
+        const id = $(this).val() || $(this).data('id') || $(this).attr('data-id') || this.value;
         if (!id) return;
 
         showModalSkeleton('#modalDetalle');
@@ -147,7 +151,7 @@ $(document).ready(function () {
 
     // 6. Cargar y abrir Modal Editar
     $(document).on('click', '.btn-table-editar', async function () {
-        const id = this.value;
+        const id = $(this).val() || $(this).data('id') || $(this).attr('data-id') || this.value;
         if (!id) return;
 
         showModalSkeleton('#modalEditar');
@@ -166,7 +170,7 @@ $(document).ready(function () {
                     limpiarValidaciones(form);
                 }
 
-                await cargarInstructores('#id_instructor_editar');
+                await cargarInstructores('#id_instructor_editar', d.id_instructor);
 
                 $('#edit_id_diploma').val(d.id_diploma);
 
@@ -210,7 +214,7 @@ $(document).ready(function () {
 
     // 8. Eliminar Diploma con Confirmación SweetAlert2
     $(document).on('click', '.btn-table-eliminar', async function () {
-        const id = this.value;
+        const id = $(this).val() || $(this).data('id') || $(this).attr('data-id') || this.value;
         if (!id) return;
 
         const confirmado = await showDeleteConfirm(
