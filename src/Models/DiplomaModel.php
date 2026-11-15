@@ -90,9 +90,26 @@ class DiplomaModel extends DBConnect implements Crud
         ];
     }
 
+    private function obtenerInstructorEnSesion()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $rol = $_SESSION['rol'] ?? 'Administrador';
+        $idInstructor = $_SESSION['id_instructor'] ?? null;
+        if ($rol === 'Instructor' && !empty($idInstructor)) {
+            return (int)$idInstructor;
+        }
+        return null;
+    }
+
     public function guardar($data)
     {
         try {
+            $idInstructorSesion = $this->obtenerInstructorEnSesion();
+            if ($idInstructorSesion !== null) {
+                $data['id_instructor'] = $idInstructorSesion;
+            }
             $this->validarDatos($data);
             $this->guardarDatos();
             return $this->success(201, "Diploma creado exitosamente.");
@@ -124,11 +141,24 @@ class DiplomaModel extends DBConnect implements Crud
     public function buscarTodos()
     {
         try {
-            $sql = "SELECT c.*, CONCAT(i.primer_nombre_instructor, ' ', i.primer_apellido_instructor) as nombre_instructor 
-                    FROM diplomas c
-                    JOIN instructores i ON c.id_instructor = i.id_instructor
-                    WHERE c.estatus_diploma = 1";
-            $stmt = $this->con->prepare($sql);
+            $idInstructorSesion = $this->obtenerInstructorEnSesion();
+
+            if ($idInstructorSesion !== null) {
+                $sql = "SELECT c.*, CONCAT(i.primer_nombre_instructor, ' ', i.primer_apellido_instructor) as nombre_instructor 
+                        FROM diplomas c
+                        JOIN instructores i ON c.id_instructor = i.id_instructor
+                        WHERE c.estatus_diploma = 1 AND c.id_instructor = :id_instructor
+                        ORDER BY c.id_diploma DESC";
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindValue(':id_instructor', $idInstructorSesion, \PDO::PARAM_INT);
+            } else {
+                $sql = "SELECT c.*, CONCAT(i.primer_nombre_instructor, ' ', i.primer_apellido_instructor) as nombre_instructor 
+                        FROM diplomas c
+                        JOIN instructores i ON c.id_instructor = i.id_instructor
+                        WHERE c.estatus_diploma = 1
+                        ORDER BY c.id_diploma DESC";
+                $stmt = $this->con->prepare($sql);
+            }
             $stmt->execute();
 
             $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -167,6 +197,16 @@ class DiplomaModel extends DBConnect implements Crud
     public function actualizar($id, $data)
     {
         try {
+            $idInstructorSesion = $this->obtenerInstructorEnSesion();
+            if ($idInstructorSesion !== null) {
+                // Verificar que el diploma le pertenezca al instructor en sesión
+                $actual = $this->buscar($id);
+                if (!$actual || empty($actual['data']) || (int)$actual['data']['id_instructor'] !== $idInstructorSesion) {
+                    return $this->error(403, "No tienes autorización para modificar este diploma.");
+                }
+                $data['id_instructor'] = $idInstructorSesion;
+            }
+
             $data['id_diploma'] = $id;
             $this->validarDatos($data, true);
             $this->actualizarDatos();
@@ -204,6 +244,15 @@ class DiplomaModel extends DBConnect implements Crud
             if (self::validator($id, $this->validate_id) !== true) {
                 throw new Exception("El ID del diploma es inválido.");
             }
+
+            $idInstructorSesion = $this->obtenerInstructorEnSesion();
+            if ($idInstructorSesion !== null) {
+                $actual = $this->buscar($id);
+                if (!$actual || empty($actual['data']) || (int)$actual['data']['id_instructor'] !== $idInstructorSesion) {
+                    return $this->error(403, "No tienes autorización para eliminar este diploma.");
+                }
+            }
+
             $this->id_diploma = $id;
             $this->eliminarDatos();
             return $this->success(200, "Diploma eliminado");

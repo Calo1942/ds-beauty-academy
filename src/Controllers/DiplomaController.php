@@ -44,6 +44,10 @@ if ($action) {
                 }
             }
 
+            if (($_SESSION['rol'] ?? '') === 'Instructor' && !empty($_SESSION['id_instructor'])) {
+                $data['id_instructor'] = (int)$_SESSION['id_instructor'];
+            }
+
             // Procesar archivo físico del diploma si fue adjuntado
             if (isset($_FILES['archivo_diploma']) && $_FILES['archivo_diploma']['error'] === UPLOAD_ERR_OK) {
                 $file = $_FILES['archivo_diploma'];
@@ -84,6 +88,10 @@ if ($action) {
                     if (isset($_POST[$field])) {
                         $data[$field] = $_POST[$field];
                     }
+                }
+
+                if (($_SESSION['rol'] ?? '') === 'Instructor' && !empty($_SESSION['id_instructor'])) {
+                    $data['id_instructor'] = (int)$_SESSION['id_instructor'];
                 }
 
                 // Procesar archivo físico del diploma si se actualiza

@@ -18,11 +18,12 @@
                     <label for="categoria_diploma_crear" class="form-label">Categoría <span class="text-danger">*</span></label>
                     <input type="text" name="categoria_diploma" id="categoria_diploma_crear" class="form-control" placeholder="Ej: Estética" maxlength="100" required onfocus="this.select()">
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group mb-3" id="grupo_instructor_crear">
                     <label for="id_instructor_crear" class="form-label">Instructor Responsable <span class="text-danger">*</span></label>
                     <select name="id_instructor" id="id_instructor_crear" class="form-control" required>
                         <option value="">-- Seleccione un instructor --</option>
                     </select>
+                    <input type="text" id="instructor_nombre_fijo_crear" class="form-control bg-dark border-secondary text-white" readonly style="display: none;">
                 </div>
                 <div class="form-group mb-3">
                     <label for="archivo_diploma_crear" class="form-label">Documento Digital del Diploma (PDF / Imagen)</label>

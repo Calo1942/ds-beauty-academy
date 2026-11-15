@@ -25,6 +25,24 @@ window.cerrarModal = cerrarModal;
 
 async function cargarInstructores(selectSelector, valorSeleccionado = null) {
     const $select = $(selectSelector);
+    const isCrear = selectSelector.includes('crear');
+    const $inputFijo = isCrear ? $('#instructor_nombre_fijo_crear') : $('#instructor_nombre_fijo_editar');
+
+    if (window.currentUserRole === 'Instructor' && window.currentInstructorId) {
+        // En rol Instructor: auto-asignar con su ID y nombre, sin llamar a ?url=instructor (evita 403 Forbidden)
+        $select.html(`<option value="${window.currentInstructorId}" selected>${window.currentUserName || 'Docente'}</option>`);
+        $select.val(window.currentInstructorId);
+        $select.hide();
+        if ($inputFijo.length) {
+            $inputFijo.val(window.currentUserName || 'Docente').show();
+        }
+        $select.trigger('change');
+        return;
+    }
+
+    // Rol Administrador: selector completo cargado por AJAX
+    $select.show();
+    if ($inputFijo.length) $inputFijo.hide();
     $select.html('<option value="">Cargando instructores...</option>');
 
     try {
@@ -57,7 +75,13 @@ $(document).ready(function () {
         },
         { 
             data: 'nombre_diploma',
-            render: (data) => `<span class="fw-semibold text-white"><i class="fas fa-graduation-cap me-2 text-accent" style="color: var(--accent);"></i>${data || 'Sin título'}</span>`
+            render: (data, type, row) => {
+                let badgePdf = '';
+                if (row && row.url_pdf_diploma) {
+                    badgePdf = ` <a href="${row.url_pdf_diploma}" target="_blank" title="Ver documento digital" class="badge bg-dark border border-secondary text-accent ms-1" style="font-size: 11px; text-decoration: none;"><i class="fas fa-file-pdf text-accent me-1"></i>Doc</a>`;
+                }
+                return `<span class="fw-semibold text-white"><i class="fas fa-graduation-cap me-2 text-accent" style="color: var(--accent);"></i>${data || 'Sin título'}</span>${badgePdf}`;
+            }
         },
         { 
             data: 'categoria_diploma',
@@ -90,6 +114,9 @@ $(document).ready(function () {
             limpiarValidaciones(form);
         }
         await cargarInstructores('#id_instructor_crear');
+        if (window.currentUserRole === 'Instructor') {
+            $('#id_instructor_crear').trigger('change');
+        }
         abrirModal('modalCrear');
     });
 
@@ -182,6 +209,10 @@ $(document).ready(function () {
                 fields.forEach(field => {
                     $(`#formEditarDiploma [name="${field}"]`).val(d[field] || '');
                 });
+
+                if (window.currentUserRole === 'Instructor') {
+                    $('#id_instructor_editar').trigger('change');
+                }
 
                 abrirModal('modalEditar');
             }

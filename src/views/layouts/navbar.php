@@ -21,7 +21,11 @@
             <div class="user-profile">
                 <a href="?url=perfil" class="user-profile-link" title="Ir a mi perfil" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
                     <div class="user-avatar-wrapper">
-                        <i class="fas fa-user-circle user-avatar"></i>
+                        <?php if (!empty($_SESSION['foto_perfil_usuario'])): ?>
+                            <img src="<?= htmlspecialchars($_SESSION['foto_perfil_usuario']) ?>" alt="Avatar" class="user-avatar" id="navbarUserAvatar" style="object-fit: cover;">
+                        <?php else: ?>
+                            <i class="fas fa-user-circle user-avatar" id="navbarUserAvatar"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="user-info">
                         <span class="user-name"><?= htmlspecialchars($_SESSION['nombre'] ?? 'Usuario') ?></span>
