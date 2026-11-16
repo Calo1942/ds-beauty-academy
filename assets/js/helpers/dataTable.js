@@ -1,6 +1,68 @@
 // dataTable.js - Factoría y utilidades para DataTables (DS Beauty Academy)
 
 /**
+ * Helpers universales para gestión de modales (DS Beauty Academy)
+ * Limpia automáticamente formularios, clases de validación y restaura botones.
+ */
+export function abrirModal(id) {
+    const modal = typeof id === 'string' ? document.getElementById(id) : id;
+    if (modal) {
+        modal.classList.add('show');
+        document.body.classList.add('modal-open');
+    }
+}
+
+export function cerrarModal(id) {
+    const modal = typeof id === 'string' ? document.getElementById(id) : id;
+    if (modal) {
+        modal.classList.remove('show');
+        if (!document.querySelector('.modal.show, .custom-modal.show')) {
+            document.body.classList.remove('modal-open');
+        }
+        // Limpieza automática del formulario dentro del modal
+        const form = modal.querySelector('form');
+        if (form) {
+            form.reset();
+            const $form = $(form);
+            $form.find('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+            $form.find('.invalid-feedback').text('').hide();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    }
+}
+
+// Registro global y listeners para backdrop, tecla Escape y botones de cierre
+if (typeof window !== 'undefined') {
+    window.abrirModal = abrirModal;
+    window.cerrarModal = cerrarModal;
+
+    $(document).on('click', '[data-modal-close], .btn-close-modal, .modal-close, [data-bs-dismiss="modal"]', function (e) {
+        e.preventDefault();
+        const $modal = $(this).closest('.modal, .custom-modal, [id^="modal"]');
+        if ($modal.length) {
+            cerrarModal($modal[0]);
+        }
+    });
+
+    $(document).on('click', '.modal, .custom-modal', function (e) {
+        if (e.target === this) {
+            cerrarModal(this);
+        }
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal.show, .custom-modal.show');
+            if (activeModal) cerrarModal(activeModal);
+        }
+    });
+}
+
+/**
  * Renderiza la paginación y la información personalizada (Puro CSS y JS, sin azul nativo)
  */
 export function renderCustomPagination(dtApi, containerSelector) {
