@@ -324,7 +324,10 @@ class ReporteModel extends DBConnect
             $stmt = $this->con->query("
                 SELECT id_estudiante,
                        CONCAT(primer_nombre_estudiante, ' ', COALESCE(primer_apellido_estudiante, '')) AS nombre_completo,
-                       cedula_estudiante, telefono_estudiante, correo_estudiante, direccion_estudiante,
+                       cedula_estudiante,
+                       telefono_principal_estudiante AS telefono_estudiante,
+                       correo_estudiante,
+                       usuario_instagram_estudiante,
                        estatus_estudiante
                 FROM estudiantes
                 ORDER BY id_estudiante DESC
@@ -364,10 +367,15 @@ class ReporteModel extends DBConnect
             $stmt = $this->con->query("
                 SELECT i.id_instructor,
                        CONCAT(i.primer_nombre_instructor, ' ', COALESCE(i.primer_apellido_instructor, '')) AS nombre_completo,
-                       i.cedula_instructor, i.telefono_instructor, i.correo_instructor,
-                       e.nombre_especialidad, i.estatus_instructor
+                       i.cedula_instructor,
+                       i.telefono_principal_instructor AS telefono_instructor,
+                       i.correo_instructor,
+                       GROUP_CONCAT(e.nombre_especialidad SEPARATOR ', ') AS nombre_especialidad,
+                       i.estatus_instructor
                 FROM instructores i
-                LEFT JOIN especialidades e ON i.id_especialidad = e.id_especialidad
+                LEFT JOIN especialidad_instructor ei ON i.id_instructor = ei.id_instructor
+                LEFT JOIN especialidades e ON ei.id_especialidad = e.id_especialidad
+                GROUP BY i.id_instructor
                 ORDER BY i.id_instructor DESC
             ");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -384,9 +392,14 @@ class ReporteModel extends DBConnect
     {
         try {
             $stmt = $this->con->query("
-                SELECT id_especialidad, nombre_especialidad, descripcion_especialidad, estatus_especialidad
-                FROM especialidades
-                ORDER BY id_especialidad DESC
+                SELECT e.id_especialidad,
+                       e.nombre_especialidad,
+                       e.estatus_especialidad,
+                       COUNT(ei.id_instructor) AS total_instructores
+                FROM especialidades e
+                LEFT JOIN especialidad_instructor ei ON e.id_especialidad = ei.id_especialidad
+                GROUP BY e.id_especialidad
+                ORDER BY e.id_especialidad DESC
             ");
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {

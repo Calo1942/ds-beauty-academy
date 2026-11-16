@@ -182,8 +182,8 @@ if (isset($_GET['action']) && in_array($_GET['action'], ['pdf', 'generar'])) {
             $pdf = $model->crearReportePdf('L', 'Reporte General de Estudiantes Registrados', 'Padrón académico oficial de alumnas matriculadas', '');
             $pdf->AddPage();
 
-            $headers = ['ID', 'Estudiante', 'Cédula', 'Teléfono', 'Correo Electrónico', 'Dirección', 'Estado'];
-            $widths  = [14, 52, 28, 30, 60, 56, 20];
+            $headers = ['ID', 'Estudiante', 'Cédula', 'Teléfono', 'Correo Electrónico', 'Instagram', 'Estado'];
+            $widths  = [14, 52, 28, 30, 65, 50, 21];
             $aligns  = ['C', 'L', 'C', 'C', 'L', 'L', 'C'];
 
             $pdf->renderTableHeader($headers, $widths, $aligns);
@@ -200,7 +200,7 @@ if (isset($_GET['action']) && in_array($_GET['action'], ['pdf', 'generar'])) {
                         $f['cedula_estudiante'] ?: 'N/A',
                         $f['telefono_estudiante'] ?: 'N/A',
                         $f['correo_estudiante'] ?: 'N/A',
-                        $f['direccion_estudiante'] ?: 'N/A',
+                        $f['usuario_instagram_estudiante'] ?: 'N/A',
                         ($f['estatus_estudiante'] == 1 ? 'Activo' : 'Inactivo')
                     ];
                     $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
@@ -307,9 +307,9 @@ if (isset($_GET['action']) && in_array($_GET['action'], ['pdf', 'generar'])) {
             $pdf = $model->crearReportePdf('P', 'Catálogo de Especialidades y Áreas Técnicas', 'Líneas formativas impartidas en la academia', '');
             $pdf->AddPage();
 
-            $headers = ['ID', 'Especialidad', 'Descripción', 'Estado'];
-            $widths  = [18, 55, 87, 30];
-            $aligns  = ['C', 'L', 'L', 'C'];
+            $headers = ['ID', 'Especialidad', 'Total Instructores', 'Estado'];
+            $widths  = [20, 85, 45, 40];
+            $aligns  = ['C', 'L', 'C', 'C'];
 
             $pdf->renderTableHeader($headers, $widths, $aligns);
 
@@ -322,7 +322,7 @@ if (isset($_GET['action']) && in_array($_GET['action'], ['pdf', 'generar'])) {
                     $row = [
                         '#' . $f['id_especialidad'],
                         $f['nombre_especialidad'],
-                        $f['descripcion_especialidad'] ?: 'Sin descripción',
+                        (string)($f['total_instructores'] ?? 0),
                         ($f['estatus_especialidad'] == 1 ? 'Activo' : 'Inactivo')
                     ];
                     $pdf->renderTableRow($row, $widths, $aligns, ($idx % 2 === 0));
