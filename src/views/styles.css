@@ -485,7 +485,7 @@ span.text-muted,
 
 .detail-avatar i {
     font-size: 60px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .detail-info-header {
