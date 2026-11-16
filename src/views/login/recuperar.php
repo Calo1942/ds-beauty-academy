@@ -273,8 +273,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        let isSubmitting = false;
         document.getElementById('formRecuperar').addEventListener('submit', async function (e) {
             e.preventDefault();
+            if (isSubmitting) return;
+
             const alertBox = document.getElementById('alertBox');
             const btn = document.getElementById('btnSubmit');
             const btnText = document.getElementById('btnText');
@@ -292,6 +295,7 @@
                 return;
             }
 
+            isSubmitting = true;
             alertBox.style.display = 'none';
             btn.disabled = true;
             btnIcon.className = 'fas fa-spinner fa-spin';
@@ -333,6 +337,7 @@
                     }, 3500);
 
                 } else {
+                    isSubmitting = false;
                     alertBox.className = 'alert-box error';
                     alertBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.mensaje || 'No se pudo procesar la solicitud.');
                     alertBox.style.display = 'block';
@@ -342,6 +347,7 @@
                     btnText.innerText = 'Enviar Código de 6 Dígitos';
                 }
             } catch (err) {
+                isSubmitting = false;
                 alertBox.className = 'alert-box error';
                 alertBox.innerHTML = '<i class="fas fa-wifi"></i> Error de conexión con el servidor.';
                 alertBox.style.display = 'block';

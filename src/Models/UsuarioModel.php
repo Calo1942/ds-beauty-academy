@@ -215,7 +215,7 @@ class UsuarioModel extends DBConnect implements Crud
             // Almacenar únicamente el hash del código por seguridad
             $hashCodigo = password_hash($codigo, PASSWORD_DEFAULT);
 
-            // Actualización atómica en la tabla usuarios
+            // Actualización atómica en la tabla usuarios con protección contra condiciones de carrera
             $sqlUpdate = "
                 UPDATE usuarios
                 SET token_recuperacion = :token,
@@ -223,12 +223,19 @@ class UsuarioModel extends DBConnect implements Crud
                     reenvio_recuperacion = NOW(),
                     intentos_recuperacion = 0
                 WHERE id_usuario = :id
+                  AND (reenvio_recuperacion IS NULL OR reenvio_recuperacion <= DATE_SUB(NOW(), INTERVAL :cooldown SECOND))
             ";
             $stmtUpdate = $this->con->prepare($sqlUpdate);
             $stmtUpdate->bindValue(':token', $hashCodigo, PDO::PARAM_STR);
             $stmtUpdate->bindValue(':vigencia', $vigencia, PDO::PARAM_INT);
+            $stmtUpdate->bindValue(':cooldown', $cooldown, PDO::PARAM_INT);
             $stmtUpdate->bindValue(':id', $usuario['id_usuario'], PDO::PARAM_INT);
             $stmtUpdate->execute();
+
+            // Si otro proceso concurrente se adelantó en milisegundos, no duplicar el envío
+            if ($stmtUpdate->rowCount() === 0) {
+                return ['respuesta' => true, 'mensaje' => $mensajeGenerico];
+            }
 
             $this->idUsuario          = (int) $usuario['id_usuario'];
             $this->codigoRecuperacion = $codigo;
