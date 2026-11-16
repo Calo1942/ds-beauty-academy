@@ -111,17 +111,17 @@ export const executeAjax = async (ajaxPromise, successMessage = null, onSuccess 
                           response.code === 201;
 
         if (isSuccess) {
-            closeLoading();
             if (onSuccess) onSuccess(response);
 
             const msg = successMessage || (response && response.message ? response.message : null);
             if (successMessage !== null && msg) {
                 await showSuccessMessage(msg, '¡Operación Exitosa!');
+            } else {
+                closeLoading();
             }
             return true;
         }
 
-        closeLoading();
         let errorMsg = response.message || response.error || 'Ha ocurrido un error inesperado';
         if (response.message && response.error && response.message !== response.error) {
             errorMsg = typeof response.error === 'string'
@@ -131,7 +131,6 @@ export const executeAjax = async (ajaxPromise, successMessage = null, onSuccess 
         await showErrorMessage(errorMsg);
         return false;
     } catch (error) {
-        closeLoading();
         await handleAjaxError(error);
         return false;
     }

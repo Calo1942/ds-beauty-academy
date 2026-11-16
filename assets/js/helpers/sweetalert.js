@@ -23,7 +23,7 @@ const getCommonConfig = () => {
         allowOutsideClick: false,
         allowEscapeKey: true,
         showClass: { popup: 'animate__animated animate__fadeInDown animate__faster' },
-        hideClass: { popup: 'animate__animated animate__fadeOutUp animate__faster' },
+        hideClass: { popup: '' },
         buttonsStyling: true,
         customClass: {
             popup: 'border-luxury shadow-lg',
@@ -143,6 +143,7 @@ export const showConnectionError = () =>
 // Toast no invasivo en esquina superior derecha
 export const showToast = (message, icon = 'success') => {
     if (typeof Swal === 'undefined') return;
+    const c = getColors();
     
     return Swal.fire({
         toast: true,
@@ -152,12 +153,12 @@ export const showToast = (message, icon = 'success') => {
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
-        background: colors.background,
-        color: colors.text
+        background: c.background,
+        color: c.text
     });
 };
 
-// Spinner de carga
+// Spinner de carga con transicion suave
 export const showLoading = (title = 'Cargando...', text = 'Por favor espere un momento') => {
     if (typeof Swal === 'undefined') return;
 
@@ -168,12 +169,14 @@ export const showLoading = (title = 'Cargando...', text = 'Por favor espere un m
         allowOutsideClick: false,
         allowEscapeKey: false,
         showConfirmButton: false,
+        showClass: { popup: 'animate__animated animate__fadeIn animate__faster' },
+        hideClass: { popup: '' },
         didOpen: () => Swal.showLoading()
     });
 };
 
 export const closeLoading = () => {
-    if (typeof Swal !== 'undefined') {
+    if (typeof Swal !== 'undefined' && Swal.isVisible()) {
         Swal.close();
     }
 };
