@@ -31,12 +31,18 @@
     font-family: 'Inter', sans-serif;
 }
 
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     display: flex;
     min-height: 100vh;
-    overflow-x: hidden;
+    width: 100%;
 }
 
 /* Tipografía y Jerarquía Visual Modular */
@@ -108,16 +114,22 @@ span.text-muted,
 
 .main-wrapper {
     flex-grow: 1;
+    width: calc(100% - var(--sidebar-width));
+    max-width: calc(100% - var(--sidebar-width));
+    min-width: 0;
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
     background-color: #121214;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .main-wrapper.sidebar-collapsed {
+    width: 100% !important;
+    max-width: 100% !important;
     margin-left: 0 !important;
 }
 
@@ -401,20 +413,6 @@ span.text-muted,
     font-weight: 600;
 }
 
-/* --- MAIN LAYOUT --- */
-.main-wrapper {
-    flex-grow: 1;
-    margin-left: var(--sidebar-width);
-    display: flex;
-    flex-direction: column;
-    background-color: #121214;
-    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* Slightly lighter than dark for depth */
-}
-
-.main-wrapper.sidebar-collapsed {
-    margin-left: 0 !important;
-}
 
 /* Logo / Título de la Academia en Navbar (visible SOLO cuando el sidebar está plegado) */
 .navbar-brand-collapsed {
@@ -679,6 +677,10 @@ span.text-muted,
 .content {
     padding: 32px;
     flex-grow: 1;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .page-header {
@@ -1250,6 +1252,7 @@ tr:last-child td {
     .main-wrapper {
         margin-left: 0 !important;
         width: 100% !important;
+        max-width: 100% !important;
     }
 
     .btn-sidebar-toggle {
@@ -3594,18 +3597,12 @@ table.custom-modern-table.dataTable {
     }
 }
 
-/* El footer (con el dropdown "Mostrar") vive dentro de .table-responsive,
-   que por defecto recorta todo lo que sobresale. Si contiene el footer
-   custom, dejamos que el menú pueda desbordar. */
-.table-responsive:has(.custom-table-footer) {
-    overflow: visible;
-}
-
-/* En pantallas pequeñas recuperamos el scroll horizontal de la tabla */
-@media (max-width: 991.98px) {
-    .table-responsive:has(.custom-table-footer) {
-        overflow-x: auto;
-    }
+/* Contenedor de tablas responsivas: siempre auto scroll horizontal y 100% de ancho */
+.table-responsive {
+    overflow-x: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* ==========================================================================

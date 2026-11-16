@@ -249,29 +249,25 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
 
     // Barra de filtros por estado si aplica
     const statusDropdownHtml = statusColIdx !== -1 ? `
-        <div class="custom-dropdown auto-filter-status" id="autoDropdownStatus_${tableId}">
-            <button type="button" class="custom-dropdown-toggle" aria-expanded="false">
-                <span class="dropdown-selected-text">Todos los estados</span>
-                <i class="fas fa-chevron-down dropdown-arrow"></i>
-            </button>
-            <div class="custom-dropdown-menu">
-                <div class="custom-dropdown-item active" data-value="">Todos los estados</div>
-                <div class="custom-dropdown-item" data-value="Activo">Activo</div>
-                <div class="custom-dropdown-item" data-value="Inactivo">Inactivo</div>
-                <div class="custom-dropdown-item" data-value="Pendiente">Pendiente</div>
-                <div class="custom-dropdown-item" data-value="Aprobada">Aprobada</div>
-                <div class="custom-dropdown-item" data-value="Repetir">Repetir</div>
-                <div class="custom-dropdown-item" data-value="Verificado">Verificado</div>
-                <div class="custom-dropdown-item" data-value="Rechazado">Rechazado</div>
+        <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
+            <div class="custom-dropdown auto-filter-status" id="autoDropdownStatus_${tableId}">
+                <button type="button" class="custom-dropdown-toggle" aria-expanded="false">
+                    <span class="dropdown-selected-text">Todos los estados</span>
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </button>
+                <div class="custom-dropdown-menu">
+                    <div class="custom-dropdown-item active" data-value="">Todos los estados</div>
+                    <div class="custom-dropdown-item" data-value="Activo">Activo</div>
+                    <div class="custom-dropdown-item" data-value="Inactivo">Inactivo</div>
+                    <div class="custom-dropdown-item" data-value="Pendiente">Pendiente</div>
+                    <div class="custom-dropdown-item" data-value="Aprobada">Aprobada</div>
+                    <div class="custom-dropdown-item" data-value="Repetir">Repetir</div>
+                    <div class="custom-dropdown-item" data-value="Verificado">Verificado</div>
+                    <div class="custom-dropdown-item" data-value="Rechazado">Rechazado</div>
+                </div>
             </div>
         </div>
     ` : '';
-
-    const clearButtonHtml = `
-        <button type="button" class="btn-clear-filters custom-btn-clear" title="Restablecer filtros">
-            <i class="fas fa-undo-alt"></i> <span>Limpiar filtros</span>
-        </button>
-    `;
 
     const filterBarHtml = `
         <div class="custom-filter-card mb-4 auto-generated-filter" data-for="${tableId}">
@@ -282,10 +278,7 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
                         <input type="text" class="custom-filter-input auto-filter-search" placeholder="Buscar registro..." autocomplete="off">
                     </div>
                 </div>
-                <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
-                    ${statusDropdownHtml}
-                    ${clearButtonHtml}
-                </div>
+                ${statusDropdownHtml}
             </div>
         </div>
     `;
@@ -299,18 +292,6 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
         dtApi.search(this.value).draw();
     });
 
-    // Evento para limpiar y restablecer filtros
-    $filterBar.find('.btn-clear-filters').on('click', function () {
-        $filterBar.find('.auto-filter-search').val('');
-        if (statusColIdx !== -1) {
-            const $dd = $filterBar.find('.auto-filter-status');
-            $dd.find('.custom-dropdown-item').removeClass('active');
-            $dd.find('.custom-dropdown-item[data-value=""]').addClass('active');
-            $dd.find('.dropdown-selected-text').text('Todos los estados');
-            $dd.removeClass('active');
-        }
-        dtApi.search('').columns().search('').draw();
-    });
 
     // Evento de dropdown de estado si aplica
     if (statusColIdx !== -1) {
@@ -430,7 +411,7 @@ export const createActionsColumn = (options = {}) => ({
 export const createDataTable = (tableId, url, columns, customConfig = {}) => {
     // Asegurar que la tabla tenga la clase custom-modern-table
     $(tableId).addClass('custom-modern-table');
-    const containerSelector = $(tableId).closest('.table-responsive, .custom-table-card, .panel');
+    const containerSelector = $(tableId).closest('.custom-table-card, .panel');
 
     const config = {
         ...defaultConfig,
