@@ -227,6 +227,26 @@
             font-size: 11.5px;
             color: var(--text-muted);
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+                border-radius: 14px;
+            }
+
+            .brand-logo {
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 12.5px;
+                margin-bottom: 22px;
+            }
+        }
     </style>
 </head>
 

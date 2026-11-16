@@ -192,6 +192,26 @@
             font-size: 12px;
             color: var(--text-muted);
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .login-card {
+                padding: 30px 20px;
+                border-radius: 14px;
+            }
+
+            .brand-logo {
+                font-size: 22px;
+            }
+
+            .subtitle {
+                font-size: 12.5px;
+                margin-bottom: 22px;
+            }
+        }
     </style>
 </head>
 
@@ -224,7 +244,7 @@
                 <div class="input-wrap" style="position: relative;">
                     <i class="fas fa-lock"></i>
                     <input type="password" id="password" name="password" required placeholder="••••••••" style="padding-right: 44px;">
-                    <button type="button" id="btnTogglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: color 0.2s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                    <button type="button" id="btnTogglePassword" style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: color 0.2s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
                         <i class="fas fa-eye" id="togglePasswordIcon"></i>
                     </button>
                 </div>
