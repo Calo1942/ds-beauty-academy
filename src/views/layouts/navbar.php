@@ -25,10 +25,6 @@ if ($isFirstLogin) {
             <button type="button" class="btn-theme-toggle" id="btnThemeToggle" title="Cambiar a modo claro / oscuro" aria-label="Cambiar tema">
                 <i class="fas fa-sun" id="themeToggleIcon"></i>
             </button>
-
-            <button type="button" class="notification" id="btnNotificationCenter" title="Centro de Notificaciones" aria-label="Centro de Notificaciones" style="background: none; border: none; padding: 0; outline: none;">
-                <i class="far fa-bell"></i>
-            </button>
             <div class="user-profile">
                 <a href="?url=perfil" class="user-profile-link" title="Ir a mi perfil" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
                     <div class="user-avatar-wrapper">
@@ -177,41 +173,6 @@ if ($isFirstLogin) {
                     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
                     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                     applyTheme(newTheme);
-                });
-            }
-
-            // Centro de Notificaciones
-            const btnNotification = document.getElementById('btnNotificationCenter');
-            if (btnNotification) {
-                btnNotification.addEventListener('click', () => {
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: '<i class="fas fa-bell text-accent me-2"></i>Notificaciones del Sistema',
-                            html: `
-                                <div style="text-align: left; padding: 10px 0; font-size: 0.95rem;">
-                                    <div style="display: flex; gap: 12px; align-items: start; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--accent, #E83382);">
-                                        <i class="fas fa-server text-accent" style="font-size: 1.2rem; margin-top: 2px;"></i>
-                                        <div>
-                                            <strong style="color: var(--text-main, #f3f3f5);">Plataforma Operativa</strong>
-                                            <p style="margin: 4px 0 0 0; color: var(--text-muted, #a0a0ab); font-size: 0.85rem;">Todos los módulos y la base de datos están sincronizados y funcionando correctamente.</p>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; gap: 12px; align-items: start; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid #22c55e;">
-                                        <i class="fas fa-wifi text-success" style="font-size: 1.2rem; margin-top: 2px;"></i>
-                                        <div>
-                                            <strong style="color: var(--text-main, #f3f3f5);">Modo Local / Autónomo</strong>
-                                            <p style="margin: 4px 0 0 0; color: var(--text-muted, #a0a0ab); font-size: 0.85rem;">Dependencias y tipografías cargadas localmente (100% offline).</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            `,
-                            confirmButtonText: 'Entendido',
-                            confirmButtonColor: '#E83382',
-                            customClass: {
-                                popup: 'swal2-dark-luxury'
-                            }
-                        });
-                    }
                 });
             }
         });

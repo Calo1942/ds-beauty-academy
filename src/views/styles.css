@@ -1288,8 +1288,29 @@ tr:last-child td {
     }
 
     .topbar {
-        padding: 0 12px;
-        height: 64px;
+        padding: 0 10px;
+        height: 60px;
+    }
+
+    .topbar-right {
+        gap: 10px;
+    }
+
+    .navbar-brand-collapsed {
+        display: none !important;
+    }
+
+    .user-profile .user-info {
+        display: none !important;
+    }
+
+    .user-profile-link {
+        padding: 2px 4px;
+        gap: 0 !important;
+    }
+
+    .user-profile {
+        gap: 8px;
     }
 
     .page-title {
@@ -1333,15 +1354,6 @@ tr:last-child td {
 @media (max-width: 576px) {
     .brand-logo {
         font-size: 28px;
-    }
-
-    .user-profile .user-role {
-        display: none;
-        /* Ahorra espacio en topbar */
-    }
-
-    .user-name {
-        font-size: 13px;
     }
 
     .modal-footer {
@@ -3603,9 +3615,20 @@ table.custom-modern-table.dataTable {
 /* 1. Modales en Pantallas Pequeñas: colapsar grids de 2 columnas a 1 columna */
 @media (max-width: 640px) {
     .modal-body [style*="grid-template-columns: 1fr 1fr"],
-    .modal-body [style*="grid-template-columns:1fr 1fr"] {
+    .modal-body [style*="grid-template-columns:1fr 1fr"],
+    .modal-body .form-grid-2 {
         grid-template-columns: 1fr !important;
         gap: 14px !important;
+    }
+
+    /* Anular explícitamente cualquier span 2 para evitar que CSS Grid cree una segunda columna implícita comprimida */
+    .modal-body [style*="grid-column: span 2"],
+    .modal-body [style*="grid-column:span 2"],
+    .modal-body [style*="grid-column: 1 / -1"],
+    .modal-body [style*="grid-column:1 / -1"],
+    .modal-body .grid-col-span-2 {
+        grid-column: span 1 !important;
+        width: 100% !important;
     }
 
     .modal-body .detail-avatar-container {
@@ -3678,15 +3701,27 @@ table.custom-modern-table.dataTable {
 @media (max-width: 576px) {
     .custom-table-footer {
         flex-direction: column !important;
-        align-items: center !important;
-        gap: 16px !important;
+        align-items: stretch !important;
+        gap: 12px !important;
         text-align: center !important;
     }
 
     .dt-custom-pagination {
         width: 100% !important;
-        justify-content: center !important;
-        flex-wrap: wrap !important;
+        max-width: 100% !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 4px !important;
+    }
+
+    .dt-custom-pagination .custom-page-btn,
+    .dt-custom-pagination .page-btn {
+        min-width: 28px !important;
+        padding: 4px 8px !important;
+        font-size: 12px !important;
+        flex-shrink: 0 !important;
     }
 
     .custom-filter-card .custom-dropdown,
