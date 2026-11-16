@@ -1,5 +1,5 @@
 // pagoDataTable.js - Gestión interactiva de Comprobantes de Pago con DataTables y SweetAlert2
-import { createDataTable, reloadDataTable } from '../helpers/dataTable.js';
+import { createDataTable, reloadDataTable, abrirModal, cerrarModal } from '../helpers/dataTable.js';
 import { getById, create, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast, showWarning } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
@@ -7,20 +7,6 @@ import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.pagoApiUrl || '?url=pago';
-
-// Helpers para abrir y cerrar modales del sistema
-export function abrirModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add('show');
-}
-
-export function cerrarModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove('show');
-}
-
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
 
 // Cargar matrículas disponibles para el registro de pago
 async function cargarMatriculas(selectSelector, valorSeleccionado = null) {

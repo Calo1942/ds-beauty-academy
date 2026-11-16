@@ -1,5 +1,5 @@
 // estudianteDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Estudiantes
-import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
+import { createDataTable, reloadDataTable, createActionsColumn, abrirModal, cerrarModal } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
@@ -7,21 +7,6 @@ import { showSkeleton, hideSkeleton, showModalSkeleton, hideModalSkeleton } from
 import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.estudianteApiUrl || '?url=estudiante';
-
-// Helpers para abrir y cerrar modales del sistema
-export function abrirModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add('show');
-}
-
-export function cerrarModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove('show');
-}
-
-// Hacer funciones de modal globales por compatibilidad con atributos HTML onclick
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
 
 $(document).ready(function () {
     // 1. Mostrar skeleton mientras carga la tabla inicial

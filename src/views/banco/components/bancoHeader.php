@@ -13,7 +13,7 @@
             <i class="fas fa-file-pdf"></i> Generar Reporte
         </a>
 
-        <button class="btn-custom-primary btn-registrar-banco" type="button" onclick="abrirModal('modalCrear')">
+        <button class="btn-custom-primary btn-registrar-banco" type="button">
             <i class="fas fa-plus"></i> Registrar Banco
         </button>
     </div>

@@ -14,7 +14,7 @@
         </a>
 
         <a href="?url=evaluacion" class="btn-custom-secondary me-2"><i class="fas fa-clipboard-list me-1"></i>Gestionar Evaluaciones</a>
-        <button class="btn-custom-primary btn-registrar-entrega" type="button" onclick="abrirModal('modalCrear')">
+        <button class="btn-custom-primary btn-registrar-entrega" type="button">
             <i class="fas fa-plus"></i> Subir Entrega
         </button>
     </div>

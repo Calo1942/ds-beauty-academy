@@ -1,5 +1,5 @@
 // evaluacionDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Evaluaciones
-import { createDataTable, reloadDataTable, createActionsColumn } from '../helpers/dataTable.js';
+import { createDataTable, reloadDataTable, createActionsColumn, abrirModal, cerrarModal } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
@@ -39,20 +39,6 @@ async function cargarAsignacionesAcademicas(selectSelector, valorSeleccionado = 
         console.error('Error cargando asignaciones académicas:', err);
     }
 }
-
-// Helpers para abrir y cerrar modales del sistema
-export function abrirModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add('show');
-}
-
-export function cerrarModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove('show');
-}
-
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
 
 $(document).ready(function () {
     // 1. Mostrar skeleton mientras carga la tabla inicial

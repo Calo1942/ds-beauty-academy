@@ -14,7 +14,7 @@
         </a>
 
         <a href="?url=entrega" class="btn-custom-secondary me-2"><i class="fas fa-tasks me-1"></i>Calificar Entregas</a>
-        <button class="btn-custom-primary btn-registrar-evaluacion" type="button" onclick="abrirModal('modalCrear')">
+        <button class="btn-custom-primary btn-registrar-evaluacion" type="button">
             <i class="fas fa-plus"></i> Registrar Evaluación
         </button>
     </div>
