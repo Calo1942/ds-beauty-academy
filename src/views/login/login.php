@@ -220,9 +220,12 @@
                         ¿Olvidaste tu contraseña?
                     </a>
                 </div>
-                <div class="input-wrap">
+                <div class="input-wrap" style="position: relative;">
                     <i class="fas fa-lock"></i>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <input type="password" id="password" name="password" required placeholder="••••••••" style="padding-right: 44px;">
+                    <button type="button" id="btnTogglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: color 0.2s;" title="Mostrar u ocultar contraseña" aria-label="Mostrar u ocultar contraseña">
+                        <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                    </button>
                 </div>
             </div>
 
@@ -238,11 +241,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Conmutador de visualización de contraseña
+        const btnTogglePassword = document.getElementById('btnTogglePassword');
+        const inputPassword = document.getElementById('password');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+        if (btnTogglePassword && inputPassword && togglePasswordIcon) {
+            btnTogglePassword.addEventListener('click', function () {
+                const isPassword = inputPassword.getAttribute('type') === 'password';
+                inputPassword.setAttribute('type', isPassword ? 'text' : 'password');
+                togglePasswordIcon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+            });
+        }
+
+        let isSubmitting = false;
         document.getElementById('formLogin').addEventListener('submit', async function (e) {
             e.preventDefault();
+            if (isSubmitting) return;
+
             const alertBox = document.getElementById('alertBox');
             const btn = document.getElementById('btnSubmit');
 
+            isSubmitting = true;
             alertBox.style.display = 'none';
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando credenciales...';
@@ -267,6 +287,7 @@
                         window.location.href = data.redirect;
                     }, 600);
                 } else {
+                    isSubmitting = false;
                     alertBox.className = 'alert-box error';
                     alertBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + (data.message || 'Error al iniciar sesión.');
                     alertBox.style.display = 'block';
@@ -274,6 +295,7 @@
                     btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
                 }
             } catch (err) {
+                isSubmitting = false;
                 alertBox.className = 'alert-box error';
                 alertBox.innerHTML = '<i class="fas fa-wifi"></i> Error de conexión con el servidor.';
                 alertBox.style.display = 'block';
