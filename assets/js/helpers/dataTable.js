@@ -158,17 +158,54 @@ export function renderCustomPagination(dtApi, containerSelector) {
     }
     $pagination.append($btnPrev);
 
-    // Números de páginas
-    for (let i = 0; i < totalPages; i++) {
-        const pageNum = i + 1;
-        const $btnPage = $(`<button type="button" class="custom-page-btn ${i === currentPage ? 'active' : ''}">${pageNum}</button>`);
-        if (i !== currentPage) {
-            $btnPage.on('click', function () {
-                dtApi.page(i).draw('page');
-            });
+    // Números de páginas con ventana deslizante inteligente (evita saturar móviles)
+    const getPageRange = (current, total) => {
+        if (total <= 7) {
+            return Array.from({ length: total }, (_, i) => i);
         }
-        $pagination.append($btnPage);
-    }
+        const pages = [0]; // Siempre primera página
+        let left = Math.max(1, current - 1);
+        let right = Math.min(total - 2, current + 1);
+
+        if (current <= 2) {
+            left = 1;
+            right = 3;
+        } else if (current >= total - 3) {
+            left = total - 4;
+            right = total - 2;
+        }
+
+        if (left > 1) {
+            pages.push('...');
+        }
+
+        for (let i = left; i <= right; i++) {
+            pages.push(i);
+        }
+
+        if (right < total - 2) {
+            pages.push('...');
+        }
+
+        pages.push(total - 1); // Siempre última página
+        return pages;
+    };
+
+    const pagesToRender = getPageRange(currentPage, totalPages);
+    pagesToRender.forEach(p => {
+        if (p === '...') {
+            $pagination.append(`<span class="custom-page-ellipsis px-1 text-muted" style="font-size: 13px; line-height: 28px; user-select: none;">…</span>`);
+        } else {
+            const pageNum = p + 1;
+            const $btnPage = $(`<button type="button" class="custom-page-btn ${p === currentPage ? 'active' : ''}">${pageNum}</button>`);
+            if (p !== currentPage) {
+                $btnPage.on('click', function () {
+                    dtApi.page(p).draw('page');
+                });
+            }
+            $pagination.append($btnPage);
+        }
+    });
 
     // Botón Siguiente
     const $btnNext = $(`<button type="button" class="custom-page-btn">Siguiente ></button>`);
