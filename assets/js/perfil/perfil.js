@@ -441,10 +441,10 @@ function configurarFotoPerfil() {
                         icon: 'warning',
                         title: 'Formato no válido',
                         text: 'Por favor, selecciona una imagen en formato JPG, PNG o WEBP.',
-                        confirmButtonColor: '#E83382'
+                        confirmButtonColor: '#E83382',
+                        background: 'var(--card-bg, #18181c)',
+                        color: 'var(--text-main, #f5f5f7)'
                     });
-                } else {
-                    alert('Por favor selecciona una imagen válida (JPG, PNG o WEBP).');
                 }
                 inputFoto.value = '';
                 return;
@@ -456,10 +456,10 @@ function configurarFotoPerfil() {
                         icon: 'warning',
                         title: 'Imagen muy pesada',
                         text: 'El tamaño de la imagen no debe superar los 8 MB.',
-                        confirmButtonColor: '#E83382'
+                        confirmButtonColor: '#E83382',
+                        background: 'var(--card-bg, #18181c)',
+                        color: 'var(--text-main, #f5f5f7)'
                     });
-                } else {
-                    alert('El tamaño de la imagen no debe superar los 8 MB.');
                 }
                 inputFoto.value = '';
                 return;
@@ -623,7 +623,7 @@ function configurarFotoPerfil() {
     // Eliminar foto actual
     if (btnModalEliminar) {
         btnModalEliminar.addEventListener('click', async () => {
-            const confirmar = typeof Swal !== 'undefined'
+            const result = typeof Swal !== 'undefined'
                 ? await Swal.fire({
                     title: '¿Eliminar foto de perfil?',
                     text: 'Se restablecerá el avatar al ícono por defecto.',
@@ -632,11 +632,13 @@ function configurarFotoPerfil() {
                     confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar',
                     confirmButtonColor: '#E83382',
-                    cancelButtonColor: '#374151'
-                }).then(r => r.isConfirmed)
-                : confirm('¿Eliminar tu foto de perfil?');
+                    cancelButtonColor: '#374151',
+                    background: 'var(--card-bg, #18181c)',
+                    color: 'var(--text-main, #f5f5f7)'
+                })
+                : { isConfirmed: false };
 
-            if (!confirmar) return;
+            if (!result.isConfirmed) return;
 
             try {
                 const formData = new FormData();
@@ -817,10 +819,10 @@ function configurarEdicionPerfil() {
                             icon: 'warning',
                             title: 'Contraseña muy corta',
                             text: 'La nueva contraseña debe tener al menos 6 caracteres.',
-                            confirmButtonColor: '#E83382'
+                            confirmButtonColor: '#E83382',
+                            background: 'var(--card-bg, #18181c)',
+                            color: 'var(--text-main, #f5f5f7)'
                         });
-                    } else {
-                        alert('La nueva contraseña debe tener al menos 6 caracteres.');
                     }
                     document.getElementById('inputPassword')?.focus();
                     return;
@@ -832,10 +834,10 @@ function configurarEdicionPerfil() {
                             icon: 'warning',
                             title: 'Las contraseñas no coinciden',
                             text: 'Por favor, confirma tu nueva contraseña reescribiéndola de forma idéntica en ambos campos.',
-                            confirmButtonColor: '#E83382'
+                            confirmButtonColor: '#E83382',
+                            background: 'var(--card-bg, #18181c)',
+                            color: 'var(--text-main, #f5f5f7)'
                         });
-                    } else {
-                        alert('Las contraseñas no coinciden. Por favor, asegúrate de escribir la misma contraseña en ambos campos.');
                     }
                     document.getElementById('inputPasswordConfirm')?.focus();
                     return;
