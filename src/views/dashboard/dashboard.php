@@ -48,8 +48,8 @@ if (!isset($metrics)) {
     include_once __DIR__ . '/../../../assets/linksFront.php';
     echo $css_links;
     ?>
-    <!-- Chart.js 4.4 UMD para gráficos interactivos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Chart.js 4.4 UMD local para gráficos interactivos -->
+    <script src="assets/vendor/chartjs/chart.umd.min.js"></script>
 </head>
 
 <body>

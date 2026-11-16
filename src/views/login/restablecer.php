@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nueva Contraseña — DS Beauty Academy</title>
+    <link rel="stylesheet" href="assets/vendor/fonts/inter.css">
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/vendor/sweetalert2/sweetalert2.min.css">
     <style>
         :root {
             --bg-dark: #0d0d11;
@@ -305,7 +306,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assets/vendor/sweetalert2/sweetalert2.all.min.js"></script>
     <script>
         // Permitir únicamente dígitos numéricos en el campo de código
         const inputCodigo = document.getElementById('codigoRecuperar');
