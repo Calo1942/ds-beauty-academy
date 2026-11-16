@@ -134,12 +134,12 @@ export function renderCustomPagination(dtApi, containerSelector) {
     const start = info.recordsDisplay === 0 ? 0 : info.start + 1;
     const end = info.end;
     const total = info.recordsDisplay;
-    $footer.find('.dt-custom-info').text(`Mostrando ${start} a ${end} de ${total} registros`);
+    $footer.find('.dt-custom-info, #customTableInfo').text(`Mostrando ${start} a ${end} de ${total} registros`);
 
     // B. Actualizar botones de paginación
     const totalPages = info.pages;
     const currentPage = info.page;
-    const $pagination = $footer.find('.dt-custom-pagination');
+    const $pagination = $footer.find('.dt-custom-pagination, #customPagination');
     $pagination.empty();
 
     if (totalPages <= 1) {

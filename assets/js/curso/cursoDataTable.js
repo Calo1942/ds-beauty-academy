@@ -1,5 +1,5 @@
 // cursoDataTable.js - Lógica de tabla DataTables, llamadas AJAX y modales para Cursos
-import { reloadDataTable } from '../helpers/dataTable.js';
+import { reloadDataTable, renderCustomPagination, abrirModal, cerrarModal } from '../helpers/dataTable.js';
 import { getById, create, update, remove, executeAjax } from '../helpers/ajax.js';
 import { showConfirm, showLoading, closeLoading, showToast, showDeleteConfirm } from '../helpers/sweetalert.js';
 import { animateIn } from '../helpers/animations.js';
@@ -8,88 +8,11 @@ import { limpiarValidaciones } from '../helpers/validation.js';
 
 const API_URL = window.cursoApiUrl || '?url=curso';
 
-// Helpers para abrir y cerrar modales del sistema
-export function abrirModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.add('show');
-}
-
-export function cerrarModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.classList.remove('show');
-}
-
-window.abrirModal = abrirModal;
-window.cerrarModal = cerrarModal;
-
 $(document).ready(function () {
     // 1. Mostrar skeleton mientras carga la tabla inicial
     showSkeleton('#cursoSkeleton', '#cursoTableContainer');
 
     let tblCurso = null;
-
-    // Función para renderizar la paginación y la información personalizada de forma segura
-    function actualizarPaginacionYInfo(dtInstance) {
-        const api = dtInstance || tblCurso;
-        if (!api || typeof api.page !== 'function') return;
-
-        let info;
-        try {
-            info = api.page.info();
-        } catch (e) {
-            return;
-        }
-        if (!info) return;
-
-        // A. Actualizar texto de información "Mostrando X a Y de Z registros"
-        const start = info.recordsDisplay === 0 ? 0 : info.start + 1;
-        const end = info.end;
-        const total = info.recordsDisplay;
-        $('#customTableInfo').text(`Mostrando ${start} a ${end} de ${total} registros`);
-
-        // B. Renderizar botones de paginación
-        const totalPages = info.pages;
-        const currentPage = info.page; // Base 0
-        const $pagination = $('#customPagination');
-        $pagination.empty();
-
-        if (totalPages <= 1) {
-            $pagination.append(`<button type="button" class="custom-page-btn" disabled>Anterior</button>`);
-            $pagination.append(`<button type="button" class="custom-page-btn active">1</button>`);
-            $pagination.append(`<button type="button" class="custom-page-btn" disabled>Siguiente ></button>`);
-            return;
-        }
-
-        // Botón Anterior
-        const $btnPrev = $(`<button type="button" class="custom-page-btn">Anterior</button>`);
-        if (currentPage === 0) {
-            $btnPrev.prop('disabled', true);
-        } else {
-            $btnPrev.on('click', () => api.page('previous').draw('page'));
-        }
-        $pagination.append($btnPrev);
-
-        // Números de páginas
-        for (let i = 0; i < totalPages; i++) {
-            const pageNum = i + 1;
-            const $btnPage = $(`<button type="button" class="custom-page-btn ${i === currentPage ? 'active' : ''}">${pageNum}</button>`);
-            if (i !== currentPage) {
-                $btnPage.on('click', function () {
-                    api.page(i).draw('page');
-                });
-            }
-            $pagination.append($btnPage);
-        }
-
-        // Botón Siguiente
-        const $btnNext = $(`<button type="button" class="custom-page-btn">Siguiente ></button>`);
-        if (currentPage >= totalPages - 1) {
-            $btnNext.prop('disabled', true);
-        } else {
-            $btnNext.on('click', () => api.page('next').draw('page'));
-        }
-        $pagination.append($btnNext);
-    }
 
     // 2. Inicializar DataTable con tamaño de página predeterminado de 5
     tblCurso = $('#cursoTable').DataTable({
@@ -202,10 +125,10 @@ $(document).ready(function () {
                 hideSkeleton('#cursoSkeleton', '#cursoTableContainer');
                 animateIn('#cursoTableContainer', 300);
             }, 300);
-            actualizarPaginacionYInfo(api);
+            renderCustomPagination(api, '#cursoTableContainer');
         },
         drawCallback: function () {
-            actualizarPaginacionYInfo(this.api());
+            renderCustomPagination(this.api(), '#cursoTableContainer');
         }
     });
 
