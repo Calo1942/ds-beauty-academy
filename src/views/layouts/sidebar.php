@@ -13,7 +13,7 @@ $isCurso = ($actualUrl == 'curso' || $actualUrl == 'recurso' || $actualUrl == 'c
 $isStaff = ($actualUrl == 'instructor' || $actualUrl == 'especialidad' || $actualUrl == 'diploma');
 $isMatricula = ($actualUrl == 'matricula' || $actualUrl == 'evaluacion' || $actualUrl == 'entrega' || $actualUrl == 'certificado');
 $isPagos = ($actualUrl == 'pago' || $actualUrl == 'comprobantePago' || $actualUrl == 'banco');
-$isConfig = ($actualUrl == 'usuario' || $actualUrl == 'perfil');
+$isConfig = ($actualUrl == 'usuario' || $actualUrl == 'rol' || $actualUrl == 'perfil');
 ?>
 
 <!-- SIDEBAR -->
@@ -141,6 +141,8 @@ $isConfig = ($actualUrl == 'usuario' || $actualUrl == 'perfil');
                                 class="fas fa-user-circle"></i> Mi Perfil</a></li>
                     <li><a href="?url=usuario" class="<?= ($actualUrl == 'usuario') ? 'active' : '' ?>"><i
                                 class="fas fa-user-cog"></i> Gestión de Usuarios</a></li>
+                    <li><a href="?url=rol" class="<?= ($actualUrl == 'rol') ? 'active' : '' ?>"><i
+                                class="fas fa-user-shield"></i> Gestión de Roles</a></li>
                 </ul>
             </li>
 

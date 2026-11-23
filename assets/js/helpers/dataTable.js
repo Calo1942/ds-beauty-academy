@@ -220,7 +220,7 @@ export function renderCustomPagination(dtApi, containerSelector) {
 /**
  * Renderiza e inyecta la barra de búsqueda y filtro de estado (Puro CSS y JS)
  */
-export function renderCustomFilterBar(dtApi, tableSelector) {
+export function renderCustomFilterBar(dtApi, tableSelector, customConfig = {}) {
     if (!dtApi || !$(tableSelector).length) return;
 
     const $table = $(tableSelector);
@@ -247,6 +247,25 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
         }
     });
 
+    // Opciones de estados personalizadas según el módulo / tabla
+    let statusOptions = ['Activo', 'Inactivo'];
+    if (customConfig && Array.isArray(customConfig.statusOptions)) {
+        statusOptions = customConfig.statusOptions;
+    } else if (tableId === 'matriculaTable') {
+        statusOptions = ['Solvente', 'Deudora'];
+    } else if (tableId === 'pagoTable' || tableId === 'comprobanteTable') {
+        statusOptions = ['Pendiente', 'Verificado', 'Rechazado'];
+    } else if (tableId === 'evaluacionTable' || tableId === 'entregaTable') {
+        statusOptions = ['Pendiente', 'Aprobada', 'Repetir'];
+    } else if (tableId === 'cursoTable') {
+        statusOptions = ['Activo', 'Venta Normal', 'Preventa', 'Cerrado'];
+    }
+
+    let statusOptionsHtml = '<div class="custom-dropdown-item active" data-value="">Todos los estados</div>';
+    statusOptions.forEach(opt => {
+        statusOptionsHtml += `<div class="custom-dropdown-item" data-value="${opt}">${opt}</div>`;
+    });
+
     // Barra de filtros por estado si aplica
     const statusDropdownHtml = statusColIdx !== -1 ? `
         <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
@@ -256,18 +275,20 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
                     <i class="fas fa-chevron-down dropdown-arrow"></i>
                 </button>
                 <div class="custom-dropdown-menu">
-                    <div class="custom-dropdown-item active" data-value="">Todos los estados</div>
-                    <div class="custom-dropdown-item" data-value="Activo">Activo</div>
-                    <div class="custom-dropdown-item" data-value="Inactivo">Inactivo</div>
-                    <div class="custom-dropdown-item" data-value="Pendiente">Pendiente</div>
-                    <div class="custom-dropdown-item" data-value="Aprobada">Aprobada</div>
-                    <div class="custom-dropdown-item" data-value="Repetir">Repetir</div>
-                    <div class="custom-dropdown-item" data-value="Verificado">Verificado</div>
-                    <div class="custom-dropdown-item" data-value="Rechazado">Rechazado</div>
+                    ${statusOptionsHtml}
                 </div>
             </div>
+            <button type="button" class="btn-clear-filters custom-btn-clear auto-filter-clear" title="Restablecer filtros">
+                <i class="fas fa-undo-alt"></i> <span>Limpiar filtros</span>
+            </button>
         </div>
-    ` : '';
+    ` : `
+        <div class="d-flex align-items-center gap-3 ms-auto flex-wrap">
+            <button type="button" class="btn-clear-filters custom-btn-clear auto-filter-clear" title="Restablecer filtros">
+                <i class="fas fa-undo-alt"></i> <span>Limpiar filtros</span>
+            </button>
+        </div>
+    `;
 
     const filterBarHtml = `
         <div class="custom-filter-card mb-4 auto-generated-filter" data-for="${tableId}">
@@ -321,6 +342,20 @@ export function renderCustomFilterBar(dtApi, tableSelector) {
             }
         });
     }
+
+    // Botón Limpiar Filtros
+    $filterBar.find('.auto-filter-clear').on('click', function () {
+        $filterBar.find('.auto-filter-search').val('');
+        dtApi.search('');
+        if (statusColIdx !== -1) {
+            const $dd = $filterBar.find('.auto-filter-status');
+            $dd.find('.custom-dropdown-item').removeClass('active');
+            $dd.find('.custom-dropdown-item[data-value=""]').addClass('active');
+            $dd.find('.dropdown-selected-text').text('Todos los estados');
+            dtApi.column(statusColIdx).search('');
+        }
+        dtApi.draw();
+    });
 }
 
 // Cerrar dropdowns personalizados al hacer clic fuera
@@ -425,7 +460,7 @@ export const createDataTable = (tableId, url, columns, customConfig = {}) => {
         ...customConfig,
         initComplete: function (settings, json) {
             const api = this.api();
-            renderCustomFilterBar(api, tableId);
+            renderCustomFilterBar(api, tableId, customConfig);
             renderCustomPagination(api, containerSelector);
             if (typeof customConfig.initComplete === 'function') {
                 customConfig.initComplete.call(this, settings, json);
@@ -433,7 +468,7 @@ export const createDataTable = (tableId, url, columns, customConfig = {}) => {
         },
         drawCallback: function (settings) {
             const api = this.api();
-            renderCustomFilterBar(api, tableId);
+            renderCustomFilterBar(api, tableId, customConfig);
             renderCustomPagination(api, containerSelector);
             if (typeof customConfig.drawCallback === 'function') {
                 customConfig.drawCallback.call(this, settings);

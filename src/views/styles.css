@@ -2226,9 +2226,9 @@ a.dash-kpi-card:hover {
 
 .custom-dropdown-menu {
     position: absolute;
-    bottom: calc(100% + 6px);
+    top: calc(100% + 6px);
+    bottom: auto;
     left: 0;
-    top: auto;
     right: 0;
     min-width: 100%;
     background-color: #161722;
@@ -2239,10 +2239,18 @@ a.dash-kpi-card:hover {
     z-index: 1050;
     display: none;
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(-6px);
     transition: opacity 0.15s ease, transform 0.15s ease;
     max-height: 240px;
     overflow-y: auto;
+}
+
+/* En el footer de paginación o cuando se indique .dropup, abrir hacia arriba */
+.custom-table-footer .custom-dropdown-menu,
+.custom-dropdown.dropup .custom-dropdown-menu {
+    top: auto;
+    bottom: calc(100% + 6px);
+    transform: translateY(6px);
 }
 
 .custom-dropdown.active .custom-dropdown-menu {
