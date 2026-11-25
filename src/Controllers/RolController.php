@@ -60,7 +60,7 @@ if ($action) {
             exit;
 
         case 'eliminar':
-            $id = $_POST['id'] ?? null;
+            $id = $_POST['eliminar'] ?? $_POST['id'] ?? null;
             if (!$id) {
                 echo json_encode([
                     'status' => 'error',
@@ -72,7 +72,7 @@ if ($action) {
             exit;
 
         case 'buscar':
-            $id = $_POST['id'] ?? null;
+            $id = $_POST['buscar'] ?? $_POST['id'] ?? null;
             if (!$id) {
                 echo json_encode([
                     'status' => 'error',

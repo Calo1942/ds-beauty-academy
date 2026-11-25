@@ -21,10 +21,11 @@ if ($isFirstLogin) {
             </div>
         </div>
         <div class="topbar-right">
-            <!-- Botón Conmutador de Modo Oscuro / Claro -->
+            <!-- Botón Conmutador de Modo Oscuro / Claro (comentado temporalmente)
             <button type="button" class="btn-theme-toggle" id="btnThemeToggle" title="Cambiar a modo claro / oscuro" aria-label="Cambiar tema">
                 <i class="fas fa-sun" id="themeToggleIcon"></i>
             </button>
+            -->
             <div class="user-profile">
                 <a href="?url=perfil" class="user-profile-link" title="Ir a mi perfil" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
                     <div class="user-avatar-wrapper">

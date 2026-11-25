@@ -8,7 +8,7 @@ class FrontController
     private $controller;
     private $method;
     private $params;
-    private $defaultController = 'dashboard';
+    private $defaultController = 'inicio';
 
     // Matriz de permisos RBAC por Rol según el Mapa Navegacional
     private $permissionsByRole = [
@@ -63,15 +63,15 @@ class FrontController
     {
         $controllerName = $this->controller;
         $isLogout = ($controllerName === 'logout' || ($controllerName === 'login' && ($_GET['action'] ?? '') === 'logout'));
-        $publicRoutes = ['login', 'logout', 'recuperar', 'restablecer'];
+        $publicRoutes = ['inicio', 'login', 'logout', 'recuperar', 'restablecer'];
 
-        // 1. Si no hay sesión iniciada y no es una ruta pública, redirigir a login
+        // 1. Si no hay sesión iniciada y no es una ruta pública, redirigir a inicio
         if (!in_array($controllerName, $publicRoutes, true) && empty($_SESSION['usuario_id'])) {
-            header('Location: ?url=login');
+            header('Location: ?url=inicio');
             exit;
         }
 
-        // 2. Si ya está autenticado e intenta ir a login o recuperación (salvo que sea logout), redirigir al dashboard
+        // 2. Si ya está autenticado e intenta ir a login, recuperación o inicio sin forzar, redirigir al dashboard
         if (in_array($controllerName, ['login', 'recuperar', 'restablecer'], true) && !empty($_SESSION['usuario_id']) && !$isLogout) {
             header('Location: ?url=dashboard');
             exit;
